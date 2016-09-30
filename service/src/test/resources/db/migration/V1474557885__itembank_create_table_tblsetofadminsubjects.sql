@@ -60,5 +60,3 @@ CREATE TABLE tblsetofadminsubjects (
   testtype varchar(30) DEFAULT NULL,
   PRIMARY KEY (_key)
 );
-
-INSERT INTO tblsetofadminsubjects VALUES ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016','SBAC_PT','SBAC_PT-ELA','IRP-Perf-ELA-11',0,1,4,4,1,1,NULL,NULL,0,0,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0,0,'bp1',NULL,NULL,'summative');

@@ -10,12 +10,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Optional;
 
 import tds.assessment.SetOfAdminSubject;
 import tds.assessment.services.AdminSubjectService;
-import tds.assessment.web.resources.SetOfAdminSubjectResource;
 import tds.common.web.exceptions.NotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,18 +43,17 @@ public class AdminSubjectControllerTest {
     public void shouldFindAdminSubjectByKey() {
         SetOfAdminSubject subject = new SetOfAdminSubject("theKey", "assessment", false, "alg");
 
-        when(service.findSetOfAdminObjectByKey("theKey")).thenReturn(Optional.of(subject));
-        ResponseEntity<SetOfAdminSubjectResource> response = controller.findSetOfAdminSubject("theKey");
-        verify(service).findSetOfAdminObjectByKey("theKey");
+        when(service.findSetOfAdminByKey("theKey")).thenReturn(Optional.of(subject));
+        ResponseEntity<SetOfAdminSubject> response = controller.findSetOfAdminSubject("theKey");
+        verify(service).findSetOfAdminByKey("theKey");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getSetOfAdminSubject().getKey()).isEqualTo("theKey");
-        assertThat(response.getBody().getId().getHref()).isEqualTo("http://localhost/assessments/admin-subject/theKey");
+        assertThat(response.getBody().getKey()).isEqualTo("theKey");
     }
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowSubjectByKeyCannotBeFound() {
-        when(service.findSetOfAdminObjectByKey("theKey")).thenReturn(Optional.empty());
+        when(service.findSetOfAdminByKey("theKey")).thenReturn(Optional.empty());
         controller.findSetOfAdminSubject("theKey");
     }
 }

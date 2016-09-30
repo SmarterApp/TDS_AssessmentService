@@ -12,5 +12,5 @@ public interface AdminSubjectService {
      * @param setOfAdminObjectKey key to the set of admin object
      * @return {@link tds.assessment.SetOfAdminSubject} if found otherwise empty
      */
-    Optional<SetOfAdminSubject> findSetOfAdminObjectByKey(String setOfAdminObjectKey);
+    Optional<SetOfAdminSubject> findSetOfAdminByKey(String setOfAdminObjectKey);
 }

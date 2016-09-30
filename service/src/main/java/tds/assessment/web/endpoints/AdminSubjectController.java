@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tds.assessment.SetOfAdminSubject;
 import tds.assessment.services.AdminSubjectService;
-import tds.assessment.web.resources.SetOfAdminSubjectResource;
 import tds.common.web.exceptions.NotFoundException;
 
 /**
@@ -28,19 +27,18 @@ public class AdminSubjectController {
     }
 
     /**
-     * Endpoint to find {@link tds.assessment.web.resources.SetOfAdminSubjectResource} by key
+     * Endpoint to find {@link tds.assessment.SetOfAdminSubject} by key
      *
      * @param key unique key for a {@link tds.assessment.SetOfAdminSubject}
-     * @return {@link org.springframework.http.ResponseEntity} containing a {@link tds.assessment.web.resources.SetOfAdminSubjectResource}
+     * @return {@link org.springframework.http.ResponseEntity} containing a {@link tds.assessment.SetOfAdminSubject}
      * @throws tds.common.web.exceptions.NotFoundException if entity cannot be found
      */
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<SetOfAdminSubjectResource> findSetOfAdminSubject(@PathVariable final String key) throws NotFoundException {
-        final SetOfAdminSubject setOfAdminSubject = service.findSetOfAdminObjectByKey(key)
+    ResponseEntity<SetOfAdminSubject> findSetOfAdminSubject(@PathVariable final String key) throws NotFoundException {
+        final SetOfAdminSubject setOfAdminSubject = service.findSetOfAdminByKey(key)
             .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
 
-        return ResponseEntity.ok(new SetOfAdminSubjectResource(setOfAdminSubject));
+        return ResponseEntity.ok(setOfAdminSubject);
     }
-
 }

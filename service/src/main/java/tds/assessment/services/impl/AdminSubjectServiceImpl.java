@@ -19,7 +19,7 @@ class AdminSubjectServiceImpl implements AdminSubjectService{
     }
 
     @Override
-    public Optional<SetOfAdminSubject> findSetOfAdminObjectByKey(String setOfAdminObjectKey) {
+    public Optional<SetOfAdminSubject> findSetOfAdminByKey(String setOfAdminObjectKey) {
         return adminSubjectQueryRepository.findByKey(setOfAdminObjectKey);
     }
 }

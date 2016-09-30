@@ -33,7 +33,7 @@ public class AdminSubjectServiceImplTest {
         SetOfAdminSubject adminSubject = new SetOfAdminSubject("theKey", "assessment", false, "dynamic");
 
         when(queryRepository.findByKey("theKey")).thenReturn(Optional.of(adminSubject));
-        Optional<SetOfAdminSubject> maybeSetOfAdminSubject = service.findSetOfAdminObjectByKey("theKey");
+        Optional<SetOfAdminSubject> maybeSetOfAdminSubject = service.findSetOfAdminByKey("theKey");
         verify(queryRepository).findByKey("theKey");
 
         assertThat(maybeSetOfAdminSubject.get()).isEqualTo(adminSubject);
