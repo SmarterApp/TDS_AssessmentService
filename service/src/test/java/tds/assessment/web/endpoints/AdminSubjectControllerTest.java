@@ -41,7 +41,7 @@ public class AdminSubjectControllerTest {
 
     @Test
     public void shouldFindAdminSubjectByKey() {
-        SetOfAdminSubject subject = new SetOfAdminSubject("theKey", "assessment", false, "alg");
+        SetOfAdminSubject subject = new SetOfAdminSubject("theKey", "assessment", false, "alg", 50F);
 
         when(service.findSetOfAdminByKey("theKey")).thenReturn(Optional.of(subject));
         ResponseEntity<SetOfAdminSubject> response = controller.findSetOfAdminSubject("theKey");

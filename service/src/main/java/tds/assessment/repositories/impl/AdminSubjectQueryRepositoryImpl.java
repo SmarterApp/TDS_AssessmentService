@@ -32,7 +32,8 @@ class AdminSubjectQueryRepositoryImpl implements AdminSubjectQueryRepository {
         String SQL = "SELECT _key as `key`, \n" +
             "testid as assessmentId, \n" +
             "issegmented, \n" +
-            "selectionalgorithm as selectionAlgorithm \n" +
+            "selectionalgorithm as selectionAlgorithm, \n" +
+            "startAbility \n" +
             "FROM itembank.tblsetofadminsubjects \n" +
             "WHERE _key = :key";
 
@@ -44,7 +45,8 @@ class AdminSubjectQueryRepositoryImpl implements AdminSubjectQueryRepository {
                     rs.getString("key"),
                     rs.getString("assessmentId"),
                     rs.getBoolean("issegmented"),
-                    rs.getString("selectionalgorithm")));
+                    rs.getString("selectionalgorithm"),
+                    rs.getFloat("startAbility")));
 
             maybeSetOfAdminSubject = Optional.of(subject);
         } catch (EmptyResultDataAccessException var5) {

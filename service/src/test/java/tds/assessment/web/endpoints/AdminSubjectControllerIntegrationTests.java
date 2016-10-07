@@ -32,7 +32,7 @@ public class AdminSubjectControllerIntegrationTests {
 
     @Test
     public void shouldReturnSetOfAdminSubjectByKey() throws Exception {
-        SetOfAdminSubject subject = new SetOfAdminSubject("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", true, "virtual");
+        SetOfAdminSubject subject = new SetOfAdminSubject("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", true, "virtual", 50F);
         when(adminSubjectService.findSetOfAdminByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(subject));
 
         http.perform(get(new URI("/assessments/admin-subject/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
