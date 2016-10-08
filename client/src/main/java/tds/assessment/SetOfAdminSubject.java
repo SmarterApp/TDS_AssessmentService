@@ -8,13 +8,13 @@ public class SetOfAdminSubject {
     private String assessmentId;
     private boolean segmented;
     private String selectionAlgorithm;
-    private Float startAbility;
+    private float startAbility;
 
     public SetOfAdminSubject(String key,
                              String assessmentId,
                              boolean segmented,
                              String selectionAlgorithm,
-                             Float startAbility) {
+                             float startAbility) {
         this.key = key;
         this.assessmentId = assessmentId;
         this.segmented = segmented;
@@ -53,7 +53,7 @@ public class SetOfAdminSubject {
     /**
      * @return the start ability value for the assessment
      */
-    public Float getStartAbility() {
+    public float getStartAbility() {
         return startAbility;
     }
 
