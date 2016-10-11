@@ -30,7 +30,7 @@ public class AdminSubjectServiceImplTest {
 
     @Test
     public void shouldReturnSetOfAdminSubjects() {
-        SetOfAdminSubject adminSubject = new SetOfAdminSubject("theKey", "assessment", false, "dynamic");
+        SetOfAdminSubject adminSubject = new SetOfAdminSubject("theKey", "assessment", false, "dynamic", 50F);
 
         when(queryRepository.findByKey("theKey")).thenReturn(Optional.of(adminSubject));
         Optional<SetOfAdminSubject> maybeSetOfAdminSubject = service.findSetOfAdminByKey("theKey");

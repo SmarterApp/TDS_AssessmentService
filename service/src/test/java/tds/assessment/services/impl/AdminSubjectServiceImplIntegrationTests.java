@@ -49,6 +49,7 @@ public class AdminSubjectServiceImplIntegrationTests {
         assertThat(maybeSetOfAdminObject.get().getKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         assertThat(maybeSetOfAdminObject.get().getSelectionAlgorithm()).isEqualTo("virtual");
         assertThat(maybeSetOfAdminObject.get().getAssessmentId()).isEqualTo("IRP-Perf-ELA-11");
+        assertThat(maybeSetOfAdminObject.get().getStartAbility()).isEqualTo(0F);
     }
 
     private void insertRecord() {

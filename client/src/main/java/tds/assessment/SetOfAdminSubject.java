@@ -8,15 +8,18 @@ public class SetOfAdminSubject {
     private String assessmentId;
     private boolean segmented;
     private String selectionAlgorithm;
+    private float startAbility;
 
     public SetOfAdminSubject(String key,
                              String assessmentId,
                              boolean segmented,
-                             String selectionAlgorithm) {
+                             String selectionAlgorithm,
+                             float startAbility) {
         this.key = key;
         this.assessmentId = assessmentId;
         this.segmented = segmented;
         this.selectionAlgorithm = selectionAlgorithm;
+        this.startAbility = startAbility;
     }
 
     /**
@@ -46,4 +49,12 @@ public class SetOfAdminSubject {
     public String getSelectionAlgorithm() {
         return selectionAlgorithm;
     }
+
+    /**
+     * @return the start ability value for the assessment
+     */
+    public float getStartAbility() {
+        return startAbility;
+    }
+
 }
