@@ -6,12 +6,6 @@
 #
 #-----------------------------------------------------------------------------------------------------------------------
 
-# Determine the amount of memory available to the container, for use with setting the Xms and Xmx values when starting
-# the jar (in this case setting both values to 80% of free memory).
-freeMem=`awk '/MemFree/ { print int($2/1024) }' /proc/meminfo`
-s=$(($freeMem/10*8))
-x=$(($freeMem/10*8))
-
 java \
     -Dspring.datasource.url="jdbc:mysql://${ASSESSMENT_DB_HOST}:${ASSESSMENT_DB_PORT}/${ASSESSMENT_DB_NAME}" \
     -Dspring.datasource.username="${ASSESSMENT_DB_USER}" \

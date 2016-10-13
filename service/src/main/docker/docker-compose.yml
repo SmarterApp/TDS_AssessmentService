@@ -31,9 +31,4 @@ services:
     image: sbacoss/tds-assessment-service
     ports:
       - "32841:8080"
-    environment:
-      ASSESSMENT_DB_HOST: ${ASSESSMENT_DB_HOST}
-      ASSESSMENT_DB_PORT: ${ASSESSMENT_DB_PORT}
-      ASSESSMENT_DB_NAME: ${ASSESSMENT_DB_NAME}
-      ASSESSMENT_DB_USER: ${ASSESSMENT_DB_USER}
-      ASSESSMENT_DB_PASSWORD: ${ASSESSMENT_DB_PASSWORD}
+    env_file: assessment-service.env
