@@ -3,9 +3,9 @@ package tds.assessment.web.endpoints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +18,7 @@ import tds.common.web.exceptions.NotFoundException;
  */
 @RestController
 @RequestMapping("/assessments/admin-subject")
-public class AdminSubjectController {
+class AdminSubjectController {
     private final AdminSubjectService service;
 
     @Autowired
@@ -33,7 +33,7 @@ public class AdminSubjectController {
      * @return {@link org.springframework.http.ResponseEntity} containing a {@link tds.assessment.SetOfAdminSubject}
      * @throws tds.common.web.exceptions.NotFoundException if entity cannot be found
      */
-    @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<SetOfAdminSubject> findSetOfAdminSubject(@PathVariable final String key) throws NotFoundException {
         final SetOfAdminSubject setOfAdminSubject = service.findSetOfAdminByKey(key)

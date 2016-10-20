@@ -29,24 +29,26 @@ class AdminSubjectQueryRepositoryImpl implements AdminSubjectQueryRepository {
     public Optional<SetOfAdminSubject> findByKey(String adminSubjectKey) {
         SqlParameterSource parameters = new MapSqlParameterSource("key", adminSubjectKey);
 
-        String SQL = "SELECT _key as `key`, \n" +
-            "testid as assessmentId, \n" +
+        String SQL = "SELECT A._key AS adminKey, \n" +
+            "testid AS assessmentId, \n" +
             "issegmented, \n" +
-            "selectionalgorithm as selectionAlgorithm, \n" +
-            "startAbility \n" +
-            "FROM itembank.tblsetofadminsubjects \n" +
-            "WHERE _key = :key";
-
+            "selectionalgorithm AS selectionAlgorithm, \n" +
+            "startAbility, \n" +
+            "S.name \n" +
+            "FROM itembank.tblsetofadminsubjects A \n" +
+            "LEFT JOIN itembank.tblsubject S ON S._key = A._fk_Subject \n" +
+            "WHERE A._key = :key";
 
         Optional<SetOfAdminSubject> maybeSetOfAdminSubject = Optional.empty();
         try {
             SetOfAdminSubject subject = jdbcTemplate.queryForObject(SQL, parameters, (rs, rowNum) ->
                 new SetOfAdminSubject(
-                    rs.getString("key"),
+                    rs.getString("adminKey"),
                     rs.getString("assessmentId"),
                     rs.getBoolean("issegmented"),
                     rs.getString("selectionalgorithm"),
-                    rs.getFloat("startAbility")));
+                    rs.getFloat("startAbility"),
+                    rs.getString("name")));
 
             maybeSetOfAdminSubject = Optional.of(subject);
         } catch (EmptyResultDataAccessException var5) {

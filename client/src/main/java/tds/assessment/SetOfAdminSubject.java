@@ -9,17 +9,28 @@ public class SetOfAdminSubject {
     private boolean segmented;
     private String selectionAlgorithm;
     private float startAbility;
+    private String subjectName;
 
     public SetOfAdminSubject(String key,
                              String assessmentId,
                              boolean segmented,
                              String selectionAlgorithm,
                              float startAbility) {
+        this(key, assessmentId, segmented, selectionAlgorithm, startAbility, null);
+    }
+
+    public SetOfAdminSubject(String key,
+                             String assessmentId,
+                             boolean segmented,
+                             String selectionAlgorithm,
+                             float startAbility,
+                             String subjectName) {
         this.key = key;
         this.assessmentId = assessmentId;
         this.segmented = segmented;
         this.selectionAlgorithm = selectionAlgorithm;
         this.startAbility = startAbility;
+        this.subjectName = subjectName;
     }
 
     /**
@@ -57,4 +68,10 @@ public class SetOfAdminSubject {
         return startAbility;
     }
 
+    /**
+     * @return the subject name - this can be null
+     */
+    public String getSubjectName() {
+        return subjectName;
+    }
 }

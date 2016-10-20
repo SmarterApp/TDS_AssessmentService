@@ -32,7 +32,7 @@ public class AdminSubjectControllerIntegrationTests {
 
     @Test
     public void shouldReturnSetOfAdminSubjectByKey() throws Exception {
-        SetOfAdminSubject subject = new SetOfAdminSubject("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", true, "virtual", 50F);
+        SetOfAdminSubject subject = new SetOfAdminSubject("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", true, "virtual", 50F, "ELA");
         when(adminSubjectService.findSetOfAdminByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(subject));
 
         http.perform(get(new URI("/assessments/admin-subject/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
@@ -41,6 +41,7 @@ public class AdminSubjectControllerIntegrationTests {
             .andExpect(jsonPath("key", is("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")))
             .andExpect(jsonPath("assessmentId", is("IRP-Perf-ELA-11")))
             .andExpect(jsonPath("segmented", is(true)))
+            .andExpect(jsonPath("subjectName", is("ELA")))
             .andExpect(jsonPath("selectionAlgorithm", is("virtual")));
     }
 
