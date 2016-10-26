@@ -10,10 +10,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Optional;
 
-import tds.assessment.SetOfAdminSubject;
-import tds.assessment.services.AdminSubjectService;
+import tds.assessment.Assessment;
+import tds.assessment.services.AssessmentService;
 import tds.common.web.exceptions.NotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,9 +22,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class AdminSubjectControllerTest {
-    private AdminSubjectController controller;
-    private AdminSubjectService service;
+public class AssessmentControllerTest {
+    private AssessmentController controller;
+    private AssessmentService service;
 
     @Before
     public void setUp() {
@@ -31,8 +32,8 @@ public class AdminSubjectControllerTest {
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(requestAttributes);
 
-        service = mock(AdminSubjectService.class);
-        controller = new AdminSubjectController(service);
+        service = mock(AssessmentService.class);
+        controller = new AssessmentController(service);
     }
 
     @After
@@ -40,12 +41,12 @@ public class AdminSubjectControllerTest {
     }
 
     @Test
-    public void shouldFindAdminSubjectByKey() {
-        SetOfAdminSubject subject = new SetOfAdminSubject("theKey", "assessment", false, "alg", 50F);
+    public void shouldFindAssessmentByKey() {
+        Assessment subject = new Assessment("theKey", "assessment", new ArrayList<>(), "alg", 50F);
 
-        when(service.findSetOfAdminByKey("theKey")).thenReturn(Optional.of(subject));
-        ResponseEntity<SetOfAdminSubject> response = controller.findSetOfAdminSubject("theKey");
-        verify(service).findSetOfAdminByKey("theKey");
+        when(service.findAssessmentByKey("theKey")).thenReturn(Optional.of(subject));
+        ResponseEntity<Assessment> response = controller.findAssessment("theKey");
+        verify(service).findAssessmentByKey("theKey");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getKey()).isEqualTo("theKey");
@@ -53,7 +54,7 @@ public class AdminSubjectControllerTest {
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowSubjectByKeyCannotBeFound() {
-        when(service.findSetOfAdminByKey("theKey")).thenReturn(Optional.empty());
-        controller.findSetOfAdminSubject("theKey");
+        when(service.findAssessmentByKey("theKey")).thenReturn(Optional.empty());
+        controller.findAssessment("theKey");
     }
 }

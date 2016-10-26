@@ -1,40 +1,50 @@
 package tds.assessment;
 
+import java.util.List;
+
 /**
- * Represents admin information concerning an assessment
+ * Represents admin information concerning an assessment and its individual segments (if any)
  */
-public class SetOfAdminSubject {
+public class Assessment {
     private String key;
     private String assessmentId;
-    private boolean segmented;
     private String selectionAlgorithm;
     private float startAbility;
     private String subjectName;
+    private List<Segment> segments;
 
-    public SetOfAdminSubject(String key,
-                             String assessmentId,
-                             boolean segmented,
-                             String selectionAlgorithm,
-                             float startAbility) {
-        this(key, assessmentId, segmented, selectionAlgorithm, startAbility, null);
+    public Assessment(String key,
+                      String assessmentId,
+                      List<Segment> segments,
+                      String selectionAlgorithm,
+                      float startAbility) {
+        this(key, assessmentId, segments, selectionAlgorithm, startAbility, null);
     }
 
-    public SetOfAdminSubject(String key,
-                             String assessmentId,
-                             boolean segmented,
-                             String selectionAlgorithm,
-                             float startAbility,
-                             String subjectName) {
+    public Assessment(String key,
+                      String assessmentId,
+                      List<Segment> segments,
+                      String selectionAlgorithm,
+                      float startAbility,
+                      String subjectName) {
         this.key = key;
         this.assessmentId = assessmentId;
-        this.segmented = segmented;
+        this.segments = segments;
         this.selectionAlgorithm = selectionAlgorithm;
         this.startAbility = startAbility;
         this.subjectName = subjectName;
     }
 
     /**
-     * @return key to the admin subject
+     * A collection of {@link Segment}s for this assessment
+     * @return
+     */
+    public List<Segment> getSegments() {
+        return segments;
+    }
+
+    /**
+     * @return key to the assessment
      */
     public String getKey() {
         return key;
@@ -51,7 +61,7 @@ public class SetOfAdminSubject {
      * @return {@code true} if the assessment is segmented
      */
     public boolean isSegmented() {
-        return segmented;
+        return segments.size() > 1;
     }
 
     /**
