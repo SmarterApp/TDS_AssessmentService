@@ -17,7 +17,7 @@ import tds.common.web.exceptions.NotFoundException;
  * Controller handling admin subject related entities
  */
 @RestController
-@RequestMapping("/assessments/assessment")
+@RequestMapping("/assessments")
 class AssessmentController {
     private final AssessmentService service;
 

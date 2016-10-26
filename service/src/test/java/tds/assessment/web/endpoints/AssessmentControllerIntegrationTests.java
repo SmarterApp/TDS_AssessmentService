@@ -38,7 +38,7 @@ public class AssessmentControllerIntegrationTests {
         Assessment assessment = new Assessment("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", new ArrayList<>(), "virtual", 50F, "ELA");
         when(assessmentSegmentService.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
-        http.perform(get(new URI("/assessments/assessment/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
+        http.perform(get(new URI("/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("key", is("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")))
@@ -72,13 +72,25 @@ public class AssessmentControllerIntegrationTests {
         Assessment assessment = new Assessment("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", segments, "virtual", 50F, "ELA");
         when(assessmentSegmentService.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
-        http.perform(get(new URI("/assessments/assessment/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
+        http.perform(get(new URI("/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("key", is("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")))
                 .andExpect(jsonPath("assessmentId", is("IRP-Perf-ELA-11")))
                 .andExpect(jsonPath("subjectName", is("ELA")))
-                .andExpect(jsonPath("selectionAlgorithm", is("virtual")));
+                .andExpect(jsonPath("selectionAlgorithm", is("virtual")))
+                .andExpect(jsonPath("segments[0].key", is("(SBAC_PT)SBAC-SEG1-MATH-11-Summer-2015-2016")))
+                .andExpect(jsonPath("segments[0].segmentId", is("SBAC-SEG1-MATH-11")))
+                .andExpect(jsonPath("segments[0].selectionAlgorithm", is("fixedform")))
+                .andExpect(jsonPath("segments[0].startAbility", is(0.0)))
+                .andExpect(jsonPath("segments[0].assessmentKey", is("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016")))
+                .andExpect(jsonPath("segments[0].subjectName", is("ELA")))
+                .andExpect(jsonPath("segments[1].key", is("(SBAC_PT)SBAC-SEG2-MATH-11-Summer-2015-2016")))
+                .andExpect(jsonPath("segments[1].segmentId", is("SBAC-SEG2-MATH-11")))
+                .andExpect(jsonPath("segments[1].selectionAlgorithm", is("fixedform")))
+                .andExpect(jsonPath("segments[1].startAbility", is(0.0)))
+                .andExpect(jsonPath("segments[1].assessmentKey", is("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016")))
+                .andExpect(jsonPath("segments[1].subjectName", is("ELA")));
     }
 
     @Test

@@ -76,6 +76,14 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(maybeAssessment.get().getStartAbility()).isEqualTo(0F);
         assertThat(maybeAssessment.get().getSubjectName()).isEqualTo("ELA");
         assertThat(maybeAssessment.get().isSegmented()).isFalse();
+        assertThat(maybeAssessment.get().getSegments().size()).isEqualTo(1);
+        Segment seg = maybeAssessment.get().getSegments().get(0);
+        assertThat(seg.getSegmentId()).isEqualTo(maybeAssessment.get().getAssessmentId());
+        assertThat(seg.getKey()).isEqualTo(maybeAssessment.get().getKey());
+        assertThat(seg.getStartAbility()).isEqualTo(maybeAssessment.get().getStartAbility());
+        assertThat(seg.getAssessmentKey()).isEqualTo(maybeAssessment.get().getKey());
+        assertThat(seg.getSubjectName()).isEqualTo(maybeAssessment.get().getSubjectName());
+        assertThat(seg.getSelectionAlgorithm()).isEqualTo(maybeAssessment.get().getSelectionAlgorithm());
     }
 
     @Test

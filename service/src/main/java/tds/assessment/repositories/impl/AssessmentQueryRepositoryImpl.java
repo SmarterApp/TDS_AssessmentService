@@ -37,7 +37,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "testid AS assessmentSegmentId, \n" +
                 "selectionalgorithm AS selectionAlgorithm, \n" +
                 "startAbility, \n" +
-                "S.name, \n" +
+                "S.name AS subject, \n" +
                 "A.virtualtest AS assessmentKey\n" +
             "FROM itembank.tblsetofadminsubjects A \n" +
             "LEFT JOIN itembank.tblsubject S ON S._key = A._fk_Subject \n" +
@@ -46,27 +46,39 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
 
 
         List<Map<String,Object>> rows = jdbcTemplate.queryForList(SQL, parameters);
-        Assessment assessment = null;
-        List<Segment> segments = new ArrayList<>();
-        Optional<Assessment> maybeAssessment;
+        Optional<Assessment> maybeAssessment = Optional.empty();
 
         if (rows.isEmpty()) {
             logger.debug("Did not findAssessmentByKey a result for assessment from tblsetofadminsubjects for %s", assessmentKey);
-            maybeAssessment = Optional.empty();
         } else {
-            /*
-                The last row is the assessment row because we are ordering by `assessmentKey`.
-                `assessmentKey`/virtualtest is null for the assessment row (which is last).
-             */
+            /*  The last row is the assessment row because we are ordering by `assessmentKey`.
+                `assessmentKey`/virtualtest is null for the assessment row (which is last). */
+            List<Segment> segments = new ArrayList<>();
+            Assessment assessment = null;
             for (Map<String, Object> row : rows) {
                 if (row.get("assessmentKey") == null) { // This is the assessment row
+
+                    /* if this is non-segmented (actually a single-segment assessment),
+                       set the segment properties equal to the assessment */
+                    if (segments.isEmpty()) {
+                        segments.add(
+                                new Segment(
+                                    (String) row.get("assessmentSegmentKey"),
+                                    (String) row.get("assessmentSegmentId"),
+                                    (String) row.get("selectionalgorithm"),
+                                    (float) row.get("startAbility"),
+                                    (String) row.get("assessmentSegmentKey"), // Intentionally the same as "segmentKey"
+                                    (String) row.get("subject")
+                                ));
+                    }
+
                     assessment = new Assessment(
                             (String) row.get("assessmentSegmentKey"),
                             (String) row.get("assessmentSegmentId"),
                             segments,
                             (String) row.get("selectionalgorithm"),
                             (float) row.get("startAbility"),
-                            (String) row.get("name"));
+                            (String) row.get("subject"));
                 } else {  // This is a segment row
                     segments.add(
                             new Segment(
@@ -75,12 +87,14 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                                     (String) row.get("selectionalgorithm"),
                                     (float) row.get("startAbility"),
                                     (String) row.get("assessmentKey"),
-                                    (String) row.get("name"))
+                                    (String) row.get("subject"))
                     );
                 }
             }
 
-            maybeAssessment = Optional.of(assessment);
+            if (assessment != null) {
+                maybeAssessment = Optional.of(assessment);
+            }
         }
 
         return maybeAssessment;

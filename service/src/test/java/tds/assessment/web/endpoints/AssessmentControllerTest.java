@@ -3,6 +3,9 @@ package tds.assessment.web.endpoints;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -18,12 +21,13 @@ import tds.assessment.services.AssessmentService;
 import tds.common.web.exceptions.NotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AssessmentControllerTest {
     private AssessmentController controller;
+    @Mock
     private AssessmentService service;
 
     @Before
@@ -32,7 +36,6 @@ public class AssessmentControllerTest {
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(requestAttributes);
 
-        service = mock(AssessmentService.class);
         controller = new AssessmentController(service);
     }
 

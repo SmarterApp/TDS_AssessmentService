@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class Assessment {
                       String subjectName) {
         this.key = key;
         this.assessmentId = assessmentId;
-        this.segments = segments;
+        this.segments = Collections.unmodifiableList(segments);
         this.selectionAlgorithm = selectionAlgorithm;
         this.startAbility = startAbility;
         this.subjectName = subjectName;
