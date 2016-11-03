@@ -1,9 +1,8 @@
 package tds.assessment.repositories;
 
-import tds.assessment.Assessment;
-import tds.assessment.Segment;
-
 import java.util.Optional;
+
+import tds.assessment.Assessment;
 
 /**
  * Queries for admin subject related entities

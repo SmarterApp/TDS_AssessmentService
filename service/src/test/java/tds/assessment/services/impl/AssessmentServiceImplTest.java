@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
@@ -31,7 +30,7 @@ public class AssessmentServiceImplTest {
 
     @Test
     public void shouldReturnAssessment() {
-        Assessment assessment = new Assessment("theKey", "assessment", new ArrayList<>(), "dynamic", 50F);
+        Assessment assessment = new Assessment.Builder().withKey("theKey").build();
 
         when(queryRepository.findAssessmentByKey("theKey")).thenReturn(Optional.of(assessment));
         Optional<Assessment> maybeAssessment = service.findAssessmentByKey("theKey");

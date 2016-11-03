@@ -10,29 +10,18 @@ public class Segment {
     private String segmentId;
     private String selectionAlgorithm;
     private float startAbility;
-    private String subjectName;
+    private String subject;
     private String assessmentKey;
+    private List<Property> languages;
 
-    public Segment(String key,
-                      String segmentId,
-                      String selectionAlgorithm,
-                      float startAbility,
-                      String assessmentKey) {
-        this(key, segmentId, selectionAlgorithm, startAbility, assessmentKey, null);
-    }
-
-    public Segment(String key,
-                      String segmentId,
-                      String selectionAlgorithm,
-                      float startAbility,
-                      String assessmentKey,
-                      String subjectName) {
-        this.key = key;
-        this.segmentId = segmentId;
-        this.selectionAlgorithm = selectionAlgorithm;
-        this.startAbility = startAbility;
-        this.assessmentKey = assessmentKey;
-        this.subjectName = subjectName;
+    private Segment(Builder builder) {
+        key = builder.key;
+        segmentId = builder.segmentId;
+        selectionAlgorithm = builder.selectionAlgorithm;
+        startAbility = builder.startAbility;
+        subject = builder.subject;
+        assessmentKey = builder.assessmentKey;
+        languages = builder.languages;
     }
 
     /**
@@ -73,7 +62,62 @@ public class Segment {
     /**
      * @return the subject name - this can be null
      */
-    public String getSubjectName() {
-        return subjectName;
+    public String getSubject() {
+        return subject;
+    }
+
+    /**
+     * @return languages associated with the segment
+     */
+    public List<Property> getLanguages() {
+        return languages;
+    }
+
+    public static class Builder {
+        private String key;
+        private String segmentId;
+        private String selectionAlgorithm;
+        private float startAbility;
+        private String subject;
+        private String assessmentKey;
+        private List<Property> languages;
+
+        public Builder(String key) {
+            this.key = key;
+        }
+
+        public Builder withSegmentId(String segmentId) {
+            this.segmentId = segmentId;
+            return this;
+        }
+
+        public Builder withSelectionAlgorithm(String selectionAlgorithm) {
+            this.selectionAlgorithm = selectionAlgorithm;
+            return this;
+        }
+
+        public Builder withStartAbility(float ability) {
+            this.startAbility = ability;
+            return this;
+        }
+
+        public Builder withSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public Builder withAssessmentKey(String assessmentKey) {
+            this.assessmentKey = assessmentKey;
+            return this;
+        }
+
+        public Builder withLanguages(List<Property> languages) {
+            this.languages = languages;
+            return this;
+        }
+
+        public Segment build() {
+            return new Segment(this);
+        }
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
@@ -45,7 +44,9 @@ public class AssessmentControllerTest {
 
     @Test
     public void shouldFindAssessmentByKey() {
-        Assessment subject = new Assessment("theKey", "assessment", new ArrayList<>(), "alg", 50F);
+        Assessment subject = new Assessment.Builder()
+            .withKey("theKey")
+            .build();
 
         when(service.findAssessmentByKey("theKey")).thenReturn(Optional.of(subject));
         ResponseEntity<Assessment> response = controller.findAssessment("theKey");

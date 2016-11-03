@@ -1,6 +1,6 @@
 package tds.assessment;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,34 +11,13 @@ public class Assessment {
     private String assessmentId;
     private String selectionAlgorithm;
     private float startAbility;
-    private String subjectName;
-    private List<Segment> segments;
+    private String subject;
+    private List<Segment> segments = new ArrayList<>();
 
-    public Assessment(String key,
-                      String assessmentId,
-                      List<Segment> segments,
-                      String selectionAlgorithm,
-                      float startAbility) {
-        this(key, assessmentId, segments, selectionAlgorithm, startAbility, null);
-    }
-
-    public Assessment(String key,
-                      String assessmentId,
-                      List<Segment> segments,
-                      String selectionAlgorithm,
-                      float startAbility,
-                      String subjectName) {
-        this.key = key;
-        this.assessmentId = assessmentId;
-        this.segments = Collections.unmodifiableList(segments);
-        this.selectionAlgorithm = selectionAlgorithm;
-        this.startAbility = startAbility;
-        this.subjectName = subjectName;
-    }
+    private Assessment() {}
 
     /**
-     * A collection of {@link Segment}s for this assessment
-     * @return
+     * @return  A collection of {@link Segment}s for this assessment
      */
     public List<Segment> getSegments() {
         return segments;
@@ -82,7 +61,57 @@ public class Assessment {
     /**
      * @return the subject name - this can be null
      */
-    public String getSubjectName() {
-        return subjectName;
+    public String getSubject() {
+        return subject;
+    }
+
+    public static final class Builder {
+        private String key;
+        private String assessmentId;
+        private String selectionAlgorithm;
+        private float startAbility;
+        private String subject;
+        private List<Segment> segments = new ArrayList<>();
+
+        public Builder withKey(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public Builder withAssessmentId(String assessmentId) {
+            this.assessmentId = assessmentId;
+            return this;
+        }
+
+        public Builder withSelectionAlgorithm(String selectionAlgorithm) {
+            this.selectionAlgorithm = selectionAlgorithm;
+            return this;
+        }
+
+        public Builder withStartAbility(float startAbility) {
+            this.startAbility = startAbility;
+            return this;
+        }
+
+        public Builder withSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public Builder withSegments(List<Segment> segments) {
+            this.segments = segments;
+            return this;
+        }
+
+        public Assessment build() {
+            Assessment assessment = new Assessment();
+            assessment.assessmentId = this.assessmentId;
+            assessment.selectionAlgorithm = this.selectionAlgorithm;
+            assessment.startAbility = this.startAbility;
+            assessment.key = this.key;
+            assessment.subject = this.subject;
+            assessment.segments = this.segments;
+            return assessment;
+        }
     }
 }
