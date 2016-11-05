@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.assessment.Form;
 import tds.assessment.repositories.AssessmentQueryRepository;
 
 @Repository
@@ -37,6 +38,9 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "testid AS assessmentSegmentId, \n" +
                 "selectionalgorithm AS selectionAlgorithm, \n" +
                 "startAbility, \n" +
+                "A.testposition AS segmentPosition, \n" +
+                "A.minItems, \n" +
+                "A.maxItems, \n" +
                 "S.name AS subject, \n" +
                 "A.virtualtest AS assessmentKey, \n" +
                 "P.propname, \n" +
@@ -55,9 +59,38 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         if (rows.isEmpty()) {
             logger.debug("Did not findAssessmentByKey a result for assessment from tblsetofadminsubjects for %s", assessmentKey);
         } else {
-            maybeAssessment = assessmentMapper.mapResults(rows);
+            List<Form> forms = findFormsForAssessment(parameters);
+            maybeAssessment = assessmentMapper.mapResults(rows, forms);
         }
 
         return maybeAssessment;
+    }
+
+    private List<Form> findFormsForAssessment(SqlParameterSource parameters) {
+        final String formsSQL =
+                "SELECT \n" +
+                        "    segments._key AS segmentKey, \n" +
+                        "    forms._key AS `key`, \n" +
+                        "    forms.formid AS id, \n" +
+                        "    forms.language, \n" +
+                        "    forms.loadconfig AS loadVersion, \n" +
+                        "    forms.updateconfig AS updateVersion, \n" +
+                        "    forms.cohort \n" +
+                        "FROM itembank.tblsetofadminsubjects segments \n" +
+                        "LEFT JOIN itembank.testform forms ON segments._key = forms._fk_adminsubject \n" +
+                        "WHERE segments.virtualtest = :key OR segments._key = :key";
+
+
+        return jdbcTemplate.query(formsSQL, parameters, (rs, row) ->
+                new Form.Builder(rs.getString("key"))
+                        .withSegmentKey(rs.getString("segmentKey"))
+                        .withId(rs.getString("id"))
+                        .withLanguage(rs.getString("language"))
+                        .withCohort(rs.getString("cohort"))
+                        // calling getObject() and casting to Double because .getLong() defaults to 0 if null
+                        .withLoadVersion((Long) rs.getObject("loadVersion"))
+                        .withUpdateVersion((Long) rs.getObject("updateVersion"))
+                        .build()
+        );
     }
 }
