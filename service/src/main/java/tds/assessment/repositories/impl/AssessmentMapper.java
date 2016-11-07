@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import tds.assessment.Assessment;
+import tds.assessment.Form;
 import tds.assessment.Property;
 import tds.assessment.Segment;
 
@@ -22,7 +23,7 @@ class AssessmentMapper {
      * @param rows
      * @return
      */
-    Optional<Assessment> mapResults(List<Map<String, Object>> rows) {
+    Optional<Assessment> mapResults(List<Map<String, Object>> rows, List<Form> forms) {
         Map<String, SegmentInformationHolder> segments = new LinkedHashMap<>();
         Map<String, Object> assessmentRow = null;
         for (Map<String, Object> row : rows) {
@@ -36,14 +37,20 @@ class AssessmentMapper {
                 }
 
                 SegmentInformationHolder holder = segments.get(key);
+                String segmentKey = (String) row.get("assessmentSegmentKey");
 
                 //If holder is null this is the first record for this segment
-                Segment.Builder segment = new Segment.Builder((String) row.get("assessmentSegmentKey"))
+                Segment.Builder segment = new Segment.Builder(segmentKey)
                     .withSegmentId((String) row.get("assessmentSegmentId"))
                     .withAssessmentKey((String) row.get("assessmentKey"))
                     .withSelectionAlgorithm((String) row.get("selectionalgorithm"))
+                    .withMinItems((int) row.get("minItems"))
+                    .withMaxItems((int) row.get("maxItems"))
                     .withStartAbility((float) row.get("startAbility"))
-                    .withSubject((String) row.get("subject"));
+                    .withPosition((Integer) row.get("segmentPosition"))
+                    .withSubject((String) row.get("subject"))
+                    .withForms(forms.stream()
+                        .filter(form -> form.getSegmentKey().equals(segmentKey)).collect(Collectors.toList()));
 
                 holder.setSegment(segment);
 
@@ -73,7 +80,11 @@ class AssessmentMapper {
                 .withSelectionAlgorithm((String) assessmentRow.get("selectionalgorithm"))
                 .withStartAbility((float) assessmentRow.get("startAbility"))
                 .withAssessmentKey((String) assessmentRow.get("assessmentSegmentKey"))
-                .withSubject((String) assessmentRow.get("subject"));
+                .withPosition(1)
+                .withMinItems((int) assessmentRow.get("minItems"))
+                .withMaxItems((int) assessmentRow.get("maxItems"))
+                .withSubject((String) assessmentRow.get("subject"))
+                .withForms(forms);
 
             if (assessmentRow.containsKey("propname")) {
                 Property language = new Property(

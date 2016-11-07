@@ -12,7 +12,11 @@ public class Segment {
     private float startAbility;
     private String subject;
     private String assessmentKey;
+    private int position;
+    private int minItems;
+    private int maxItems;
     private List<Property> languages;
+    private List<Form> forms;
 
     private Segment(Builder builder) {
         key = builder.key;
@@ -21,7 +25,11 @@ public class Segment {
         startAbility = builder.startAbility;
         subject = builder.subject;
         assessmentKey = builder.assessmentKey;
+        position = builder.position;
+        minItems = builder.minItems;
+        maxItems = builder.maxItems;
         languages = builder.languages;
+        forms = builder.forms;
     }
 
     /**
@@ -73,6 +81,34 @@ public class Segment {
         return languages;
     }
 
+    /**
+     * @return the position of the segment in the {@link Assessment}
+     */
+    public int getPosition() {
+        return position;
+    }
+
+    /**
+     * @return the minimum number of items in the {@link Segment}
+     */
+    public int getMinItems() {
+        return minItems;
+    }
+
+    /**
+     * @return the minimum number of items in the {@link Segment}
+     */
+    public int getMaxItems() {
+        return maxItems;
+    }
+
+    /**
+     * @return return the forms that are a part of this assessment's {@link tds.assessment.Segment}
+     */
+    public List<Form> getForms() {
+        return forms;
+    }
+
     public static class Builder {
         private String key;
         private String segmentId;
@@ -80,7 +116,11 @@ public class Segment {
         private float startAbility;
         private String subject;
         private String assessmentKey;
+        private int position;
+        private int minItems;
+        private int maxItems;
         private List<Property> languages;
+        private List<Form> forms;
 
         public Builder(String key) {
             this.key = key;
@@ -113,6 +153,26 @@ public class Segment {
 
         public Builder withLanguages(List<Property> languages) {
             this.languages = languages;
+            return this;
+        }
+
+        public Builder withPosition(int position) {
+            this.position = position;
+            return this;
+        }
+
+        public Builder withMinItems(int minItems) {
+            this.minItems = minItems;
+            return this;
+        }
+
+        public Builder withMaxItems(int maxItems) {
+            this.maxItems = maxItems;
+            return this;
+        }
+
+        public Builder withForms(List<Form> forms) {
+            this.forms = forms;
             return this;
         }
 
