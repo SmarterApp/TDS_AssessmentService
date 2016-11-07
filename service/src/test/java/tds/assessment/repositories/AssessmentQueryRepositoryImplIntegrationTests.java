@@ -119,20 +119,10 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(seg.getSelectionAlgorithm()).isEqualTo(maybeAssessment.get().getSelectionAlgorithm());
 
         Form form1 = null;
-        Form form2 = null;
-        Form form3 = null;
 
         for(Form form : seg.getForms()) {
-            switch (form.getKey()) {
-                case "187-510":
-                    form1 = form;
-                    break;
-                case "187-511":
-                    form2 = form;
-                    break;
-                case "187-512":
-                    form3 = form;
-                    break;
+            if (form.getKey().equals("187-510")) {
+                form1 = form;
             }
         }
         assertThat(seg.getForms()).hasSize(3);
@@ -143,20 +133,6 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(form1.getLoadVersion()).isEqualTo(8233L);
         assertThat(form1.getUpdateVersion()).isNull();
         assertThat(form1.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(form2.getKey()).isEqualTo("187-511");
-        assertThat(form2.getCohort()).isEqualTo("Default");
-        assertThat(form2.getId()).isEqualTo("PracTest::MG4::S1::SP14::Braille");
-        assertThat(form2.getLanguage()).isEqualTo("ENU-Braille");
-        assertThat(form2.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form2.getUpdateVersion()).isNull();
-        assertThat(form2.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(form3.getKey()).isEqualTo("187-512");
-        assertThat(form3.getCohort()).isEqualTo("Default");
-        assertThat(form3.getId()).isEqualTo("PracTest::MG4::S1::SP14::ESN");
-        assertThat(form3.getLanguage()).isEqualTo("ESN");
-        assertThat(form3.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form3.getUpdateVersion()).isNull();
-        assertThat(form3.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
     }
 
     @Test
@@ -217,30 +193,13 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         allSegments.addAll(formsSeg2);
         Form form1 = null;
         Form form2 = null;
-        Form form3 = null;
-        Form form4 = null;
-        Form form5 = null;
-        Form form6 = null;
-
         for(Form form : allSegments) {
             switch (form.getKey()) {
                 case "187-528":
                     form1 = form;
                     break;
-                case "187-529":
-                    form2 = form;
-                    break;
-                case "187-530":
-                    form3 = form;
-                    break;
                 case "187-531":
-                    form4 = form;
-                    break;
-                case "187-532":
-                    form5 = form;
-                    break;
-                case "187-533":
-                    form6 = form;
+                    form2 = form;
                     break;
             }
         }
@@ -252,41 +211,13 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(form1.getLoadVersion()).isEqualTo(8233L);
         assertThat(form1.getUpdateVersion()).isEqualTo(8234L);
         assertThat(form1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(form2.getKey()).isEqualTo("187-529");
+        assertThat(form2.getKey()).isEqualTo("187-531");
         assertThat(form2.getCohort()).isEqualTo("Default");
-        assertThat(form2.getId()).isEqualTo("PracTest::MG8::S1::SP14::Braille");
-        assertThat(form2.getLanguage()).isEqualTo("ENU-Braille");
+        assertThat(form2.getId()).isEqualTo("PracTest::MG8::S2::SP14");
+        assertThat(form2.getLanguage()).isEqualTo("ENU");
         assertThat(form2.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form2.getUpdateVersion()).isEqualTo(8234L);
-        assertThat(form2.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(form3.getKey()).isEqualTo("187-530");
-        assertThat(form3.getCohort()).isEqualTo("Default");
-        assertThat(form3.getId()).isEqualTo("PracTest::MG8::S1::SP14::ESN");
-        assertThat(form3.getLanguage()).isEqualTo("ESN");
-        assertThat(form3.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form3.getUpdateVersion()).isEqualTo(8234L);
-        assertThat(form3.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(form4.getKey()).isEqualTo("187-531");
-        assertThat(form4.getCohort()).isEqualTo("Default");
-        assertThat(form4.getId()).isEqualTo("PracTest::MG8::S2::SP14");
-        assertThat(form4.getLanguage()).isEqualTo("ENU");
-        assertThat(form4.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form4.getUpdateVersion()).isNull();
-        assertThat(form4.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
-        assertThat(form5.getKey()).isEqualTo("187-532");
-        assertThat(form5.getCohort()).isEqualTo("Default");
-        assertThat(form5.getId()).isEqualTo("PracTest::MG8::S2::SP14::Braille");
-        assertThat(form5.getLanguage()).isEqualTo("ENU-Braille");
-        assertThat(form5.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form5.getUpdateVersion()).isNull();
-        assertThat(form5.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
-        assertThat(form6.getKey()).isEqualTo("187-533");
-        assertThat(form6.getCohort()).isEqualTo("Default");
-        assertThat(form6.getId()).isEqualTo("PracTest::MG8::S2::SP14::ESN");
-        assertThat(form6.getLanguage()).isEqualTo("ESN");
-        assertThat(form6.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form6.getUpdateVersion()).isNull();
-        assertThat(form6.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+        assertThat(form2.getUpdateVersion()).isNull();
+        assertThat(form2.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
     }
 
 }

@@ -77,7 +77,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                         "    forms.updateconfig AS updateVersion, \n" +
                         "    forms.cohort \n" +
                         "FROM itembank.tblsetofadminsubjects segments \n" +
-                        "LEFT JOIN itembank.testform forms ON segments._key = forms._fk_adminsubject \n" +
+                        "JOIN itembank.testform forms ON segments._key = forms._fk_adminsubject \n" +
                         "WHERE segments.virtualtest = :key OR segments._key = :key";
 
 
