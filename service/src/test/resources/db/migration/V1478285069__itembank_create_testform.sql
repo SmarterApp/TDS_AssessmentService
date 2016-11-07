@@ -7,7 +7,7 @@
 
 use itembank;
 
-DROP TABLE IF EXISTS tblitemprops;
+DROP TABLE IF EXISTS testform;
 
 CREATE TABLE `testform` (
   `_fk_adminsubject` varchar(250) NOT NULL,
