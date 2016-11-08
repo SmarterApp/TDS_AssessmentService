@@ -8,15 +8,30 @@ public class Property {
     private String value;
     private String description;
 
+    /**
+     * @param name        property name
+     * @param value       property value
+     * @param description description of the property
+     */
     public Property(String name, String value, String description) {
         this.name = name;
         this.value = value;
         this.description = description;
     }
 
+    /**
+     * @param name  property name
+     * @param value property value
+     */
     public Property(String name, String value) {
         this.name = name;
         this.value = value;
+    }
+
+    /**
+     * Private constructor for frameworks
+     */
+    private Property() {
     }
 
     /**

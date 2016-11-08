@@ -33,6 +33,11 @@ public class Segment {
     }
 
     /**
+     * Empty constructor for frameworks
+     */
+    private Segment() {}
+
+    /**
      * @return key to the segment
      */
     public String getKey() {
