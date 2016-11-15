@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 
 import tds.assessment.Assessment;
 import tds.assessment.Form;
-import tds.assessment.Property;
+import tds.assessment.Item;
+import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
 
 /**
@@ -23,7 +24,7 @@ class AssessmentMapper {
      * @param rows
      * @return
      */
-    Optional<Assessment> mapResults(List<Map<String, Object>> rows, List<Form> forms) {
+    Optional<Assessment> mapResults(List<Map<String, Object>> rows, List<Form> forms, List<Item> items) {
         Map<String, SegmentInformationHolder> segments = new LinkedHashMap<>();
         Map<String, Object> assessmentRow = null;
         for (Map<String, Object> row : rows) {
@@ -50,13 +51,15 @@ class AssessmentMapper {
                     .withPosition((Integer) row.get("segmentPosition"))
                     .withSubject((String) row.get("subject"))
                     .withForms(forms.stream()
-                        .filter(form -> form.getSegmentKey().equals(segmentKey)).collect(Collectors.toList()));
+                        .filter(form -> form.getSegmentKey().equals(segmentKey)).collect(Collectors.toList()))
+                    .withItems(items.stream()
+                        .filter(item -> item.getSegmentKey().equals(segmentKey)).collect(Collectors.toList()));
 
                 holder.setSegment(segment);
 
                 //Add the language
                 if (row.containsKey("propname")) {
-                    Property language = new Property(
+                    ItemProperty language = new ItemProperty(
                         (String) row.get("propname"),
                         (String) row.get("propvalue"),
                         (String) row.get("propdescription")
@@ -84,10 +87,11 @@ class AssessmentMapper {
                 .withMinItems((int) assessmentRow.get("minItems"))
                 .withMaxItems((int) assessmentRow.get("maxItems"))
                 .withSubject((String) assessmentRow.get("subject"))
-                .withForms(forms);
+                .withForms(forms)
+                .withItems(items);
 
             if (assessmentRow.containsKey("propname")) {
-                Property language = new Property(
+                ItemProperty language = new ItemProperty(
                     (String) assessmentRow.get("propname"),
                     (String) assessmentRow.get("propvalue"),
                     (String) assessmentRow.get("propdescription")
@@ -118,9 +122,9 @@ class AssessmentMapper {
 
     private class SegmentInformationHolder {
         private Segment.Builder segment;
-        private List<Property> languages = new ArrayList<>();
+        private List<ItemProperty> languages = new ArrayList<>();
 
-        List<Property> getLanguages() {
+        List<ItemProperty> getLanguages() {
             return languages;
         }
 

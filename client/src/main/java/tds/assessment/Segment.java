@@ -15,8 +15,9 @@ public class Segment {
     private int position;
     private int minItems;
     private int maxItems;
-    private List<Property> languages;
+    private List<ItemProperty> languages;
     private List<Form> forms;
+    private List<Item> items;
 
     private Segment(Builder builder) {
         key = builder.key;
@@ -30,6 +31,7 @@ public class Segment {
         maxItems = builder.maxItems;
         languages = builder.languages;
         forms = builder.forms;
+        items = builder.items;
     }
 
     /**
@@ -77,7 +79,7 @@ public class Segment {
     /**
      * @return languages associated with the segment
      */
-    public List<Property> getLanguages() {
+    public List<ItemProperty> getLanguages() {
         return languages;
     }
 
@@ -109,6 +111,13 @@ public class Segment {
         return forms;
     }
 
+    /**
+     * @return return the items that a part of this assessment's {@link tds.assessment.Segment}
+     */
+    public List<Item> getItems() {
+        return items;
+    }
+
     public static class Builder {
         private String key;
         private String segmentId;
@@ -119,8 +128,9 @@ public class Segment {
         private int position;
         private int minItems;
         private int maxItems;
-        private List<Property> languages;
+        private List<ItemProperty> languages;
         private List<Form> forms;
+        private List<Item> items;
 
         public Builder(String key) {
             this.key = key;
@@ -151,7 +161,7 @@ public class Segment {
             return this;
         }
 
-        public Builder withLanguages(List<Property> languages) {
+        public Builder withLanguages(List<ItemProperty> languages) {
             this.languages = languages;
             return this;
         }
@@ -173,6 +183,11 @@ public class Segment {
 
         public Builder withForms(List<Form> forms) {
             this.forms = forms;
+            return this;
+        }
+
+        public Builder withItems(List<Item> items) {
+            this.items = items;
             return this;
         }
 

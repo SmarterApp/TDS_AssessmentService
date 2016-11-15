@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import tds.assessment.Assessment;
 import tds.assessment.Form;
+import tds.assessment.Item;
 import tds.assessment.repositories.AssessmentQueryRepository;
 
 @Repository
@@ -60,7 +61,8 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
             logger.debug("Did not findAssessmentByKey a result for assessment from tblsetofadminsubjects for %s", assessmentKey);
         } else {
             List<Form> forms = findFormsForAssessment(parameters);
-            maybeAssessment = assessmentMapper.mapResults(rows, forms);
+            List<Item> items = findItemsForAssessment(parameters);
+            maybeAssessment = assessmentMapper.mapResults(rows, forms, items);
         }
 
         return maybeAssessment;
@@ -90,6 +92,45 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                         // calling getObject() and casting to Double because .getLong() defaults to 0 if null
                         .withLoadVersion((Long) rs.getObject("loadVersion"))
                         .withUpdateVersion((Long) rs.getObject("updateVersion"))
+                        .build()
+        );
+    }
+
+    private List<Item> findItemsForAssessment(SqlParameterSource parameters) {
+        final String itemsSQL =
+                "SELECT \n" +
+                "    I._key AS id,\n" +
+                "    I.itemtype,\n" +
+                "    A._fk_adminsubject AS segmentKey,\n" +
+                "    A.groupid,\n" +
+                "    A.groupkey,\n" +
+                "    A.itemposition AS position,\n" +
+                "    A.isactive,\n" +
+                "    A.isfieldtest,\n" +
+                "    A.isrequired, \n" +
+                "    A.strandname \n" +
+                "FROM \n" +
+                "    itembank.tblsetofadminitems as A \n" +
+                "JOIN \n" +
+                "    itembank.tblitem I \n" +
+                "    ON I._key = A._fk_item \n" +
+                "JOIN itembank.tblsetofadminsubjects segments \n" +
+                "    ON segments._key = A._fk_adminsubject \n" +
+                "WHERE \n" +
+                "   segments.virtualtest = :key OR segments._key = :key";
+
+
+        return jdbcTemplate.query(itemsSQL, parameters, (rs, row) ->
+                new Item.Builder(rs.getString("id"))
+                        .withSegmentKey(rs.getString("segmentKey"))
+                        .withItemType(rs.getString("itemtype"))
+                        .withGroupId(rs.getString("groupid"))
+                        .withGroupKey(rs.getString("groupkey"))
+                        .withPosition(rs.getInt("position"))
+                        .withActive(rs.getBoolean("isactive"))
+                        .withFieldTest(rs.getBoolean("isfieldtest"))
+                        .withRequired(rs.getBoolean("isrequired"))
+                        .withStrand(rs.getString("strandname"))
                         .build()
         );
     }
