@@ -12,6 +12,11 @@ public class Form {
     private Long loadVersion;
     private Long updateVersion;
 
+    /**
+     * Private constructor for framework
+     */
+    private Form() {}
+
     private Form(Builder builder) {
         key = builder.key;
         id = builder.id;
