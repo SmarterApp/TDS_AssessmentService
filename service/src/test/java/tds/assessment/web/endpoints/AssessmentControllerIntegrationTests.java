@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
 import tds.assessment.services.AssessmentService;
+import tds.common.web.advice.ExceptionAdvice;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AssessmentController.class)
+@Import(ExceptionAdvice.class)
 public class AssessmentControllerIntegrationTests {
     @Autowired
     private MockMvc http;

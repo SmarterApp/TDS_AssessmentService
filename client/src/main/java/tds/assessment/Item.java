@@ -15,6 +15,11 @@ public class Item {
     private boolean required;
     private String strand;
 
+    /**
+     * Private empty constructor for frameworks
+     */
+    private Item() {}
+
     private Item(Builder builder) {
         this.groupKey = builder.groupKey;
         this.segmentKey = builder.segmentKey;
