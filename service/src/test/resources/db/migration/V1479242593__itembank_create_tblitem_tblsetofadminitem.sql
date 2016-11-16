@@ -65,7 +65,5 @@ CREATE TABLE `tblsetofadminitems` (
   PRIMARY KEY (`_fk_adminsubject`,`_fk_item`),
   KEY `fk_tblsetofadminitems_tblitem` (`_fk_item`),
   KEY `ix_adminitemgroup2` (`_fk_adminsubject`,`groupid`,`blockid`),
-  KEY `ix_adminitem_ftitemgroup` (`_fk_adminsubject`,`isfieldtest`,`groupkey`),
-  CONSTRAINT `fk_tblsetofadminitems_tblitem` FOREIGN KEY (`_fk_item`) REFERENCES `tblitem` (`_key`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_tblsetofadminitems_tblsetofadminsubjects` FOREIGN KEY (`_fk_adminsubject`) REFERENCES `tblsetofadminsubjects` (`_key`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `ix_adminitem_ftitemgroup` (`_fk_adminsubject`,`isfieldtest`,`groupkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
