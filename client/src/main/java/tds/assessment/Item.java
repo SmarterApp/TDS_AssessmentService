@@ -21,7 +21,7 @@ public class Item {
     /**
      * Private empty constructor for frameworks
      */
-    public Item() {}
+    private Item() {}
 
     public Item(String id) {
         this.id = id;

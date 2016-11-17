@@ -70,16 +70,15 @@ public class AssessmentControllerIntegrationTests {
         seg1.setSubject("ELA");
 
         Segment seg2 = new Segment("(SBAC_PT)SBAC-SEG2-MATH-11-Summer-2015-2016");
-            seg2.setSegmentId("SBAC-SEG2-MATH-11");
-            seg2.setSelectionAlgorithm("fixedform");
-            seg2.setStartAbility(0);
-            seg2.setAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016");
-            seg2.setSubject("ELA");
+        seg2.setSegmentId("SBAC-SEG2-MATH-11");
+        seg2.setSelectionAlgorithm("fixedform");
+        seg2.setStartAbility(0);
+        seg2.setAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016");
+        seg2.setSubject("ELA");
 
         segments.add(seg1);
         segments.add(seg2);
 
-//        Assessment assessment = new Assessment("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", segments, "virtual", 50F, "ELA");
         Assessment assessment = new Assessment();
         assessment.setKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         assessment.setAssessmentId("IRP-Perf-ELA-11");

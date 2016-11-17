@@ -25,9 +25,6 @@ public class Segment {
      */
     private Segment() {}
 
-    /**
-     * Empty constructor for frameworks
-     */
     public Segment(String key) {
         this.key = key;
     }
