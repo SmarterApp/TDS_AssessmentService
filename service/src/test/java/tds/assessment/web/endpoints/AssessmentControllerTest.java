@@ -44,11 +44,10 @@ public class AssessmentControllerTest {
 
     @Test
     public void shouldFindAssessmentByKey() {
-        Assessment subject = new Assessment.Builder()
-            .withKey("theKey")
-            .build();
+        Assessment assessment = new Assessment();
+        assessment.setKey("theKey");
 
-        when(service.findAssessmentByKey("theKey")).thenReturn(Optional.of(subject));
+        when(service.findAssessmentByKey("theKey")).thenReturn(Optional.of(assessment));
         ResponseEntity<Assessment> response = controller.findAssessment("theKey");
         verify(service).findAssessmentByKey("theKey");
 

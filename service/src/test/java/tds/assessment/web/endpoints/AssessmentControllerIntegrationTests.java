@@ -39,13 +39,12 @@ public class AssessmentControllerIntegrationTests {
 
     @Test
     public void shouldReturnAssessmentByKey() throws Exception {
-        Assessment assessment = new Assessment.Builder()
-            .withKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")
-            .withAssessmentId("IRP-Perf-ELA-11")
-            .withSelectionAlgorithm("virtual")
-            .withSubject("ELA")
-            .withStartAbility(50F)
-            .build();
+        Assessment assessment = new Assessment();
+        assessment.setKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        assessment.setAssessmentId("IRP-Perf-ELA-11");
+        assessment.setSelectionAlgorithm("virtual");
+        assessment.setSubject("ELA");
+        assessment.setStartAbility(50F);
 
         when(assessmentSegmentService.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
@@ -63,34 +62,31 @@ public class AssessmentControllerIntegrationTests {
     @Test
     public void shouldReturnSegmentedAssessmentByKey() throws Exception {
         List<Segment> segments = new ArrayList<>();
-        Segment seg1 = new Segment.Builder("(SBAC_PT)SBAC-SEG1-MATH-11-Summer-2015-2016")
-            .withSegmentId("SBAC-SEG1-MATH-11")
-            .withSelectionAlgorithm("fixedform")
-            .withStartAbility(0)
-            .withAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016")
-            .withSubject("ELA")
-            .build();
+        Segment seg1 = new Segment("(SBAC_PT)SBAC-SEG1-MATH-11-Summer-2015-2016");
+        seg1.setSegmentId("SBAC-SEG1-MATH-11");
+        seg1.setSelectionAlgorithm("fixedform");
+        seg1.setStartAbility(0);
+        seg1.setAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016");
+        seg1.setSubject("ELA");
 
-        Segment seg2 = new Segment.Builder("(SBAC_PT)SBAC-SEG2-MATH-11-Summer-2015-2016")
-            .withSegmentId("SBAC-SEG2-MATH-11")
-            .withSelectionAlgorithm("fixedform")
-            .withStartAbility(0)
-            .withAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016")
-            .withSubject("ELA")
-            .build();
+        Segment seg2 = new Segment("(SBAC_PT)SBAC-SEG2-MATH-11-Summer-2015-2016");
+            seg2.setSegmentId("SBAC-SEG2-MATH-11");
+            seg2.setSelectionAlgorithm("fixedform");
+            seg2.setStartAbility(0);
+            seg2.setAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016");
+            seg2.setSubject("ELA");
 
         segments.add(seg1);
         segments.add(seg2);
 
 //        Assessment assessment = new Assessment("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "IRP-Perf-ELA-11", segments, "virtual", 50F, "ELA");
-        Assessment assessment = new Assessment.Builder()
-            .withKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")
-            .withAssessmentId("IRP-Perf-ELA-11")
-            .withSegments(segments)
-            .withSelectionAlgorithm("virtual")
-            .withSubject("ELA")
-            .withStartAbility(50F)
-            .build();
+        Assessment assessment = new Assessment();
+        assessment.setKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        assessment.setAssessmentId("IRP-Perf-ELA-11");
+        assessment.setSegments(segments);
+        assessment.setSelectionAlgorithm("virtual");
+        assessment.setSubject("ELA");
+        assessment.setStartAbility(50F);
 
         when(assessmentSegmentService.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 

@@ -1,8 +1,11 @@
 package tds.assessment.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.assessment.Form;
+import tds.assessment.Item;
 
 /**
  * Queries for admin subject related entities
@@ -16,4 +19,5 @@ public interface AssessmentQueryRepository {
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
     Optional<Assessment> findAssessmentByKey(String assessmentKey);
+
 }

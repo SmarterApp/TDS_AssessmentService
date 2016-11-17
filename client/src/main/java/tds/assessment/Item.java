@@ -1,5 +1,7 @@
 package tds.assessment;
 
+import java.util.List;
+
 /**
  * A model representing an item for an {@link Assessment}
  */
@@ -14,90 +16,15 @@ public class Item {
     private boolean active;
     private boolean required;
     private String strand;
+    private List<ItemProperty> itemProperties;
 
     /**
      * Private empty constructor for frameworks
      */
-    private Item() {}
+    public Item() {}
 
-    private Item(Builder builder) {
-        this.groupKey = builder.groupKey;
-        this.segmentKey = builder.segmentKey;
-        this.itemType = builder.itemType;
-        this.groupId = builder.groupId;
-        this.strand = builder.strand;
-        this.required = builder.required;
-        this.active = builder.active;
-        this.fieldTest = builder.fieldTest;
-        this.id = builder.id;
-        this.position = builder.position;
-    }
-
-    public static class Builder {
-        private String id;
-        private String itemType;
-        private String segmentKey;
-        private String groupId;
-        private String groupKey;
-        private int position;
-        private boolean fieldTest;
-        private boolean active;
-        private boolean required;
-        private String strand;
-
-        public Builder(String id) {
-            this.id = id;
-        }
-
-
-        public Builder withItemType(String itemType) {
-            this.itemType = itemType;
-            return this;
-        }
-
-        public Builder withSegmentKey(String segmentKey) {
-            this.segmentKey = segmentKey;
-            return this;
-        }
-
-        public Builder withGroupId(String groupId) {
-            this.groupId = groupId;
-            return this;
-        }
-
-        public Builder withGroupKey(String groupKey) {
-            this.groupKey = groupKey;
-            return this;
-        }
-
-        public Builder withPosition(int position) {
-            this.position = position;
-            return this;
-        }
-
-        public Builder withFieldTest(boolean fieldTest) {
-            this.fieldTest = fieldTest;
-            return this;
-        }
-
-        public Builder withActive(boolean active) {
-            this.active = active;
-            return this;
-        }
-
-        public Builder withRequired(boolean required) {
-            this.required = required;
-            return this;
-        }
-
-        public Builder withStrand(String strand) {
-            this.strand = strand;
-            return this;
-        }
-
-        public Item build() {
-            return new Item(this);
-        }
+    public Item(String id) {
+        this.id = id;
     }
 
     /**
@@ -170,4 +97,51 @@ public class Item {
         return strand;
     }
 
+    /**
+     * @return the
+     */
+    public List<ItemProperty> getItemProperties() {
+        return itemProperties;
+    }
+
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public void setSegmentKey(String segmentKey) {
+        this.segmentKey = segmentKey;
+    }
+
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setFieldTest(boolean fieldTest) {
+        this.fieldTest = fieldTest;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public void setStrand(String strand) {
+        this.strand = strand;
+    }
+
+    public void setItemProperties(List<ItemProperty> itemProperties) {
+        this.itemProperties = itemProperties;
+    }
 }
