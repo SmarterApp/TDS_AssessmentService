@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Import;
 import tds.common.configuration.DataSourceConfiguration;
 
 @SpringBootApplication
-@Import(DataSourceConfiguration.class)
 public class AssessmentServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(AssessmentServiceApplication.class, args);
