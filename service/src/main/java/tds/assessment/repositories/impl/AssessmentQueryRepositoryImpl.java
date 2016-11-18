@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
 import tds.assessment.Item;
+import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.repositories.AssessmentQueryRepository;
 
@@ -67,5 +69,38 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         }
 
         return maybeAssessment;
+    }
+
+    @Override
+    public List<ItemConstraint> findItemConstraintsForAssessment(final String clientName, final String assessmentId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("clientName", clientName);
+        parameters.put("assessmentId", assessmentId);
+
+        final String SQL =
+                "SELECT \n" +
+                        "   clientname,\n" +
+                        "   testid AS assessmentId, \n" +
+                        "   propname,\n" +
+                        "   propvalue,\n" +
+                        "   tooltype,\n" +
+                        "   toolvalue,\n" +
+                        "   item_in \n" +
+                        "FROM \n" +
+                        "   configs.client_test_itemconstraint \n" +
+                        "WHERE \n" +
+                        "   clientname = :clientName AND \n" +
+                        "   testid = :assessmentId";
+
+        return jdbcTemplate.query(SQL, parameters, (rs, row) ->
+                new ItemConstraint.Builder()
+                        .withInclusive(rs.getBoolean("item_in"))
+                        .withPropertyName(rs.getString("propname"))
+                        .withPropertyValue(rs.getString("propvalue"))
+                        .withToolType(rs.getString("tooltype"))
+                        .withToolValue(rs.getString("toolvalue"))
+                        .withAssessmentId(rs.getString("assessmentId"))
+                        .build()
+        );
     }
 }

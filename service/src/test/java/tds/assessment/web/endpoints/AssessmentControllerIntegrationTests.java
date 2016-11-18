@@ -46,9 +46,9 @@ public class AssessmentControllerIntegrationTests {
         assessment.setSubject("ELA");
         assessment.setStartAbility(50F);
 
-        when(assessmentSegmentService.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
+        when(assessmentSegmentService.findAssessmentByKey("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
-        URI uri = UriComponentsBuilder.fromUriString("/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016").build().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016").build().toUri();
 
         http.perform(get(uri)
             .contentType(MediaType.APPLICATION_JSON))
@@ -87,9 +87,9 @@ public class AssessmentControllerIntegrationTests {
         assessment.setSubject("ELA");
         assessment.setStartAbility(50F);
 
-        when(assessmentSegmentService.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
+        when(assessmentSegmentService.findAssessmentByKey("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
-        http.perform(get(new URI("/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
+        http.perform(get(new URI("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("key", is("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")))
@@ -112,8 +112,8 @@ public class AssessmentControllerIntegrationTests {
 
     @Test
     public void shouldReturnNotFound() throws Exception {
-        when(assessmentSegmentService.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.empty());
-        http.perform(get(new URI("/assessments/assessment/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
+        when(assessmentSegmentService.findAssessmentByKey("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.empty());
+        http.perform(get(new URI("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }

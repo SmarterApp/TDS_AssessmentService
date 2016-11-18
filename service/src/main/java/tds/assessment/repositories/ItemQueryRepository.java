@@ -28,11 +28,4 @@ public interface ItemQueryRepository {
      */
     List<Item> findItemsForAssessment(final String assessmentKey);
 
-    /**
-     * Finds a list of {@link tds.assessment.ItemConstraint}s for the assessment
-     *
-     * @param assessmentId the assessment id for the item's {@link tds.assessment.Assessment}
-     * @return A list of item constraints for the assessment
-     */
-    List<ItemConstraint> findItemConstraintsForAssessment(final String assessmentId);
 }

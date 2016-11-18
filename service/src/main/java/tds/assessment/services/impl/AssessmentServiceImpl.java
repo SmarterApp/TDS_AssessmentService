@@ -37,25 +37,27 @@ class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public Optional<Assessment> findAssessmentByKey(String assessmentKey) {
+    public Optional<Assessment> findAssessmentByKey(final String clientName, final String assessmentKey) {
         Optional<Assessment> maybeAssessment = assessmentQueryRepository.findAssessmentByKey(assessmentKey);
 
         if (maybeAssessment.isPresent()) {
+            Assessment assessment = maybeAssessment.get();
             List<Form> forms = formQueryRepository.findFormsForAssessment(assessmentKey);
             List<Item> items = itemQueryRepository.findItemsForAssessment(assessmentKey);
             List<ItemProperty> itemProperties = itemQueryRepository.findActiveItemsProperties(assessmentKey);
-            List<ItemConstraint> itemConstraints = itemQueryRepository.findItemConstraintsForAssessment(maybeAssessment.get().getAssessmentId());
-            maybeAssessment.get().setItemConstraints(itemConstraints);
+            List<ItemConstraint> itemConstraints = assessmentQueryRepository.findItemConstraintsForAssessment(clientName,
+                    assessment.getAssessmentId());
+            assessment.setItemConstraints(itemConstraints);
 
-            mapItems(items, itemProperties);
-            mapAssessment(maybeAssessment, forms, items);
+            assignPropertiesToItems(items, itemProperties);
+            assignFormsAndItemsToAssessmentSegments(assessment, forms, items);
         }
 
         return maybeAssessment;
     }
 
-    private static void mapAssessment(Optional<Assessment> assessment, List<Form> forms, List<Item> items) {
-        for (Segment segment : assessment.get().getSegments()) {
+    private static void assignFormsAndItemsToAssessmentSegments(Assessment assessment, List<Form> forms, List<Item> items) {
+        for (Segment segment : assessment.getSegments()) {
             segment.setForms(forms.stream()
                 .filter(form -> form.getSegmentKey().equals(segment.getKey())).collect(Collectors.toList()));
             segment.setItems(items.stream()
@@ -63,13 +65,11 @@ class AssessmentServiceImpl implements AssessmentService {
         }
     }
 
-    private static void mapItems(List<Item> items, List<ItemProperty> itemProperties) {
+    private static void assignPropertiesToItems(List<Item> items, List<ItemProperty> itemProperties) {
         Multimap<String, ItemProperty> itemIdToPropertyMap = ArrayListMultimap.create();
-        for (ItemProperty property : itemProperties) {
-            if (property.getItemId() != null) {
-                itemIdToPropertyMap.put(property.getItemId(), property);
-            }
-        }
+        itemProperties.stream()
+                .filter(property -> property.getItemId() != null)
+                .forEach(property -> itemIdToPropertyMap.put(property.getItemId(), property));
 
         for (Item item : items) {
             item.setItemProperties(new ArrayList<>(itemIdToPropertyMap.get(item.getId())));

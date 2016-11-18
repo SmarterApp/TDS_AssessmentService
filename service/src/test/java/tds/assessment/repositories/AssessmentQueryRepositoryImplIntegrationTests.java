@@ -17,6 +17,7 @@ import java.util.Optional;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
 import tds.assessment.Item;
+import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
 
@@ -65,6 +66,19 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "('item-23', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 0),\n" +
                 "('item-2', 'Language', 'Braille-ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 1);";
 
+        final String itemConstraintsInsertSql =
+                "INSERT INTO configs.client_test_itemconstraint" +
+                        "(clientname, testid, propname, propvalue, tooltype, toolvalue, item_in) VALUES " +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'ER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_ER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'MI', 'Item Types Exclusion', 'TDS_ItemTypeExcl_MI', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'WER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_WER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', 'Language', 'ENU', 'Language', 'ENU', 1), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'ER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_ER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'MI', 'Item Types Exclusion', 'TDS_ItemTypeExcl_MI', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'WER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_WER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
+
+        jdbcTemplate.update(itemConstraintsInsertSql);
         jdbcTemplate.update(tblClientInsertSQL);
         jdbcTemplate.update(tblSubjectInsertSQL);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
@@ -157,6 +171,44 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment2.getLanguages()).hasSize(2);
         assertThat(segment2.getLanguages()).contains(new ItemProperty("Language", "ENU"), new ItemProperty("Language", "Braille-ENU"));
         assertThat(segment2.getStartAbility()).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldRetrieveFourConstraintsForAssessment() {
+        final String assessmentId = "IRP-Perf-ELA-11";
+        List<ItemConstraint> itemConstraints = repository.findItemConstraintsForAssessment("SBAC_PT", "IRP-Perf-ELA-11");
+        assertThat(itemConstraints).hasSize(4);
+        ItemConstraint languageConstraint = null;
+        ItemConstraint erConstraint = null;
+
+        for (ItemConstraint constraint : itemConstraints) {
+            if (constraint.getPropertyValue().equals("ER")) {
+                erConstraint = constraint;
+                continue;
+            } else if (constraint.getPropertyName().equals("Language")) {
+                languageConstraint = constraint;
+                continue;
+            }
+        }
+
+        assertThat(languageConstraint.getAssessmentId()).isEqualTo(assessmentId);
+        assertThat(languageConstraint.getPropertyName()).isEqualTo("Language");
+        assertThat(languageConstraint.getPropertyValue()).isEqualTo("ENU");
+        assertThat(languageConstraint.getToolType()).isEqualTo("Language");
+        assertThat(languageConstraint.getToolValue()).isEqualTo("ENU");
+        assertThat(languageConstraint.isInclusive()).isTrue();
+        assertThat(erConstraint.getAssessmentId()).isEqualTo(assessmentId);
+        assertThat(erConstraint.getPropertyName()).isEqualTo("--ITEMTYPE--");
+        assertThat(erConstraint.getPropertyValue()).isEqualTo("ER");
+        assertThat(erConstraint.getToolType()).isEqualTo("Item Types Exclusion");
+        assertThat(erConstraint.getToolValue()).isEqualTo("TDS_ItemTypeExcl_ER");
+        assertThat(erConstraint.isInclusive()).isFalse();
+    }
+
+    @Test
+    public void shouldRetrieveNoConstraintsForAssessment() {
+        List<ItemConstraint> itemConstraints = repository.findItemConstraintsForAssessment("No client", "NoExam");
+        assertThat(itemConstraints).isEmpty();
     }
 
 }

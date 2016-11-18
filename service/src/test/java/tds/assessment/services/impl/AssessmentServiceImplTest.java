@@ -46,7 +46,7 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
-        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("theKey");
+        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
@@ -86,13 +86,13 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(forms);
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
-        when(itemQueryRepository.findItemConstraintsForAssessment(assessmentId)).thenReturn(new ArrayList<>());
-        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("theKey");
+        when(assessmentQueryRepository.findItemConstraintsForAssessment("SBAC_PT", assessmentId)).thenReturn(new ArrayList<>());
+        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
-        verify(itemQueryRepository).findItemConstraintsForAssessment(assessmentId);
+        verify(assessmentQueryRepository).findItemConstraintsForAssessment("SBAC_PT", assessmentId);
         assertThat(maybeAssessment).isPresent();
 
         List<Segment> retSegments = maybeAssessment.get().getSegments();
@@ -163,13 +163,13 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(itemProperties);
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(items);
-        when(itemQueryRepository.findItemConstraintsForAssessment(assessmentId)).thenReturn(new ArrayList<>());
-        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("theKey");
+        when(assessmentQueryRepository.findItemConstraintsForAssessment("SBAC_PT", assessmentId)).thenReturn(new ArrayList<>());
+        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
-        verify(itemQueryRepository).findItemConstraintsForAssessment(assessmentId);
+        verify(assessmentQueryRepository).findItemConstraintsForAssessment("SBAC_PT", assessmentId);
         assertThat(maybeAssessment).isPresent();
 
         List<Segment> retSegments = maybeAssessment.get().getSegments();
@@ -252,13 +252,13 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
-        when(itemQueryRepository.findItemConstraintsForAssessment(assessmentId)).thenReturn(itemConstraints);
-        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("theKey");
+        when(assessmentQueryRepository.findItemConstraintsForAssessment("SBAC_PT", assessmentId)).thenReturn(itemConstraints);
+        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
-        verify(itemQueryRepository).findItemConstraintsForAssessment("foo");
+        verify(assessmentQueryRepository).findItemConstraintsForAssessment("SBAC_PT", "foo");
         assertThat(maybeAssessment).isPresent();
         List<ItemConstraint> retConstraints = maybeAssessment.get().getItemConstraints();
         assertThat(retConstraints).hasSize(2);

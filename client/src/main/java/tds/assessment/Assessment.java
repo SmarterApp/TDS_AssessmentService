@@ -12,7 +12,7 @@ public class Assessment {
     private String selectionAlgorithm;
     private float startAbility;
     private String subject;
-    private List<ItemConstraint> itemConstraints;
+    private List<ItemConstraint> itemConstraints = new ArrayList<>();
     private List<Segment> segments = new ArrayList<>();
 
     public Assessment() {}
@@ -63,6 +63,22 @@ public class Assessment {
      */
     public boolean isSegmented() {
         return segments.size() > 1;
+    }
+
+    public Segment getSegment(final String segmentKey) {
+        Segment matchingSegment = null;
+        for (Segment segment : segments) {
+            if (segmentKey.equals(segment.getKey())) {
+                matchingSegment = segment;
+                break;
+            }
+        }
+
+        if (matchingSegment == null) {
+            throw new IllegalArgumentException(String.format("No segment with key {} found in the assessment.", segmentKey));
+        }
+
+        return matchingSegment;
     }
 
     /**

@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,13 +13,14 @@ public class Segment {
     private float startAbility;
     private String subject;
     private String assessmentKey;
-    private int position;private int minItems;
+    private int position;
+    private int minItems;
     private int maxItems;
     private int fieldTestMinItems;
     private int fieldTestMaxItems;
-    private List<ItemProperty> languages;
-    private List<Form> forms;
-    private List<Item> items;
+    private List<ItemProperty> languages = new ArrayList<>();
+    private List<Form> forms = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
     /**
      * Empty constructor for frameworks

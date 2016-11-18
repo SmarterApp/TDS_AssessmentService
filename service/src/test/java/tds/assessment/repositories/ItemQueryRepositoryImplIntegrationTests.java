@@ -74,19 +74,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
                 "('item-7', '--ITEMTYPE--', 'ER', 'Extended Response', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 1),\n" +
                 "('item-2', 'Language', 'ENU-Braille', 'Supported Language', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 1);";
 
-        final String itemConstraintsInsertSql =
-                "INSERT INTO configs.client_test_itemconstraint" +
-                "(clientname, testid, propname, propvalue, tooltype, toolvalue, item_in) VALUES " +
-                "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'ER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_ER', 0), \n" +
-                "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'MI', 'Item Types Exclusion', 'TDS_ItemTypeExcl_MI', 0), \n" +
-                "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'WER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_WER', 0), \n" +
-                "('SBAC_PT', 'IRP-Perf-ELA-11', 'Language', 'ENU', 'Language', 'ENU', 1), \n" +
-                "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'ER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_ER', 0), \n" +
-                "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'MI', 'Item Types Exclusion', 'TDS_ItemTypeExcl_MI', 0), \n" +
-                "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'WER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_WER', 0), \n" +
-                "('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
-
-        jdbcTemplate.update(itemConstraintsInsertSql);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a);
@@ -152,8 +139,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.isRequired()).isTrue();
     }
 
-
-
     @Test
     public void shouldRetrieveSingleItemSegmentedTest() {
         List<Item> items = repository.findItemsForAssessment("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015");
@@ -207,41 +192,4 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(properties.isEmpty());
     }
 
-    @Test
-    public void shouldRetrieveFourConstraintsForAssessment() {
-        final String assessmentId = "IRP-Perf-ELA-11";
-        List<ItemConstraint> itemConstraints = repository.findItemConstraintsForAssessment("IRP-Perf-ELA-11");
-        assertThat(itemConstraints).hasSize(4);
-        ItemConstraint languageConstraint = null;
-        ItemConstraint erConstraint = null;
-
-        for (ItemConstraint constraint : itemConstraints) {
-            if (constraint.getPropertyValue().equals("ER")) {
-                erConstraint = constraint;
-                continue;
-            } else if (constraint.getPropertyName().equals("Language")) {
-                languageConstraint = constraint;
-                continue;
-            }
-        }
-
-        assertThat(languageConstraint.getAssessmentId()).isEqualTo(assessmentId);
-        assertThat(languageConstraint.getPropertyName()).isEqualTo("Language");
-        assertThat(languageConstraint.getPropertyValue()).isEqualTo("ENU");
-        assertThat(languageConstraint.getToolType()).isEqualTo("Language");
-        assertThat(languageConstraint.getToolValue()).isEqualTo("ENU");
-        assertThat(languageConstraint.isInclusive()).isTrue();
-        assertThat(erConstraint.getAssessmentId()).isEqualTo(assessmentId);
-        assertThat(erConstraint.getPropertyName()).isEqualTo("--ITEMTYPE--");
-        assertThat(erConstraint.getPropertyValue()).isEqualTo("ER");
-        assertThat(erConstraint.getToolType()).isEqualTo("Item Types Exclusion");
-        assertThat(erConstraint.getToolValue()).isEqualTo("TDS_ItemTypeExcl_ER");
-        assertThat(erConstraint.isInclusive()).isFalse();
-    }
-
-    @Test
-    public void shouldRetrieveNoConstraintsForAssessment() {
-        List<ItemConstraint> itemConstraints = repository.findItemConstraintsForAssessment("NoExam");
-        assertThat(itemConstraints).isEmpty();
-    }
 }

@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public class Item {
     private boolean active;
     private boolean required;
     private String strand;
-    private List<ItemProperty> itemProperties;
+    private List<ItemProperty> itemProperties = new ArrayList<>();
 
     /**
      * Private empty constructor for frameworks
