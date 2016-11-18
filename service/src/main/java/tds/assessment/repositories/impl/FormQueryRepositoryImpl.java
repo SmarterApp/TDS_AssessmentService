@@ -17,8 +17,8 @@ public class FormQueryRepositoryImpl implements FormQueryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public FormQueryRepositoryImpl(DataSource dataSource) {
-        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    public FormQueryRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override

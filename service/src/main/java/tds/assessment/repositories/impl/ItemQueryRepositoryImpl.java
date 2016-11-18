@@ -22,8 +22,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ItemQueryRepositoryImpl(final DataSource dataSource) {
-        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    public ItemQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Item> findItemsForAssessment(final String assessmentKey) {

@@ -29,8 +29,8 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     private final AssessmentMapper assessmentMapper = new AssessmentMapper();
 
     @Autowired
-    public AssessmentQueryRepositoryImpl(final DataSource dataSource) {
-        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    public AssessmentQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
