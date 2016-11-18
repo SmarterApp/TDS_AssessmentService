@@ -1,6 +1,5 @@
 package tds.assessment.repositories;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,14 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class FormQueryRepositoryImplIntegrationTests {
     @Autowired
-    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private FormQueryRepository repository;
 
     @Before
     public void setUp() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         // Non-segmented, test
         String tblSetOfAdminSubjectsInsertSQL1 = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016','SBAC_PT', 'SBAC_PT-ELA','IRP-Perf-ELA-11'," +
                 "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +

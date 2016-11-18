@@ -9,14 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
-import tds.assessment.Form;
-import tds.assessment.Item;
 import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
@@ -29,14 +25,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AssessmentQueryRepositoryImplIntegrationTests {
 
     @Autowired
-    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private AssessmentQueryRepository repository;
 
     @Before
     public void setUp() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         String tblClientInsertSQL = "INSERT INTO tblclient VALUES (1,'SBAC_PT',NULL,'/usr/local/tomcat/resources/tds/');";
 
