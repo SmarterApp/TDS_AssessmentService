@@ -3,12 +3,14 @@ package tds.assessment.repositories.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +18,8 @@ import java.util.Optional;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
 import tds.assessment.Item;
+import tds.assessment.ItemConstraint;
+import tds.assessment.ItemProperty;
 import tds.assessment.repositories.AssessmentQueryRepository;
 
 @Repository
@@ -42,6 +46,8 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "A.testposition AS segmentPosition, \n" +
                 "A.minItems, \n" +
                 "A.maxItems, \n" +
+                "A.ftminitems AS fieldTestMinItems, \n" +
+                "A.ftmaxitems AS fieldTestMaxItems, \n" +
                 "S.name AS subject, \n" +
                 "A.virtualtest AS assessmentKey, \n" +
                 "P.propname, \n" +
@@ -53,84 +59,47 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
             "WHERE A.virtualtest = :key OR A._key = :key \n" +
             "ORDER BY assessmentKey DESC";
 
-
         List<Map<String,Object>> rows = jdbcTemplate.queryForList(SQL, parameters);
         Optional<Assessment> maybeAssessment = Optional.empty();
 
         if (rows.isEmpty()) {
             logger.debug("Did not findAssessmentByKey a result for assessment from tblsetofadminsubjects for %s", assessmentKey);
         } else {
-            List<Form> forms = findFormsForAssessment(parameters);
-            List<Item> items = findItemsForAssessment(parameters);
-            maybeAssessment = assessmentMapper.mapResults(rows, forms, items);
+            maybeAssessment = assessmentMapper.mapResults(rows);
         }
 
         return maybeAssessment;
     }
 
-    private List<Form> findFormsForAssessment(SqlParameterSource parameters) {
-        final String formsSQL =
+    @Override
+    public List<ItemConstraint> findItemConstraintsForAssessment(final String clientName, final String assessmentId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("clientName", clientName);
+        parameters.put("assessmentId", assessmentId);
+
+        final String SQL =
                 "SELECT \n" +
-                        "    segments._key AS segmentKey, \n" +
-                        "    forms._key AS `key`, \n" +
-                        "    forms.formid AS id, \n" +
-                        "    forms.language, \n" +
-                        "    forms.loadconfig AS loadVersion, \n" +
-                        "    forms.updateconfig AS updateVersion, \n" +
-                        "    forms.cohort \n" +
-                        "FROM itembank.tblsetofadminsubjects segments \n" +
-                        "JOIN itembank.testform forms ON segments._key = forms._fk_adminsubject \n" +
-                        "WHERE segments.virtualtest = :key OR segments._key = :key";
+                        "   clientname,\n" +
+                        "   testid AS assessmentId, \n" +
+                        "   propname,\n" +
+                        "   propvalue,\n" +
+                        "   tooltype,\n" +
+                        "   toolvalue,\n" +
+                        "   item_in \n" +
+                        "FROM \n" +
+                        "   configs.client_test_itemconstraint \n" +
+                        "WHERE \n" +
+                        "   clientname = :clientName AND \n" +
+                        "   testid = :assessmentId";
 
-
-        return jdbcTemplate.query(formsSQL, parameters, (rs, row) ->
-                new Form.Builder(rs.getString("key"))
-                        .withSegmentKey(rs.getString("segmentKey"))
-                        .withId(rs.getString("id"))
-                        .withLanguage(rs.getString("language"))
-                        .withCohort(rs.getString("cohort"))
-                        // calling getObject() and casting to Double because .getLong() defaults to 0 if null
-                        .withLoadVersion((Long) rs.getObject("loadVersion"))
-                        .withUpdateVersion((Long) rs.getObject("updateVersion"))
-                        .build()
-        );
-    }
-
-    private List<Item> findItemsForAssessment(SqlParameterSource parameters) {
-        final String itemsSQL =
-                "SELECT \n" +
-                "    I._key AS id,\n" +
-                "    I.itemtype,\n" +
-                "    A._fk_adminsubject AS segmentKey,\n" +
-                "    A.groupid,\n" +
-                "    A.groupkey,\n" +
-                "    A.itemposition AS position,\n" +
-                "    A.isactive,\n" +
-                "    A.isfieldtest,\n" +
-                "    A.isrequired, \n" +
-                "    A.strandname \n" +
-                "FROM \n" +
-                "    itembank.tblsetofadminitems as A \n" +
-                "JOIN \n" +
-                "    itembank.tblitem I \n" +
-                "    ON I._key = A._fk_item \n" +
-                "JOIN itembank.tblsetofadminsubjects segments \n" +
-                "    ON segments._key = A._fk_adminsubject \n" +
-                "WHERE \n" +
-                "   segments.virtualtest = :key OR segments._key = :key";
-
-
-        return jdbcTemplate.query(itemsSQL, parameters, (rs, row) ->
-                new Item.Builder(rs.getString("id"))
-                        .withSegmentKey(rs.getString("segmentKey"))
-                        .withItemType(rs.getString("itemtype"))
-                        .withGroupId(rs.getString("groupid"))
-                        .withGroupKey(rs.getString("groupkey"))
-                        .withPosition(rs.getInt("position"))
-                        .withActive(rs.getBoolean("isactive"))
-                        .withFieldTest(rs.getBoolean("isfieldtest"))
-                        .withRequired(rs.getBoolean("isrequired"))
-                        .withStrand(rs.getString("strandname"))
+        return jdbcTemplate.query(SQL, parameters, (rs, row) ->
+                new ItemConstraint.Builder()
+                        .withInclusive(rs.getBoolean("item_in"))
+                        .withPropertyName(rs.getString("propname"))
+                        .withPropertyValue(rs.getString("propvalue"))
+                        .withToolType(rs.getString("tooltype"))
+                        .withToolValue(rs.getString("toolvalue"))
+                        .withAssessmentId(rs.getString("assessmentId"))
                         .build()
         );
     }

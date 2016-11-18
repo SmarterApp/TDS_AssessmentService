@@ -17,7 +17,6 @@ import tds.common.web.exceptions.NotFoundException;
  * Controller handling admin subject related entities
  */
 @RestController
-@RequestMapping("/assessments")
 class AssessmentController {
     private final AssessmentService service;
 
@@ -33,10 +32,11 @@ class AssessmentController {
      * @return {@link org.springframework.http.ResponseEntity} containing a {@link tds.assessment.Assessment}}
      * @throws tds.common.web.exceptions.NotFoundException if entity cannot be found
      */
-    @GetMapping(value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{clientName}/assessments/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<Assessment> findAssessment(@PathVariable final String key) throws NotFoundException {
-        final Assessment assessment = service.findAssessmentByKey(key)
+    ResponseEntity<Assessment> findAssessment(@PathVariable final String clientName, @PathVariable final String key)
+            throws NotFoundException {
+        final Assessment assessment = service.findAssessmentByKey(clientName, key)
             .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
 
         return ResponseEntity.ok(assessment);

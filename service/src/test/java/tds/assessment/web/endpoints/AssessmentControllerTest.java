@@ -44,13 +44,15 @@ public class AssessmentControllerTest {
 
     @Test
     public void shouldFindAssessmentByKey() {
-        Assessment subject = new Assessment.Builder()
-            .withKey("theKey")
-            .build();
+        final String clientName = "SBAC_PT";
+        final String assessmentKey = "theKey";
+        Assessment assessment = new Assessment();
+        assessment.setKey(assessmentKey);
 
-        when(service.findAssessmentByKey("theKey")).thenReturn(Optional.of(subject));
-        ResponseEntity<Assessment> response = controller.findAssessment("theKey");
-        verify(service).findAssessmentByKey("theKey");
+
+        when(service.findAssessmentByKey(clientName, assessmentKey)).thenReturn(Optional.of(assessment));
+        ResponseEntity<Assessment> response = controller.findAssessment(clientName, assessmentKey);
+        verify(service).findAssessmentByKey(clientName, assessmentKey);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getKey()).isEqualTo("theKey");
@@ -58,7 +60,9 @@ public class AssessmentControllerTest {
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowSubjectByKeyCannotBeFound() {
-        when(service.findAssessmentByKey("theKey")).thenReturn(Optional.empty());
-        controller.findAssessment("theKey");
+        final String clientName = "SBAC_PT";
+        final String assessmentKey = "theKey";
+        when(service.findAssessmentByKey(clientName, assessmentKey)).thenReturn(Optional.empty());
+        controller.findAssessment(clientName, assessmentKey);
     }
 }

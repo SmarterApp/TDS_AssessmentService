@@ -1,8 +1,10 @@
 package tds.assessment.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.assessment.ItemConstraint;
 
 /**
  * Queries for admin subject related entities
@@ -16,4 +18,14 @@ public interface AssessmentQueryRepository {
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
     Optional<Assessment> findAssessmentByKey(String assessmentKey);
+
+    /**
+     * Finds a list of {@link tds.assessment.ItemConstraint}s for the assessment
+     *
+     * @param clientName
+     * @param assessmentId the assessment id for the item's {@link tds.assessment.Assessment}
+     * @return A list of item constraints for the assessment
+     */
+    List<ItemConstraint> findItemConstraintsForAssessment(final String clientName, final String assessmentId);
+
 }

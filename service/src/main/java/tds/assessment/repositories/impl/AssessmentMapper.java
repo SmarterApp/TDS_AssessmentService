@@ -24,7 +24,7 @@ class AssessmentMapper {
      * @param rows
      * @return
      */
-    Optional<Assessment> mapResults(List<Map<String, Object>> rows, List<Form> forms, List<Item> items) {
+    Optional<Assessment> mapResults(List<Map<String, Object>> rows) {
         Map<String, SegmentInformationHolder> segments = new LinkedHashMap<>();
         Map<String, Object> assessmentRow = null;
         for (Map<String, Object> row : rows) {
@@ -41,19 +41,17 @@ class AssessmentMapper {
                 String segmentKey = (String) row.get("assessmentSegmentKey");
 
                 //If holder is null this is the first record for this segment
-                Segment.Builder segment = new Segment.Builder(segmentKey)
-                    .withSegmentId((String) row.get("assessmentSegmentId"))
-                    .withAssessmentKey((String) row.get("assessmentKey"))
-                    .withSelectionAlgorithm((String) row.get("selectionalgorithm"))
-                    .withMinItems((int) row.get("minItems"))
-                    .withMaxItems((int) row.get("maxItems"))
-                    .withStartAbility((float) row.get("startAbility"))
-                    .withPosition((Integer) row.get("segmentPosition"))
-                    .withSubject((String) row.get("subject"))
-                    .withForms(forms.stream()
-                        .filter(form -> form.getSegmentKey().equals(segmentKey)).collect(Collectors.toList()))
-                    .withItems(items.stream()
-                        .filter(item -> item.getSegmentKey().equals(segmentKey)).collect(Collectors.toList()));
+                Segment segment = new Segment(segmentKey);
+                segment.setSegmentId((String) row.get("assessmentSegmentId"));
+                segment.setAssessmentKey((String) row.get("assessmentKey"));
+                segment.setSelectionAlgorithm((String) row.get("selectionalgorithm"));
+                segment.setMinItems((int) row.get("minItems"));
+                segment.setMaxItems((int) row.get("maxItems"));
+                segment.setFieldTestMinItems((int) row.get("fieldTestMinItems"));
+                segment.setFieldTestMaxItems((int) row.get("fieldTestMaxItems"));
+                segment.setStartAbility((float) row.get("startAbility"));
+                segment.setPosition((Integer) row.get("segmentPosition"));
+                segment.setSubject((String) row.get("subject"));
 
                 holder.setSegment(segment);
 
@@ -78,17 +76,17 @@ class AssessmentMapper {
 
         List<Segment> assessmentSegments = new ArrayList<>();
         if (segments.isEmpty()) {
-            Segment.Builder segment = new Segment.Builder((String) assessmentRow.get("assessmentSegmentKey"))
-                .withSegmentId((String) assessmentRow.get("assessmentSegmentId"))
-                .withSelectionAlgorithm((String) assessmentRow.get("selectionalgorithm"))
-                .withStartAbility((float) assessmentRow.get("startAbility"))
-                .withAssessmentKey((String) assessmentRow.get("assessmentSegmentKey"))
-                .withPosition(1)
-                .withMinItems((int) assessmentRow.get("minItems"))
-                .withMaxItems((int) assessmentRow.get("maxItems"))
-                .withSubject((String) assessmentRow.get("subject"))
-                .withForms(forms)
-                .withItems(items);
+            Segment segment = new Segment((String) assessmentRow.get("assessmentSegmentKey"));
+            segment.setSegmentId((String) assessmentRow.get("assessmentSegmentId"));
+            segment.setSelectionAlgorithm((String) assessmentRow.get("selectionalgorithm"));
+            segment.setStartAbility((float) assessmentRow.get("startAbility"));
+            segment.setAssessmentKey((String) assessmentRow.get("assessmentSegmentKey"));
+            segment.setPosition(1);
+            segment.setMinItems((int) assessmentRow.get("minItems"));
+            segment.setMaxItems((int) assessmentRow.get("maxItems"));
+            segment.setFieldTestMinItems((int) assessmentRow.get("fieldTestMinItems"));
+            segment.setFieldTestMaxItems((int) assessmentRow.get("fieldTestMaxItems"));
+            segment.setSubject((String) assessmentRow.get("subject"));
 
             if (assessmentRow.containsKey("propname")) {
                 ItemProperty language = new ItemProperty(
@@ -97,10 +95,10 @@ class AssessmentMapper {
                     (String) assessmentRow.get("propdescription")
                 );
 
-                segment.withLanguages(Collections.singletonList(language));
+                segment.setLanguages(Collections.singletonList(language));
             }
 
-            assessmentSegments.add(segment.build());
+            assessmentSegments.add(segment);
         } else {
             assessmentSegments.addAll(segments.values()
                 .stream()
@@ -108,33 +106,32 @@ class AssessmentMapper {
                 .collect(Collectors.toList()));
         }
 
-        Assessment assessment = new Assessment.Builder()
-                    .withKey((String) assessmentRow.get("assessmentSegmentKey"))
-                    .withAssessmentId((String) assessmentRow.get("assessmentSegmentId"))
-                    .withSelectionAlgorithm((String) assessmentRow.get("selectionalgorithm"))
-                    .withStartAbility((float) assessmentRow.get("startAbility"))
-                    .withSubject((String) assessmentRow.get("subject"))
-                    .withSegments(assessmentSegments)
-                    .build();
+        Assessment assessment = new Assessment();
+        assessment.setKey((String) assessmentRow.get("assessmentSegmentKey"));
+        assessment.setAssessmentId((String) assessmentRow.get("assessmentSegmentId"));
+        assessment.setSelectionAlgorithm((String) assessmentRow.get("selectionalgorithm"));
+        assessment.setStartAbility((float) assessmentRow.get("startAbility"));
+        assessment.setSubject((String) assessmentRow.get("subject"));
+        assessment.setSegments(assessmentSegments);
 
         return Optional.of(assessment);
     }
 
     private class SegmentInformationHolder {
-        private Segment.Builder segment;
+        private Segment segment;
         private List<ItemProperty> languages = new ArrayList<>();
 
         List<ItemProperty> getLanguages() {
             return languages;
         }
 
-        void setSegment(Segment.Builder segment) {
+        void setSegment(Segment segment) {
             this.segment = segment;
         }
 
         Segment build() {
-            segment.withLanguages(languages);
-            return segment.build();
+            segment.setLanguages(languages);
+            return segment;
         }
     }
 

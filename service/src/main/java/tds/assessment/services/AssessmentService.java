@@ -8,9 +8,13 @@ import tds.assessment.Assessment;
  * Service handling interaction with assessments
  */
 public interface AssessmentService {
+
     /**
+     * Retrieves a fully populated assessment
+     *
+     * @param clientName the client environment identifier
      * @param assessmentKey to the assessment
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
-    Optional<Assessment> findAssessmentByKey(String assessmentKey);
+    Optional<Assessment> findAssessmentByKey(String clientName, String assessmentKey);
 }

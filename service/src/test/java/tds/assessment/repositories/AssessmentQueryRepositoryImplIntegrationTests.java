@@ -17,6 +17,7 @@ import java.util.Optional;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
 import tds.assessment.Item;
+import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
 
@@ -58,55 +59,33 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',2,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
                 "0,'bp1',NULL,NULL,'summative');";
 
-        String tblitemPropsInsertSQL = "insert into itembank.tblitemprops (_fk_item, propname, propvalue, propdescription, _fk_adminsubject, isactive) \n" +
-            "values \n" +
-            "('item-99', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 1),\n" +
-            "('item-1', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 1),\n" +
-            "('item-23', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 0),\n" +
-            "('item-2', 'Language', 'Braille-ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 1);";
+        final String tblItemPropsInsertSQL = "insert into itembank.tblitemprops (_fk_item, propname, propvalue, propdescription, _fk_adminsubject, isactive) \n" +
+                "values \n" +
+                "('item-99', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 1),\n" +
+                "('item-1', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 1),\n" +
+                "('item-23', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 0),\n" +
+                "('item-2', 'Language', 'Braille-ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 1);";
 
-        String testformInsertSQL =
-                "INSERT INTO itembank.testform\n" +
-                        "   (_fk_adminsubject, _efk_itsbank, _efk_itskey, formid, language, _key, itsid, iteration, loadconfig, updateconfig, cohort)\n" +
-                        "VALUES \n" +
-                        "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 528, 528, 'PracTest::MG8::S1::SP14', 'ENU', '187-528', NULL, 0, 8233, 8234, 'Default'),\n" +
-                        "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 529, 529, 'PracTest::MG8::S1::SP14::Braille', 'ENU-Braille', '187-529', NULL, 0, 8233, 8234, 'Default'),\n" +
-                        "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 530, 530, 'PracTest::MG8::S1::SP14::ESN', 'ESN', '187-530', NULL, 0, 8233, 8234, 'Default'),\n" +
-                        "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 531, 531, 'PracTest::MG8::S2::SP14', 'ENU', '187-531', NULL, 0, 8233, NULL, 'Default'),\n" +
-                        "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 532, 532, 'PracTest::MG8::S2::SP14::Braille', 'ENU-Braille', '187-532', NULL, 0, 8233, NULL, 'Default'),\n" +
-                        "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 533, 533, 'PracTest::MG8::S2::SP14::ESN', 'ESN', '187-533', NULL, 0, 8233, NULL, 'Default'), \n " +
-                        "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016',510, 510,'PracTest::MG4::S1::SP14','ENU','187-510',NULL,0,8233,NULL,'Default'), \n" +
-                        "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016',511, 511,'PracTest::MG4::S1::SP14::Braille','ENU-Braille','187-511',NULL,0,8233,NULL,'Default'),\n" +
-                        "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016',512, 512,'PracTest::MG4::S1::SP14::ESN','ESN','187-512',NULL,0,8233,NULL,'Default')\n";
+        final String itemConstraintsInsertSql =
+                "INSERT INTO configs.client_test_itemconstraint" +
+                        "(clientname, testid, propname, propvalue, tooltype, toolvalue, item_in) VALUES " +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'ER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_ER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'MI', 'Item Types Exclusion', 'TDS_ItemTypeExcl_MI', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', '--ITEMTYPE--', 'WER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_WER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-11', 'Language', 'ENU', 'Language', 'ENU', 1), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'ER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_ER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'MI', 'Item Types Exclusion', 'TDS_ItemTypeExcl_MI', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'WER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_WER', 0), \n" +
+                        "('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
-        String tblItemInsertSQL =
-                "INSERT INTO itembank.tblitem\n" +
-                        "   (_key, _efk_itembank, _efk_item, itemtype)\n" +
-                        "VALUES \n" +
-                        "   ('187-1234', 187, 123, 'ER'),\n" +
-                        "   ('187-1235', 187, 124, 'MI'),\n" +
-                        "   ('187-1236', 187, 125, 'WER'),\n" +
-                        "   ('187-1237', 187, 126, 'MC')";
-
-        String tblSetAdminSubjectsInsertSQL =
-                "INSERT INTO itembank.tblsetofadminitems \n" +
-                        "   (_fk_item, _fk_adminsubject, groupid, groupkey, itemposition, isfieldtest, isactive, isrequired, strandname)\n" +
-                        "VALUES \n" +
-                        "   ('187-1234', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-1', 'GK-1', 1, 0, 1, 1, 'strand1'),\n" +
-                        "   ('187-1235', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-2', 'GK-2', 2, 0, 1, 1, 'strand2'),\n" +
-                        "   ('187-1236', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'G-3', 'GK-3', 1, 0, 1, 1, 'strand3'),\n" +
-                        "   ('187-1237', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'G-4', 'GK-4', 1, 1, 1, 1, 'silver strand')";
-
+        jdbcTemplate.update(itemConstraintsInsertSql);
         jdbcTemplate.update(tblClientInsertSQL);
         jdbcTemplate.update(tblSubjectInsertSQL);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2b);
-        jdbcTemplate.update(tblitemPropsInsertSQL);
-        jdbcTemplate.update(tblItemInsertSQL);
-        jdbcTemplate.update(tblSetAdminSubjectsInsertSQL);
-        jdbcTemplate.update(testformInsertSQL);
+        jdbcTemplate.update(tblItemPropsInsertSQL);
     }
 
     @Test
@@ -134,37 +113,11 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(seg.getPosition()).isEqualTo(1);
         assertThat(seg.getMinItems()).isEqualTo(4);
         assertThat(seg.getMaxItems()).isEqualTo(4);
+        assertThat(seg.getFieldTestMinItems()).isEqualTo(1);
+        assertThat(seg.getFieldTestMaxItems()).isEqualTo(4);
         assertThat(seg.getLanguages()).hasSize(1);
         assertThat(seg.getLanguages()).containsOnly(new ItemProperty("Language", "ENU"));
         assertThat(seg.getSelectionAlgorithm()).isEqualTo(maybeAssessment.get().getSelectionAlgorithm());
-
-        Form form1 = null;
-
-        for(Form form : seg.getForms()) {
-            if (form.getKey().equals("187-510")) {
-                form1 = form;
-            }
-        }
-        assertThat(seg.getForms()).hasSize(3);
-        assertThat(form1.getKey()).isEqualTo("187-510");
-        assertThat(form1.getCohort()).isEqualTo("Default");
-        assertThat(form1.getId()).isEqualTo("PracTest::MG4::S1::SP14");
-        assertThat(form1.getLanguage()).isEqualTo("ENU");
-        assertThat(form1.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form1.getUpdateVersion()).isNull();
-        assertThat(form1.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(seg.getItems()).hasSize(1);
-        Item item1 = seg.getItems().get(0);
-        assertThat(item1.getId()).isEqualTo("187-1237");
-        assertThat(item1.getGroupId()).isEqualTo("G-4");
-        assertThat(item1.getGroupKey()).isEqualTo("GK-4");
-        assertThat(item1.getItemType()).isEqualTo("MC");
-        assertThat(item1.getPosition()).isEqualTo(1);
-        assertThat(item1.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(item1.getStrand()).isEqualTo("silver strand");
-        assertThat(item1.isActive()).isTrue();
-        assertThat(item1.isFieldTest()).isTrue();
-        assertThat(item1.isRequired()).isTrue();
     }
 
     @Test
@@ -199,6 +152,8 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment1.getPosition()).isEqualTo(1);
         assertThat(segment1.getMinItems()).isEqualTo(4);
         assertThat(segment1.getMaxItems()).isEqualTo(4);
+        assertThat(segment1.getFieldTestMinItems()).isEqualTo(2);
+        assertThat(segment1.getFieldTestMaxItems()).isEqualTo(3);
         assertThat(segment1.getSubject()).isEqualTo(subject);
         assertThat(segment1.getStartAbility()).isEqualTo(0);
 
@@ -210,92 +165,50 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment2.getPosition()).isEqualTo(2);
         assertThat(segment2.getMinItems()).isEqualTo(4);
         assertThat(segment2.getMaxItems()).isEqualTo(4);
+        assertThat(segment2.getFieldTestMinItems()).isEqualTo(1);
+        assertThat(segment2.getFieldTestMaxItems()).isEqualTo(4);
         assertThat(segment2.getSubject()).isEqualTo(subject);
         assertThat(segment2.getLanguages()).hasSize(2);
         assertThat(segment2.getLanguages()).contains(new ItemProperty("Language", "ENU"), new ItemProperty("Language", "Braille-ENU"));
         assertThat(segment2.getStartAbility()).isEqualTo(0);
+    }
 
-        List<Form> formsSeg1 = segment1.getForms();
-        assertThat(formsSeg1.size()).isEqualTo(3);
-        List<Form> formsSeg2 = segment2.getForms();
-        assertThat(formsSeg2.size()).isEqualTo(3);
+    @Test
+    public void shouldRetrieveFourConstraintsForAssessment() {
+        final String assessmentId = "IRP-Perf-ELA-11";
+        List<ItemConstraint> itemConstraints = repository.findItemConstraintsForAssessment("SBAC_PT", "IRP-Perf-ELA-11");
+        assertThat(itemConstraints).hasSize(4);
+        ItemConstraint languageConstraint = null;
+        ItemConstraint erConstraint = null;
 
-        List<Form> allSegments = new ArrayList<>();
-        allSegments.addAll(formsSeg1);
-        allSegments.addAll(formsSeg2);
-        Form form1 = null;
-        Form form2 = null;
-        for(Form form : allSegments) {
-            switch (form.getKey()) {
-                case "187-528":
-                    form1 = form;
-                    break;
-                case "187-531":
-                    form2 = form;
-                    break;
+        for (ItemConstraint constraint : itemConstraints) {
+            if (constraint.getPropertyValue().equals("ER")) {
+                erConstraint = constraint;
+                continue;
+            } else if (constraint.getPropertyName().equals("Language")) {
+                languageConstraint = constraint;
+                continue;
             }
         }
 
-        // Validate forms in each segment
-        assertThat(form1.getKey()).isEqualTo("187-528");
-        assertThat(form1.getCohort()).isEqualTo("Default");
-        assertThat(form1.getId()).isEqualTo("PracTest::MG8::S1::SP14");
-        assertThat(form1.getLanguage()).isEqualTo("ENU");
-        assertThat(form1.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form1.getUpdateVersion()).isEqualTo(8234L);
-        assertThat(form1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(form2.getKey()).isEqualTo("187-531");
-        assertThat(form2.getCohort()).isEqualTo("Default");
-        assertThat(form2.getId()).isEqualTo("PracTest::MG8::S2::SP14");
-        assertThat(form2.getLanguage()).isEqualTo("ENU");
-        assertThat(form2.getLoadVersion()).isEqualTo(8233L);
-        assertThat(form2.getUpdateVersion()).isNull();
-        assertThat(form2.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+        assertThat(languageConstraint.getAssessmentId()).isEqualTo(assessmentId);
+        assertThat(languageConstraint.getPropertyName()).isEqualTo("Language");
+        assertThat(languageConstraint.getPropertyValue()).isEqualTo("ENU");
+        assertThat(languageConstraint.getToolType()).isEqualTo("Language");
+        assertThat(languageConstraint.getToolValue()).isEqualTo("ENU");
+        assertThat(languageConstraint.isInclusive()).isTrue();
+        assertThat(erConstraint.getAssessmentId()).isEqualTo(assessmentId);
+        assertThat(erConstraint.getPropertyName()).isEqualTo("--ITEMTYPE--");
+        assertThat(erConstraint.getPropertyValue()).isEqualTo("ER");
+        assertThat(erConstraint.getToolType()).isEqualTo("Item Types Exclusion");
+        assertThat(erConstraint.getToolValue()).isEqualTo("TDS_ItemTypeExcl_ER");
+        assertThat(erConstraint.isInclusive()).isFalse();
+    }
 
-        List<Item> itemsSeg1 = segment1.getItems();
-        List<Item> itemsSeg2 = segment2.getItems();
-
-        // Validate items in each segment
-        assertThat(itemsSeg1).hasSize(2);
-        Item item1Seg1 = null;
-        Item item2Seg1 = null;
-        for (Item item : itemsSeg1) {
-            if ("187-1234".equals(item.getId())) {
-                item1Seg1 = item;
-            } else if ("187-1235".equals(item.getId())) {
-                item2Seg1 = item;
-            }
-        }
-        assertThat(item1Seg1.getGroupId()).isEqualTo("G-1");
-        assertThat(item1Seg1.getGroupKey()).isEqualTo("GK-1");
-        assertThat(item1Seg1.getItemType()).isEqualTo("ER");
-        assertThat(item1Seg1.getPosition()).isEqualTo(1);
-        assertThat(item1Seg1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(item1Seg1.isActive()).isTrue();
-        assertThat(item1Seg1.isFieldTest()).isFalse();
-        assertThat(item1Seg1.isRequired()).isTrue();
-        assertThat(item1Seg1.getStrand()).isEqualTo("strand1");
-        assertThat(item2Seg1.getGroupId()).isEqualTo("G-2");
-        assertThat(item2Seg1.getGroupKey()).isEqualTo("GK-2");
-        assertThat(item2Seg1.getItemType()).isEqualTo("MI");
-        assertThat(item2Seg1.getPosition()).isEqualTo(2);
-        assertThat(item2Seg1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(item2Seg1.isActive()).isTrue();
-        assertThat(item2Seg1.isFieldTest()).isFalse();
-        assertThat(item2Seg1.isRequired()).isTrue();
-        assertThat(item2Seg1.getStrand()).isEqualTo("strand2");
-        Item item1Seg2 = segment2.getItems().get(0);
-        assertThat(item1Seg2.getGroupId()).isEqualTo("G-3");
-        assertThat(item1Seg2.getGroupKey()).isEqualTo("GK-3");
-        assertThat(item1Seg2.getItemType()).isEqualTo("WER");
-        assertThat(item1Seg2.getPosition()).isEqualTo(1);
-        assertThat(item1Seg2.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
-        assertThat(item1Seg2.isActive()).isTrue();
-        assertThat(item1Seg2.isFieldTest()).isFalse();
-        assertThat(item1Seg2.isRequired()).isTrue();
-        assertThat(item1Seg2.getStrand()).isEqualTo("strand3");
-
-        assertThat(itemsSeg2).hasSize(1);
+    @Test
+    public void shouldRetrieveNoConstraintsForAssessment() {
+        List<ItemConstraint> itemConstraints = repository.findItemConstraintsForAssessment("No client", "NoExam");
+        assertThat(itemConstraints).isEmpty();
     }
 
 }

@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,29 +16,20 @@ public class Segment {
     private int position;
     private int minItems;
     private int maxItems;
-    private List<ItemProperty> languages;
-    private List<Form> forms;
-    private List<Item> items;
-
-    private Segment(Builder builder) {
-        key = builder.key;
-        segmentId = builder.segmentId;
-        selectionAlgorithm = builder.selectionAlgorithm;
-        startAbility = builder.startAbility;
-        subject = builder.subject;
-        assessmentKey = builder.assessmentKey;
-        position = builder.position;
-        minItems = builder.minItems;
-        maxItems = builder.maxItems;
-        languages = builder.languages;
-        forms = builder.forms;
-        items = builder.items;
-    }
+    private int fieldTestMinItems;
+    private int fieldTestMaxItems;
+    private List<ItemProperty> languages = new ArrayList<>();
+    private List<Form> forms = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
     /**
      * Empty constructor for frameworks
      */
     private Segment() {}
+
+    public Segment(String key) {
+        this.key = key;
+    }
 
     /**
      * @return key to the segment
@@ -110,6 +102,20 @@ public class Segment {
     }
 
     /**
+     * @return the minimum number of field test items in the {@link tds.assessment.Segment}
+     */
+    public int getFieldTestMinItems() {
+        return fieldTestMinItems;
+    }
+
+    /**
+     * @return the maximum number of field test items in the {@link tds.assessment.Segment}
+     */
+    public int getFieldTestMaxItems() {
+        return fieldTestMaxItems;
+    }
+
+    /**
      * @return return the forms that are a part of this assessment's {@link tds.assessment.Segment}
      */
     public List<Form> getForms() {
@@ -123,81 +129,56 @@ public class Segment {
         return items;
     }
 
-    public static class Builder {
-        private String key;
-        private String segmentId;
-        private String selectionAlgorithm;
-        private float startAbility;
-        private String subject;
-        private String assessmentKey;
-        private int position;
-        private int minItems;
-        private int maxItems;
-        private List<ItemProperty> languages;
-        private List<Form> forms;
-        private List<Item> items;
-
-        public Builder(String key) {
-            this.key = key;
-        }
-
-        public Builder withSegmentId(String segmentId) {
-            this.segmentId = segmentId;
-            return this;
-        }
-
-        public Builder withSelectionAlgorithm(String selectionAlgorithm) {
-            this.selectionAlgorithm = selectionAlgorithm;
-            return this;
-        }
-
-        public Builder withStartAbility(float ability) {
-            this.startAbility = ability;
-            return this;
-        }
-
-        public Builder withSubject(String subject) {
-            this.subject = subject;
-            return this;
-        }
-
-        public Builder withAssessmentKey(String assessmentKey) {
-            this.assessmentKey = assessmentKey;
-            return this;
-        }
-
-        public Builder withLanguages(List<ItemProperty> languages) {
-            this.languages = languages;
-            return this;
-        }
-
-        public Builder withPosition(int position) {
-            this.position = position;
-            return this;
-        }
-
-        public Builder withMinItems(int minItems) {
-            this.minItems = minItems;
-            return this;
-        }
-
-        public Builder withMaxItems(int maxItems) {
-            this.maxItems = maxItems;
-            return this;
-        }
-
-        public Builder withForms(List<Form> forms) {
-            this.forms = forms;
-            return this;
-        }
-
-        public Builder withItems(List<Item> items) {
-            this.items = items;
-            return this;
-        }
-
-        public Segment build() {
-            return new Segment(this);
-        }
+    public void setSegmentId(String segmentId) {
+        this.segmentId = segmentId;
     }
+
+    public void setSelectionAlgorithm(String selectionAlgorithm) {
+        this.selectionAlgorithm = selectionAlgorithm;
+    }
+
+    public void setStartAbility(float startAbility) {
+        this.startAbility = startAbility;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setAssessmentKey(String assessmentKey) {
+        this.assessmentKey = assessmentKey;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setMinItems(int minItems) {
+        this.minItems = minItems;
+    }
+
+    public void setMaxItems(int maxItems) {
+        this.maxItems = maxItems;
+    }
+
+    public void setFieldTestMinItems(int fieldTestMinItems) {
+        this.fieldTestMinItems = fieldTestMinItems;
+    }
+
+    public void setFieldTestMaxItems(int fieldTestMaxItems) {
+        this.fieldTestMaxItems = fieldTestMaxItems;
+    }
+
+    public void setLanguages(List<ItemProperty> languages) {
+        this.languages = languages;
+    }
+
+    public void setForms(List<Form> forms) {
+        this.forms = forms;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
 }

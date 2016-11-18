@@ -1,0 +1,52 @@
+package tds.assessment.repositories.impl;
+
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import tds.assessment.Form;
+import tds.assessment.repositories.FormQueryRepository;
+
+@Repository
+public class FormQueryRepositoryImpl implements FormQueryRepository {
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public FormQueryRepositoryImpl(DataSource dataSource) {
+        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Override
+    public List<Form> findFormsForAssessment(String assessmentKey) {
+        SqlParameterSource parameters = new MapSqlParameterSource("key", assessmentKey);
+        final String formsSQL =
+            "SELECT \n" +
+            "    segments._key AS segmentKey, \n" +
+            "    forms._key AS `key`, \n" +
+            "    forms.formid AS id, \n" +
+            "    forms.language, \n" +
+            "    forms.loadconfig AS loadVersion, \n" +
+            "    forms.updateconfig AS updateVersion, \n" +
+            "    forms.cohort \n" +
+            "FROM itembank.tblsetofadminsubjects segments \n" +
+            "JOIN itembank.testform forms ON segments._key = forms._fk_adminsubject \n" +
+            "WHERE segments.virtualtest = :key OR segments._key = :key";
+
+        return jdbcTemplate.query(formsSQL, parameters, (rs, row) ->
+                new Form.Builder(rs.getString("key"))
+                        .withSegmentKey(rs.getString("segmentKey"))
+                        .withId(rs.getString("id"))
+                        .withLanguage(rs.getString("language"))
+                        .withCohort(rs.getString("cohort"))
+                        // calling getObject() and casting to Double because .getLong() defaults to 0 if null
+                        .withLoadVersion((Long) rs.getObject("loadVersion"))
+                        .withUpdateVersion((Long) rs.getObject("updateVersion"))
+                        .build()
+        );
+    }
+}
