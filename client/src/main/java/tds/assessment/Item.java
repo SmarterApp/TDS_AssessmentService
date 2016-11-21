@@ -14,7 +14,6 @@ public class Item {
     private String groupKey;
     private int position;
     private boolean fieldTest;
-    private boolean active;
     private boolean required;
     private String strand;
     private List<ItemProperty> itemProperties = new ArrayList<>();
@@ -85,13 +84,6 @@ public class Item {
     }
 
     /**
-     * @return flags whether the item is active
-     */
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
      * @return the strand of the item
      */
     public String getStrand() {
@@ -128,10 +120,6 @@ public class Item {
 
     public void setFieldTest(boolean fieldTest) {
         this.fieldTest = fieldTest;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public void setRequired(boolean required) {

@@ -36,7 +36,6 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                         "    A.groupid,\n" +
                         "    A.groupkey,\n" +
                         "    A.itemposition AS position,\n" +
-                        "    A.isactive,\n" +
                         "    A.isfieldtest,\n" +
                         "    A.isrequired, \n" +
                         "    A.strandname \n" +
@@ -48,7 +47,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                         "JOIN itembank.tblsetofadminsubjects segments \n" +
                         "    ON segments._key = A._fk_adminsubject \n" +
                         "WHERE \n" +
-                        "   segments.virtualtest = :key OR segments._key = :key";
+                        "   (segments.virtualtest = :key OR segments._key = :key) AND \n" +
+                        "   A.isactive = 1";
 
         List<Item> items = jdbcTemplate.query(itemsSQL, parameters, (RowMapper<Item>) (rs, row) -> {
                     Item item = new Item(rs.getString("id"));
@@ -57,7 +57,6 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                     item.setGroupId(rs.getString("groupid"));
                     item.setGroupKey(rs.getString("groupkey"));
                     item.setPosition(rs.getInt("position"));
-                    item.setActive(rs.getBoolean("isactive"));
                     item.setFieldTest(rs.getBoolean("isfieldtest"));
                     item.setRequired(rs.getBoolean("isrequired"));
                     item.setStrand(rs.getString("strandname"));

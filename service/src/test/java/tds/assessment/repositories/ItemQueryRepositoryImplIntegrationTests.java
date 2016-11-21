@@ -131,7 +131,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.getPosition()).isEqualTo(1);
         assertThat(item1.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         assertThat(item1.getStrand()).isEqualTo("silver strand");
-        assertThat(item1.isActive()).isTrue();
         assertThat(item1.isFieldTest()).isTrue();
         assertThat(item1.isRequired()).isTrue();
     }
@@ -159,7 +158,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg1.getItemType()).isEqualTo("ER");
         assertThat(item1Seg1.getPosition()).isEqualTo(1);
         assertThat(item1Seg1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(item1Seg1.isActive()).isTrue();
         assertThat(item1Seg1.isFieldTest()).isFalse();
         assertThat(item1Seg1.isRequired()).isTrue();
         assertThat(item1Seg1.getStrand()).isEqualTo("strand1");
@@ -168,7 +166,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item2Seg1.getItemType()).isEqualTo("MI");
         assertThat(item2Seg1.getPosition()).isEqualTo(2);
         assertThat(item2Seg1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(item2Seg1.isActive()).isTrue();
         assertThat(item2Seg1.isFieldTest()).isFalse();
         assertThat(item2Seg1.isRequired()).isTrue();
         assertThat(item2Seg1.getStrand()).isEqualTo("strand2");
@@ -177,7 +174,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg2.getItemType()).isEqualTo("WER");
         assertThat(item1Seg2.getPosition()).isEqualTo(1);
         assertThat(item1Seg2.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
-        assertThat(item1Seg2.isActive()).isTrue();
         assertThat(item1Seg2.isFieldTest()).isFalse();
         assertThat(item1Seg2.isRequired()).isTrue();
         assertThat(item1Seg2.getStrand()).isEqualTo("strand3");
