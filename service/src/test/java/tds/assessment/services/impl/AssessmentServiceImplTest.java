@@ -4,8 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import tds.assessment.Assessment;
 import tds.assessment.Form;
@@ -13,9 +15,11 @@ import tds.assessment.Item;
 import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
+import tds.assessment.Strand;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
+import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +31,7 @@ public class AssessmentServiceImplTest {
     private AssessmentQueryRepository assessmentQueryRepository;
     private ItemQueryRepository itemQueryRepository;
     private FormQueryRepository formQueryRepository;
+    private StrandQueryRepository strandQueryRepository;
     private AssessmentService service;
 
     @Before
@@ -34,7 +39,9 @@ public class AssessmentServiceImplTest {
         assessmentQueryRepository = mock(AssessmentQueryRepository.class);
         itemQueryRepository = mock(ItemQueryRepository.class);
         formQueryRepository = mock(FormQueryRepository.class);
-        service = new AssessmentServiceImpl(assessmentQueryRepository, itemQueryRepository, formQueryRepository);
+        strandQueryRepository = mock(StrandQueryRepository.class);
+        service = new AssessmentServiceImpl(assessmentQueryRepository, itemQueryRepository, formQueryRepository,
+                strandQueryRepository);
     }
 
     @Test
@@ -46,11 +53,13 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
         Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
+        verify(strandQueryRepository).findStrands("theKey");
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
     }
 
@@ -86,6 +95,7 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(forms);
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
         when(assessmentQueryRepository.findItemConstraintsForAssessment("SBAC_PT", assessmentId)).thenReturn(new ArrayList<>());
         Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
@@ -93,6 +103,7 @@ public class AssessmentServiceImplTest {
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
         verify(assessmentQueryRepository).findItemConstraintsForAssessment("SBAC_PT", assessmentId);
+        verify(strandQueryRepository).findStrands("theKey");
         assertThat(maybeAssessment).isPresent();
 
         List<Segment> retSegments = maybeAssessment.get().getSegments();
@@ -163,6 +174,7 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(itemProperties);
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(items);
+        when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
         when(assessmentQueryRepository.findItemConstraintsForAssessment("SBAC_PT", assessmentId)).thenReturn(new ArrayList<>());
         Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
@@ -170,6 +182,7 @@ public class AssessmentServiceImplTest {
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
         verify(assessmentQueryRepository).findItemConstraintsForAssessment("SBAC_PT", assessmentId);
+        verify(strandQueryRepository).findStrands("theKey");
         assertThat(maybeAssessment).isPresent();
 
         List<Segment> retSegments = maybeAssessment.get().getSegments();
@@ -252,6 +265,7 @@ public class AssessmentServiceImplTest {
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
         when(assessmentQueryRepository.findItemConstraintsForAssessment("SBAC_PT", assessmentId)).thenReturn(itemConstraints);
         Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey");
@@ -259,6 +273,7 @@ public class AssessmentServiceImplTest {
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
         verify(assessmentQueryRepository).findItemConstraintsForAssessment("SBAC_PT", "foo");
+        verify(strandQueryRepository).findStrands("theKey");
         assertThat(maybeAssessment).isPresent();
         List<ItemConstraint> retConstraints = maybeAssessment.get().getItemConstraints();
         assertThat(retConstraints).hasSize(2);
@@ -276,5 +291,140 @@ public class AssessmentServiceImplTest {
         assertThat(retCon2.getToolValue()).isEqualTo(constraint2.getToolValue());
         assertThat(retCon2.getPropertyName()).isEqualTo(constraint2.getPropertyName());
         assertThat(retCon2.getPropertyValue()).isEqualTo(constraint2.getPropertyValue());
+    }
+
+    @Test
+    public void shouldReturnAssessmentWithStrands() {
+        Set<Strand> assessmentStrands = new HashSet<>();
+        Strand assessmentStrand = new Strand.Builder()
+                .withKey("Strand1-key")
+                .withName("Strand1")
+                .withMinItems(0)
+                .withMaxItems(4)
+                .withSegmentKey("theKey")
+                .withAdaptiveCut(26.32F)
+                .build();
+        assessmentStrands.add(assessmentStrand);
+        Set<Strand> seg1Strands = new HashSet<>();
+        Strand seg1Strand1 = new Strand.Builder()
+                .withKey("Strand2-key")
+                .withName("Strand2")
+                .withMinItems(2)
+                .withMaxItems(3)
+                .withSegmentKey("seg1")
+                .withAdaptiveCut(29.35F)
+                .build();
+        Strand seg1Strand2 = new Strand.Builder()
+                .withKey("Strand3-key")
+                .withName("Strand3")
+                .withMinItems(0)
+                .withMaxItems(12)
+                .withSegmentKey("seg1")
+                .withAdaptiveCut(-26.32F)
+                .build();
+        seg1Strands.add(seg1Strand1);
+        seg1Strands.add(seg1Strand2);
+
+        Set<Strand> seg2Strands = new HashSet<>();
+        Strand seg2Strand1 = new Strand.Builder()
+                .withKey("Strand4-key")
+                .withName("Strand4")
+                .withMinItems(3)
+                .withMaxItems(14)
+                .withSegmentKey("seg2")
+                .withAdaptiveCut(-32.522F)
+                .build();
+        seg2Strands.add(seg2Strand1);
+
+        Set<Strand> allStrands = new HashSet<>();
+        allStrands.addAll(assessmentStrands);
+        allStrands.addAll(seg1Strands);
+        allStrands.addAll(seg2Strands);
+
+
+        final String assessmentId = "foo";
+        Assessment assessment = new Assessment();
+        assessment.setKey("theKey");
+        assessment.setAssessmentId(assessmentId);
+        assessment.setStrands(assessmentStrands);
+
+        List<Segment> segs = new ArrayList<>();
+        Segment seg1 = new Segment("seg1");
+        seg1.setStrands(seg1Strands);
+        Segment seg2 = new Segment("seg2");
+        seg2.setStrands(seg2Strands);
+
+        segs.add(seg1);
+        segs.add(seg2);
+        assessment.setSegments(segs);
+
+        when(assessmentQueryRepository.findAssessmentByKey("theKey")).thenReturn(Optional.of(assessment));
+        when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
+        when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(strandQueryRepository.findStrands("theKey")).thenReturn(allStrands);
+        when(assessmentQueryRepository.findItemConstraintsForAssessment("SBAC_PT", assessmentId)).thenReturn(new ArrayList<>());
+        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
+        verify(assessmentQueryRepository).findAssessmentByKey("theKey");
+        verify(formQueryRepository).findFormsForAssessment("theKey");
+        verify(itemQueryRepository).findActiveItemsProperties("theKey");
+        verify(itemQueryRepository).findItemsForAssessment("theKey");
+        verify(assessmentQueryRepository).findItemConstraintsForAssessment("SBAC_PT", assessmentId);
+        verify(strandQueryRepository).findStrands("theKey");
+        assertThat(maybeAssessment).isPresent();
+
+        Assessment retAssessment = maybeAssessment.get();
+        List<Segment> retSegments = retAssessment.getSegments();
+        assertThat(retSegments).hasSize(2);
+        Segment retSeg1 = retSegments.get(0);
+        assertThat(retSeg1.getKey()).isEqualTo("seg1");
+
+        // Assessment strand
+        Set<Strand> retAssessmentStrands = retAssessment.getStrands();
+        assertThat(retAssessmentStrands).hasSize(1);
+        Strand retAssessmentStrand = retAssessmentStrands.iterator().next(); // we know its one item, just get the first one
+        assertThat(retAssessmentStrand.getKey()).isEqualTo(assessmentStrand.getKey());
+        assertThat(retAssessmentStrand.getSegmentKey()).isEqualTo(assessment.getKey());
+        assertThat(retAssessmentStrand.getMinItems()).isEqualTo(assessmentStrand.getMinItems());
+        assertThat(retAssessmentStrand.getMaxItems()).isEqualTo(assessmentStrand.getMaxItems());
+        assertThat(retAssessmentStrand.getAdaptiveCut()).isEqualTo(assessmentStrand.getAdaptiveCut());
+
+        // Segment 1 Strands
+        Set<Strand> retSeg1Strands = retSeg1.getStrands();
+        assertThat(retSeg1Strands).hasSize(2);
+
+        Strand retSeg1Strand1 = null;
+        Strand retSeg1Strand2 = null;
+
+        for (Strand retStrand : retSeg1Strands) {
+            if (retStrand.getName().equals(seg1Strand1.getName())) {
+                retSeg1Strand1 = retStrand;
+            } else if (retStrand.getName().equals(seg1Strand2.getName())) {
+                retSeg1Strand2 = retStrand;
+            }
+        }
+
+        assertThat(retSeg1Strand1.getKey()).isEqualTo(seg1Strand1.getKey());
+        assertThat(retSeg1Strand1.getSegmentKey()).isEqualTo(seg1.getKey());
+        assertThat(retSeg1Strand1.getMinItems()).isEqualTo(seg1Strand1.getMinItems());
+        assertThat(retSeg1Strand1.getMaxItems()).isEqualTo(seg1Strand1.getMaxItems());
+        assertThat(retSeg1Strand1.getAdaptiveCut()).isEqualTo(seg1Strand1.getAdaptiveCut());
+        assertThat(retSeg1Strand2.getKey()).isEqualTo(seg1Strand2.getKey());
+        assertThat(retSeg1Strand2.getSegmentKey()).isEqualTo(seg1.getKey());
+        assertThat(retSeg1Strand2.getMinItems()).isEqualTo(seg1Strand2.getMinItems());
+        assertThat(retSeg1Strand2.getMaxItems()).isEqualTo(seg1Strand2.getMaxItems());
+        assertThat(retSeg1Strand2.getAdaptiveCut()).isEqualTo(seg1Strand2.getAdaptiveCut());
+
+        // Segment 2 Strands
+        Segment retSeg2 = retSegments.get(1);
+        assertThat(retSeg2.getKey()).isEqualTo("seg2");
+        Set<Strand> retSeg2Strands = retSeg2.getStrands();
+        assertThat(retSeg2Strands).hasSize(1);
+        Strand retSeg2Strand1 = retSeg2Strands.iterator().next(); // we know its one item, just get the first one
+        assertThat(retSeg2Strand1.getKey()).isEqualTo(seg2Strand1.getKey());
+        assertThat(retSeg2Strand1.getSegmentKey()).isEqualTo(seg2.getKey());
+        assertThat(retSeg2Strand1.getMinItems()).isEqualTo(seg2Strand1.getMinItems());
+        assertThat(retSeg2Strand1.getMaxItems()).isEqualTo(seg2Strand1.getMaxItems());
+        assertThat(retSeg2Strand1.getAdaptiveCut()).isEqualTo(seg2Strand1.getAdaptiveCut());
     }
 }

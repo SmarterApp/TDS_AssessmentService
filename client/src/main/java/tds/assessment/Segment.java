@@ -1,7 +1,9 @@
 package tds.assessment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents admin information concerning a segment
@@ -21,6 +23,7 @@ public class Segment {
     private List<ItemProperty> languages = new ArrayList<>();
     private List<Form> forms = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
+    private Set<Strand> strands = new HashSet<>();
 
     /**
      * Empty constructor for frameworks
@@ -129,6 +132,14 @@ public class Segment {
         return items;
     }
 
+    /**
+     * @return the collection of {@link tds.assessment.Strand}s containing adaptive algorithm metadata for
+     * the {@link tds.assessment.Segment}
+     */
+    public Set<Strand> getStrands() {
+        return strands;
+    }
+
     public void setSegmentId(String segmentId) {
         this.segmentId = segmentId;
     }
@@ -179,6 +190,10 @@ public class Segment {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public void setStrands(Set<Strand> strands) {
+        this.strands = strands;
     }
 
 }

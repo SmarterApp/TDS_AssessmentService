@@ -1,7 +1,9 @@
 package tds.assessment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents admin information concerning an assessment and its individual segments (if any)
@@ -14,6 +16,7 @@ public class Assessment {
     private String subject;
     private List<ItemConstraint> itemConstraints = new ArrayList<>();
     private List<Segment> segments = new ArrayList<>();
+    private Set<Strand> strands = new HashSet<>();
 
     public Assessment() {}
 
@@ -112,6 +115,18 @@ public class Assessment {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    /**
+     * @return the collection of {@link tds.assessment.Strand}s containing adaptive algorithm metadata for
+     * the {@link tds.assessment.Assessment}
+     */
+    public Set<Strand> getStrands() {
+        return strands;
+    }
+
+    public void setStrands(Set<Strand> strands) {
+        this.strands = strands;
     }
 
 }
