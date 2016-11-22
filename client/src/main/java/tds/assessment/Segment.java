@@ -20,10 +20,10 @@ public class Segment {
     private int maxItems;
     private int fieldTestMinItems;
     private int fieldTestMaxItems;
-    private List<ItemProperty> languages = new ArrayList<>();
-    private List<Form> forms = new ArrayList<>();
-    private List<Item> items = new ArrayList<>();
-    private Set<Strand> strands = new HashSet<>();
+    private List<ItemProperty> languages;
+    private List<Form> forms;
+    private List<Item> items;
+    private Set<Strand> strands;
 
     /**
      * Empty constructor for frameworks
@@ -80,7 +80,7 @@ public class Segment {
      * @return languages associated with the segment
      */
     public List<ItemProperty> getLanguages() {
-        return languages;
+        return languages != null ? languages : new ArrayList<ItemProperty>();
     }
 
     /**
@@ -122,14 +122,14 @@ public class Segment {
      * @return return the forms that are a part of this assessment's {@link tds.assessment.Segment}
      */
     public List<Form> getForms() {
-        return forms;
+        return forms != null ? forms : new ArrayList<Form>();
     }
 
     /**
      * @return return the items that a part of this assessment's {@link tds.assessment.Segment}
      */
     public List<Item> getItems() {
-        return items;
+        return items != null ? items : new ArrayList<Item>();
     }
 
     /**
@@ -137,7 +137,7 @@ public class Segment {
      * the {@link tds.assessment.Segment}
      */
     public Set<Strand> getStrands() {
-        return strands;
+        return strands != null ? strands : new HashSet<Strand>();
     }
 
     public void setSegmentId(String segmentId) {

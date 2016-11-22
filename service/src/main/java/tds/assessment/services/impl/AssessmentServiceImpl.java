@@ -50,8 +50,7 @@ class AssessmentServiceImpl implements AssessmentService {
                     assessment.getAssessmentId());
             Set<Strand> strands = strandQueryRepository.findStrands(assessmentKey);
 
-            AssessmentAssembler.assignPropertiesToItems(items, itemProperties);
-            AssessmentAssembler.assignDataToAssessmentSegments(assessment, forms, items, itemConstraints, strands);
+            AssessmentAssembler.assemble(assessment, items, itemProperties, forms, itemConstraints, strands);
         }
 
         return maybeAssessment;

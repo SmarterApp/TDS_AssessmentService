@@ -13,7 +13,7 @@ public class Strand {
 
     private Strand() {}
 
-    public Strand (Builder builder) {
+    private Strand (Builder builder) {
         this.name = builder.name;
         this.key = builder.key;
         this.segmentKey = builder.segmentKey;

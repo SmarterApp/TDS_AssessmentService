@@ -48,7 +48,7 @@ public class StrandQueryRepositoryImpl implements StrandQueryRepository {
                         .withKey(rs.getString("_key"))
                         .withMinItems(rs.getInt("minitems"))
                         .withMaxItems(rs.getInt("maxitems"))
-                        // calling getObject() and casting to Double because .getDouble() defaults to 0 if null
+                        // calling getObject() and casting to Float because .getFloat() defaults to 0 if null
                         .withAdaptiveCut((Float) rs.getObject("adaptivecut"))
                         .withSegmentKey(rs.getString("segmentKey"))
                         .build()

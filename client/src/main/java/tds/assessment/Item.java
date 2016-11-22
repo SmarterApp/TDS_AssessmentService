@@ -16,7 +16,7 @@ public class Item {
     private boolean fieldTest;
     private boolean required;
     private String strand;
-    private List<ItemProperty> itemProperties = new ArrayList<>();
+    private List<ItemProperty> itemProperties;
 
     /**
      * Private empty constructor for frameworks
@@ -94,7 +94,7 @@ public class Item {
      * @return the
      */
     public List<ItemProperty> getItemProperties() {
-        return itemProperties;
+        return itemProperties != null ? itemProperties : new ArrayList<ItemProperty>();
     }
 
 

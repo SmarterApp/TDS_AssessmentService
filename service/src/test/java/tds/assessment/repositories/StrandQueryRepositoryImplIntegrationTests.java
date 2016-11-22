@@ -84,6 +84,7 @@ public class StrandQueryRepositoryImplIntegrationTests {
         assertThat(strand1.getMaxItems()).isEqualTo(7);
         assertThat(strand1.getSegmentKey()).isEqualTo(assessmentKey);
         assertThat(strand1.getAdaptiveCut()).isEqualTo(-39.234F);
+
         assertThat(strand2.getKey()).isEqualTo("Strand2-key");
         assertThat(strand2.getMinItems()).isEqualTo(0);
         assertThat(strand2.getMaxItems()).isEqualTo(4);
@@ -118,10 +119,12 @@ public class StrandQueryRepositoryImplIntegrationTests {
         assertThat(strand3.getSegmentKey()).isEqualTo(assessmentKey);
         assertThat(strand3.getAdaptiveCut()).isNull();
         assertThat(strand4.getKey()).isEqualTo("Strand4-key");
+
         assertThat(strand4.getMinItems()).isEqualTo(1);
         assertThat(strand4.getMaxItems()).isEqualTo(3);
         assertThat(strand4.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
         assertThat(strand4.getAdaptiveCut()).isNull();
+
         assertThat(strand5.getKey()).isEqualTo("Strand5-key");
         assertThat(strand5.getMinItems()).isEqualTo(0);
         assertThat(strand5.getMaxItems()).isEqualTo(4);
