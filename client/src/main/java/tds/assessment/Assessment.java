@@ -65,7 +65,8 @@ public class Assessment {
      * @return {@code true} if the assessment is segmented
      */
     public boolean isSegmented() {
-        return segments.size() > 1;
+
+        return segments != null && segments.size() > 1;
     }
 
     public Segment getSegment(final String segmentKey) {
