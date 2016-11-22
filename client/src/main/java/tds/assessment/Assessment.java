@@ -1,7 +1,9 @@
 package tds.assessment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents admin information concerning an assessment and its individual segments (if any)
@@ -12,13 +14,14 @@ public class Assessment {
     private String selectionAlgorithm;
     private float startAbility;
     private String subject;
-    private List<ItemConstraint> itemConstraints = new ArrayList<>();
-    private List<Segment> segments = new ArrayList<>();
+    private List<ItemConstraint> itemConstraints;
+    private List<Segment> segments;
+    private Set<Strand> strands;
 
     public Assessment() {}
 
     public List<ItemConstraint> getItemConstraints() {
-        return itemConstraints;
+        return itemConstraints != null ? itemConstraints : new ArrayList<ItemConstraint>();
     }
 
     public void setItemConstraints(List<ItemConstraint> itemConstraints) {
@@ -29,7 +32,7 @@ public class Assessment {
      * @return  A collection of {@link Segment}s for this assessment
      */
     public List<Segment> getSegments() {
-        return segments;
+        return segments != null ? segments : new ArrayList<Segment>();
     }
 
     public void setSegments(List<Segment> segments) {
@@ -112,6 +115,18 @@ public class Assessment {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    /**
+     * @return the collection of {@link tds.assessment.Strand}s containing adaptive algorithm metadata for
+     * the {@link tds.assessment.Assessment}
+     */
+    public Set<Strand> getStrands() {
+        return strands != null ? strands : new HashSet<Strand>();
+    }
+
+    public void setStrands(Set<Strand> strands) {
+        this.strands = strands;
     }
 
 }

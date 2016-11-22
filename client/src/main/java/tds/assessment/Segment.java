@@ -1,7 +1,9 @@
 package tds.assessment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents admin information concerning a segment
@@ -18,9 +20,10 @@ public class Segment {
     private int maxItems;
     private int fieldTestMinItems;
     private int fieldTestMaxItems;
-    private List<ItemProperty> languages = new ArrayList<>();
-    private List<Form> forms = new ArrayList<>();
-    private List<Item> items = new ArrayList<>();
+    private List<ItemProperty> languages;
+    private List<Form> forms;
+    private List<Item> items;
+    private Set<Strand> strands;
 
     /**
      * Empty constructor for frameworks
@@ -77,7 +80,7 @@ public class Segment {
      * @return languages associated with the segment
      */
     public List<ItemProperty> getLanguages() {
-        return languages;
+        return languages != null ? languages : new ArrayList<ItemProperty>();
     }
 
     /**
@@ -119,14 +122,22 @@ public class Segment {
      * @return return the forms that are a part of this assessment's {@link tds.assessment.Segment}
      */
     public List<Form> getForms() {
-        return forms;
+        return forms != null ? forms : new ArrayList<Form>();
     }
 
     /**
      * @return return the items that a part of this assessment's {@link tds.assessment.Segment}
      */
     public List<Item> getItems() {
-        return items;
+        return items != null ? items : new ArrayList<Item>();
+    }
+
+    /**
+     * @return the collection of {@link tds.assessment.Strand}s containing adaptive algorithm metadata for
+     * the {@link tds.assessment.Segment}
+     */
+    public Set<Strand> getStrands() {
+        return strands != null ? strands : new HashSet<Strand>();
     }
 
     public void setSegmentId(String segmentId) {
@@ -179,6 +190,10 @@ public class Segment {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public void setStrands(Set<Strand> strands) {
+        this.strands = strands;
     }
 
 }
