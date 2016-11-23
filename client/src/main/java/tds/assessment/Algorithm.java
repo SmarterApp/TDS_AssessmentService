@@ -14,6 +14,9 @@ public enum Algorithm {
         this.algorithmName = algorithmName;
     }
 
+    /**
+     * @return the name of the algorithm 
+     */
     public String getAlgorithmName() {
         return algorithmName;
     }
@@ -23,10 +26,18 @@ public enum Algorithm {
         return this.getAlgorithmName();
     }
 
+    /**
+     * Returns a {@link tds.assessment.Algorithm} enum for the algorithm name
+     *
+     * @param algorithmName
+     * @return
+     */
     public static Algorithm fromAlgorithm(String algorithmName) {
-        for (Algorithm algorithm : values()) {
-            if (algorithm.getAlgorithmName().equalsIgnoreCase(algorithmName)) {
-                return algorithm;
+        if (algorithmName != null) {
+            for (Algorithm algorithm : values()) {
+                if (algorithmName.equalsIgnoreCase(algorithm.getAlgorithmName())) {
+                    return algorithm;
+                }
             }
         }
         // No value found for string
