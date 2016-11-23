@@ -8,39 +8,39 @@ public enum Algorithm {
     VIRTUAL("virtual"),
     FIXED_FORM("fixedform");
 
-    private String algorithmName;
+    private String type;
 
-    Algorithm(String algorithmName) {
-        this.algorithmName = algorithmName;
+    Algorithm(String type) {
+        this.type = type;
     }
 
     /**
-     * @return the name of the algorithm 
+     * @return the name of the algorithm
      */
-    public String getAlgorithmName() {
-        return algorithmName;
+    public String getType() {
+        return type;
     }
 
     @Override
     public String toString() {
-        return this.getAlgorithmName();
+        return this.getType();
     }
 
     /**
      * Returns a {@link tds.assessment.Algorithm} enum for the algorithm name
      *
-     * @param algorithmName
+     * @param algorithmType Th
      * @return
      */
-    public static Algorithm fromAlgorithm(String algorithmName) {
-        if (algorithmName != null) {
-            for (Algorithm algorithm : values()) {
-                if (algorithmName.equalsIgnoreCase(algorithm.getAlgorithmName())) {
-                    return algorithm;
-                }
+    public static Algorithm fromType(String algorithmType) {
+        if (algorithmType == null) throw new IllegalArgumentException("The algorithm type cannot be null");
+
+        for (Algorithm algorithm : values()) {
+            if (algorithmType.equalsIgnoreCase(algorithm.getType())) {
+                return algorithm;
             }
         }
-        // No value found for string
-        throw new IllegalArgumentException();
+        // No Algorithm found for algorithm type
+        throw new IllegalArgumentException(String.format("No Algorithm found with the name {}", algorithmType));
     }
 }

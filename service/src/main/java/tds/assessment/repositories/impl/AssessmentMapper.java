@@ -43,7 +43,7 @@ class AssessmentMapper {
                 Segment segment = new Segment(segmentKey);
                 segment.setSegmentId((String) row.get("assessmentSegmentId"));
                 segment.setAssessmentKey((String) row.get("assessmentKey"));
-                segment.setSelectionAlgorithm(Algorithm.fromAlgorithm((String) row.get("selectionalgorithm")));
+                segment.setSelectionAlgorithm(Algorithm.fromType((String) row.get("selectionalgorithm")));
                 segment.setMinItems((int) row.get("minItems"));
                 segment.setMaxItems((int) row.get("maxItems"));
                 segment.setFieldTestMinItems((int) row.get("fieldTestMinItems"));
@@ -77,7 +77,7 @@ class AssessmentMapper {
         if (segments.isEmpty()) {
             Segment segment = new Segment((String) assessmentRow.get("assessmentSegmentKey"));
             segment.setSegmentId((String) assessmentRow.get("assessmentSegmentId"));
-            segment.setSelectionAlgorithm(Algorithm.fromAlgorithm((String) assessmentRow.get("selectionalgorithm")));
+            segment.setSelectionAlgorithm(Algorithm.fromType((String) assessmentRow.get("selectionalgorithm")));
             segment.setStartAbility((float) assessmentRow.get("startAbility"));
             segment.setAssessmentKey((String) assessmentRow.get("assessmentSegmentKey"));
             segment.setPosition(1);
@@ -108,7 +108,7 @@ class AssessmentMapper {
         Assessment assessment = new Assessment();
         assessment.setKey((String) assessmentRow.get("assessmentSegmentKey"));
         assessment.setAssessmentId((String) assessmentRow.get("assessmentSegmentId"));
-        assessment.setSelectionAlgorithm(Algorithm.fromAlgorithm((String) assessmentRow.get("selectionalgorithm")));
+        assessment.setSelectionAlgorithm(Algorithm.fromType((String) assessmentRow.get("selectionalgorithm")));
         assessment.setStartAbility((float) assessmentRow.get("startAbility"));
         assessment.setSubject((String) assessmentRow.get("subject"));
         assessment.setSegments(assessmentSegments);
