@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
@@ -93,7 +94,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
     public void shouldFindNonSegmentedAssessmentByKey() {
         Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         assertThat(maybeAssessment.get().getKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(maybeAssessment.get().getSelectionAlgorithm()).isEqualTo("virtual");
+        assertThat(maybeAssessment.get().getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
         assertThat(maybeAssessment.get().getAssessmentId()).isEqualTo("IRP-Perf-ELA-11");
         assertThat(maybeAssessment.get().getStartAbility()).isEqualTo(0F);
         assertThat(maybeAssessment.get().getSubject()).isEqualTo("ELA");
@@ -121,7 +122,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         final String subject = "ELA";
         Optional<Assessment> maybeAssessment = repository.findAssessmentByKey(assessmentKey);
         assertThat(maybeAssessment.get().getKey()).isEqualTo(assessmentKey);
-        assertThat(maybeAssessment.get().getSelectionAlgorithm()).isEqualTo("virtual");
+        assertThat(maybeAssessment.get().getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
         assertThat(maybeAssessment.get().getAssessmentId()).isEqualTo("SBAC-Mathematics-8");
         assertThat(maybeAssessment.get().getStartAbility()).isEqualTo(0F);
         assertThat(maybeAssessment.get().getSubject()).isEqualTo(subject);
@@ -143,7 +144,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment1.getAssessmentKey()).isEqualTo(assessmentKey);
         assertThat(segment1.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
         assertThat(segment1.getSegmentId()).isEqualTo("SBAC-SEG1-MATH-8");
-        assertThat(segment1.getSelectionAlgorithm()).isEqualTo("fixedform");
+        assertThat(segment1.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
         assertThat(segment1.getPosition()).isEqualTo(1);
         assertThat(segment1.getMinItems()).isEqualTo(4);
         assertThat(segment1.getMaxItems()).isEqualTo(4);
@@ -156,7 +157,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment2.getAssessmentKey()).isEqualTo(assessmentKey);
         assertThat(segment2.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
         assertThat(segment2.getSegmentId()).isEqualTo("SBAC-SEG2-MATH-8");
-        assertThat(segment2.getSelectionAlgorithm()).isEqualTo("fixedform");
+        assertThat(segment2.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
         assertThat(segment2.getPosition()).isEqualTo(2);
         assertThat(segment2.getMinItems()).isEqualTo(4);
         assertThat(segment2.getMaxItems()).isEqualTo(4);

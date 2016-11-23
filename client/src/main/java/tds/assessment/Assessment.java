@@ -11,7 +11,7 @@ import java.util.Set;
 public class Assessment {
     private String key;
     private String assessmentId;
-    private String selectionAlgorithm;
+    private Algorithm selectionAlgorithm;
     private float startAbility;
     private String subject;
     private List<ItemConstraint> itemConstraints;
@@ -88,11 +88,11 @@ public class Assessment {
     /**
      * @return the selection algorithm key for the assessment
      */
-    public String getSelectionAlgorithm() {
+    public Algorithm getSelectionAlgorithm() {
         return selectionAlgorithm;
     }
 
-    public void setSelectionAlgorithm(String selectionAlgorithm) {
+    public void setSelectionAlgorithm(Algorithm selectionAlgorithm) {
         this.selectionAlgorithm = selectionAlgorithm;
     }
 

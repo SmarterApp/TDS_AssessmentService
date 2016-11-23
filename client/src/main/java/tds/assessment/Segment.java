@@ -11,7 +11,7 @@ import java.util.Set;
 public class Segment {
     private String key;
     private String segmentId;
-    private String selectionAlgorithm;
+    private Algorithm selectionAlgorithm;
     private float startAbility;
     private String subject;
     private String assessmentKey;
@@ -58,7 +58,7 @@ public class Segment {
     /**
      * @return the selection algorithm key for the segment
      */
-    public String getSelectionAlgorithm() {
+    public Algorithm getSelectionAlgorithm() {
         return selectionAlgorithm;
     }
 
@@ -144,7 +144,7 @@ public class Segment {
         this.segmentId = segmentId;
     }
 
-    public void setSelectionAlgorithm(String selectionAlgorithm) {
+    public void setSelectionAlgorithm(Algorithm selectionAlgorithm) {
         this.selectionAlgorithm = selectionAlgorithm;
     }
 
