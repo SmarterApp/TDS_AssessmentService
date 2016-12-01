@@ -1,6 +1,5 @@
 package tds.assessment.repositories.impl;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -8,12 +7,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import tds.assessment.Item;
-import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.repositories.ItemQueryRepository;
 

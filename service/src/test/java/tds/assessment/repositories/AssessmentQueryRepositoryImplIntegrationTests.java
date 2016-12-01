@@ -1,11 +1,14 @@
 package tds.assessment.repositories;
 
+import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,7 @@ import tds.assessment.Assessment;
 import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
+import tds.common.data.mapping.ResultSetMapperUtility;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AssessmentQueryRepositoryImplIntegrationTests {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
     private AssessmentQueryRepository repository;
@@ -74,38 +78,51 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                         "('SBAC_PT', 'IRP-Perf-ELA-3', '--ITEMTYPE--', 'WER', 'Item Types Exclusion', 'TDS_ItemTypeExcl_WER', 0), \n" +
                         "('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
-        jdbcTemplate.update(itemConstraintsInsertSql);
-        jdbcTemplate.update(tblClientInsertSQL);
-        jdbcTemplate.update(tblSubjectInsertSQL);
-        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
-        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2);
-        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a);
-        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2b);
-        jdbcTemplate.update(tblItemPropsInsertSQL);
+        SqlParameterSource parameters = new MapSqlParameterSource("ftstartDate", ResultSetMapperUtility.mapJodaInstantToTimestamp(Instant.now()));
+        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept) VALUES " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3), \n" +
+            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3);\n";
+
+        jdbcTemplate.update(itemConstraintsInsertSql, new MapSqlParameterSource());
+        jdbcTemplate.update(tblClientInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(tblSubjectInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1, new MapSqlParameterSource());
+        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2, new MapSqlParameterSource());
+        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a, new MapSqlParameterSource());
+        jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2b, new MapSqlParameterSource());
+        jdbcTemplate.update(tblItemPropsInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(clientTestPropertiesInsertSQL, parameters);
     }
 
     @Test
     public void shouldNotFindAssessmentByKey() {
-        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("BOGUS");
+        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("BOGUS", "SBAC");
         assertThat(maybeAssessment).isNotPresent();
     }
 
     @Test
     public void shouldFindNonSegmentedAssessmentByKey() {
-        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(maybeAssessment.get().getKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(maybeAssessment.get().getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
-        assertThat(maybeAssessment.get().getAssessmentId()).isEqualTo("IRP-Perf-ELA-11");
-        assertThat(maybeAssessment.get().getStartAbility()).isEqualTo(0F);
-        assertThat(maybeAssessment.get().getSubject()).isEqualTo("ELA");
-        assertThat(maybeAssessment.get().isSegmented()).isFalse();
-        assertThat(maybeAssessment.get().getSegments().size()).isEqualTo(1);
-        Segment seg = maybeAssessment.get().getSegments().get(0);
-        assertThat(seg.getSegmentId()).isEqualTo(maybeAssessment.get().getAssessmentId());
-        assertThat(seg.getKey()).isEqualTo(maybeAssessment.get().getKey());
-        assertThat(seg.getStartAbility()).isEqualTo(maybeAssessment.get().getStartAbility());
-        assertThat(seg.getAssessmentKey()).isEqualTo(maybeAssessment.get().getKey());
-        assertThat(seg.getSubject()).isEqualTo(maybeAssessment.get().getSubject());
+        Assessment assessment = repository.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "SBAC_PT").get();
+        assertThat(assessment.getKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
+        assertThat(assessment.getAssessmentId()).isEqualTo("IRP-Perf-ELA-11");
+        assertThat(assessment.getStartAbility()).isEqualTo(0F);
+        assertThat(assessment.getSubject()).isEqualTo("ELA");
+        assertThat(assessment.isSegmented()).isFalse();
+        assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
+        assertThat(assessment.getAbilitySlope()).isEqualTo(1.5f);
+        assertThat(assessment.getFieldTestStartDate()).isNotNull();
+        assertThat(assessment.getFieldTestEndDate()).isNull();
+        assertThat(assessment.getMaxOpportunities()).isEqualTo(99);
+        assertThat(assessment.getAbilityIntercept()).isEqualTo(2.3f);
+
+        assertThat(assessment.getSegments().size()).isEqualTo(1);
+        Segment seg = assessment.getSegments().get(0);
+        assertThat(seg.getSegmentId()).isEqualTo(assessment.getAssessmentId());
+        assertThat(seg.getKey()).isEqualTo(assessment.getKey());
+        assertThat(seg.getStartAbility()).isEqualTo(assessment.getStartAbility());
+        assertThat(seg.getAssessmentKey()).isEqualTo(assessment.getKey());
+        assertThat(seg.getSubject()).isEqualTo(assessment.getSubject());
         assertThat(seg.getPosition()).isEqualTo(1);
         assertThat(seg.getMinItems()).isEqualTo(4);
         assertThat(seg.getMaxItems()).isEqualTo(4);
@@ -113,26 +130,32 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(seg.getFieldTestMaxItems()).isEqualTo(4);
         assertThat(seg.getLanguages()).hasSize(1);
         assertThat(seg.getLanguages()).containsOnly(new ItemProperty("Language", "ENU"));
-        assertThat(seg.getSelectionAlgorithm()).isEqualTo(maybeAssessment.get().getSelectionAlgorithm());
+        assertThat(seg.getSelectionAlgorithm()).isEqualTo(assessment.getSelectionAlgorithm());
     }
 
     @Test
     public void shouldFindSegmentedAssessmentByKey() {
         final String assessmentKey = "(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015";
         final String subject = "ELA";
-        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey(assessmentKey);
-        assertThat(maybeAssessment.get().getKey()).isEqualTo(assessmentKey);
-        assertThat(maybeAssessment.get().getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
-        assertThat(maybeAssessment.get().getAssessmentId()).isEqualTo("SBAC-Mathematics-8");
-        assertThat(maybeAssessment.get().getStartAbility()).isEqualTo(0F);
-        assertThat(maybeAssessment.get().getSubject()).isEqualTo(subject);
-        assertThat(maybeAssessment.get().isSegmented()).isTrue();
-        assertThat(maybeAssessment.get().getSegments()).hasSize(2);
+        Assessment assessment = repository.findAssessmentByKey(assessmentKey, "SBAC_PT").get();
+        assertThat(assessment.getKey()).isEqualTo(assessmentKey);
+        assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
+        assertThat(assessment.getAssessmentId()).isEqualTo("SBAC-Mathematics-8");
+        assertThat(assessment.getStartAbility()).isEqualTo(0F);
+        assertThat(assessment.getSubject()).isEqualTo(subject);
+        assertThat(assessment.isSegmented()).isTrue();
+        assertThat(assessment.getSegments()).hasSize(2);
+        assertThat(assessment.getAccommodationFamily()).isEqualTo("otherFamily");
+        assertThat(assessment.getAbilitySlope()).isEqualTo(5.5f);
+        assertThat(assessment.getFieldTestStartDate()).isNotNull();
+        assertThat(assessment.getFieldTestEndDate()).isNull();
+        assertThat(assessment.getMaxOpportunities()).isEqualTo(95);
+        assertThat(assessment.getAbilityIntercept()).isEqualTo(6.3f);
 
         Segment segment1 = null;
         Segment segment2 = null;
 
-        for(Segment segment : maybeAssessment.get().getSegments()) {
+        for(Segment segment : assessment.getSegments()) {
             if(segment.getKey().equals("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015")) {
                 segment1 = segment;
             } else {
@@ -180,12 +203,13 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         for (ItemConstraint constraint : itemConstraints) {
             if (constraint.getPropertyValue().equals("ER")) {
                 erConstraint = constraint;
-                continue;
             } else if (constraint.getPropertyName().equals("Language")) {
                 languageConstraint = constraint;
-                continue;
             }
         }
+
+        assertThat(languageConstraint).isNotNull();
+        assertThat(erConstraint).isNotNull();
 
         assertThat(languageConstraint.getAssessmentId()).isEqualTo(assessmentId);
         assertThat(languageConstraint.getPropertyName()).isEqualTo("Language");

@@ -1,5 +1,7 @@
 package tds.assessment;
 
+import org.joda.time.Instant;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +16,12 @@ public class Assessment {
     private Algorithm selectionAlgorithm;
     private float startAbility;
     private String subject;
+    private float abilitySlope;
+    private float abilityIntercept;
+    private String accommodationFamily;
+    private int maxOpportunities;
+    private Instant fieldTestStartDate;
+    private Instant fieldTestEndDate;
     private List<ItemConstraint> itemConstraints;
     private List<Segment> segments;
     private Set<Strand> strands;
@@ -79,7 +87,7 @@ public class Assessment {
         }
 
         if (matchingSegment == null) {
-            throw new IllegalArgumentException(String.format("No segment with key {} found in the assessment.", segmentKey));
+            throw new IllegalArgumentException(String.format("No segment with key %s found in the assessment.", segmentKey));
         }
 
         return matchingSegment;
@@ -130,4 +138,69 @@ public class Assessment {
         this.strands = strands;
     }
 
+    /**
+     * @return the ability slope
+     */
+    public float getAbilitySlope() {
+        return abilitySlope;
+    }
+
+    public void setAbilitySlope(float abilitySlope) {
+        this.abilitySlope = abilitySlope;
+    }
+
+    /**
+     * @return the intercept for the ability
+     */
+    public float getAbilityIntercept() {
+        return abilityIntercept;
+    }
+
+    public void setAbilityIntercept(float abilityIntercept) {
+        this.abilityIntercept = abilityIntercept;
+    }
+
+    /**
+     * @return the accommodation family
+     */
+    public String getAccommodationFamily() {
+        return accommodationFamily;
+    }
+
+    public void setAccommodationFamily(String accommodationFamily) {
+        this.accommodationFamily = accommodationFamily;
+    }
+
+    /**
+     * @return the max opportunities an exam can be taken
+     */
+    public int getMaxOpportunities() {
+        return maxOpportunities;
+    }
+
+    public void setMaxOpportunities(int maxOpportunities) {
+        this.maxOpportunities = maxOpportunities;
+    }
+
+    /**
+     * @return the field test start date
+     */
+    public Instant getFieldTestStartDate() {
+        return fieldTestStartDate;
+    }
+
+    public void setFieldTestStartDate(Instant fieldTestStartDate) {
+        this.fieldTestStartDate = fieldTestStartDate;
+    }
+
+    /**
+     * @return the field test end date
+     */
+    public Instant getFieldTestEndDate() {
+        return fieldTestEndDate;
+    }
+
+    public void setFieldTestEndDate(Instant fieldTestEndDate) {
+        this.fieldTestEndDate = fieldTestEndDate;
+    }
 }

@@ -3,23 +3,18 @@ package tds.assessment.repositories.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
-import tds.assessment.Form;
-import tds.assessment.Item;
 import tds.assessment.ItemConstraint;
-import tds.assessment.ItemProperty;
 import tds.assessment.repositories.AssessmentQueryRepository;
 
 @Repository
@@ -34,15 +29,24 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     }
 
     @Override
-    public Optional<Assessment> findAssessmentByKey(final String assessmentKey) {
-        SqlParameterSource parameters = new MapSqlParameterSource("key", assessmentKey);
+    public Optional<Assessment> findAssessmentByKey(final String assessmentKey, final String clientName) {
+        /*
+        This method fetches the base assessment object
+        1. itembank.tblsetofadminsubjects - contains the structure of the assessment and segment along with some metadata
+        2. configs.client_testproperties - contains client specific information for the assessment
+        3. itembank.tblsubject - subject information for the assessment (i.e. MATH, ELA)
+        3. itembank.tblsitemprops - contains property information about the assessment specifically the supported languages
+         */
+
+        SqlParameterSource parameters = new MapSqlParameterSource("key", assessmentKey)
+            .addValue("clientName", clientName);
 
         String SQL =
             "SELECT \n" +
                 "A._key AS assessmentSegmentKey, \n" +
-                "testid AS assessmentSegmentId, \n" +
-                "selectionalgorithm AS selectionAlgorithm, \n" +
-                "startAbility, \n" +
+                "A.testid AS assessmentSegmentId, \n" +
+                "A.selectionalgorithm AS selectionAlgorithm, \n" +
+                "A.startAbility, \n" +
                 "A.testposition AS segmentPosition, \n" +
                 "A.minItems, \n" +
                 "A.maxItems, \n" +
@@ -52,8 +56,20 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "A.virtualtest AS assessmentKey, \n" +
                 "P.propname, \n" +
                 "P.propvalue, \n" +
-                "P.propdescription \n" +
-            "FROM itembank.tblsetofadminsubjects A \n" +
+                "P.propdescription, \n" +
+                "CT.ftstartdate, \n" +
+                "CT.ftenddate, \n" +
+                "CT.accommodationfamily, \n" +
+                "CT.maxopportunities, \n" +
+                "CT.abilityslope, \n" +
+                "CT.abilityintercept \n" +
+            "FROM itembank.tblsetofadminsubjects A \n " +
+            "JOIN configs.client_testproperties CT ON CT.testid = A.testid \n " +
+            "  OR CT.testid = (\n " +
+            "    select parentTsa.testid from itembank.tblsetofadminsubjects tsa \n " +
+            "    join itembank.tblsetofadminsubjects parentTsa on tsa.virtualtest = parentTsa._key\n " +
+            "    where tsa._key = A._key \n " +
+            "  ) \n " +
             "LEFT JOIN itembank.tblsubject S ON S._key = A._fk_Subject \n" +
             "LEFT JOIN itembank.tblitemprops P ON P.isactive = 1 and propname = 'Language' AND P._fk_AdminSubject = A._key \n" +
             "WHERE A.virtualtest = :key OR A._key = :key \n" +

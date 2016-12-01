@@ -15,9 +15,10 @@ public interface AssessmentQueryRepository {
      * {@link tds.assessment.Segment} objects, which is non-empty if the assessment is segmented.
      *
      * @param assessmentKey the unique key for the assessment/admin subject
+     * @param clientName    the client name associated with the assessment
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
-    Optional<Assessment> findAssessmentByKey(String assessmentKey);
+    Optional<Assessment> findAssessmentByKey(String assessmentKey, String clientName);
 
     /**
      * Finds a list of {@link tds.assessment.ItemConstraint}s for the assessment

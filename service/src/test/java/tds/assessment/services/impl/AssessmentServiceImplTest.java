@@ -41,13 +41,13 @@ public class AssessmentServiceImplTest {
         Assessment assessment = new Assessment();
         assessment.setKey("theKey");
 
-        when(assessmentQueryRepository.findAssessmentByKey("theKey")).thenReturn(Optional.of(assessment));
+        when(assessmentQueryRepository.findAssessmentByKey("theKey", "SBAC_PT")).thenReturn(Optional.of(assessment));
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
         Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
-        verify(assessmentQueryRepository).findAssessmentByKey("theKey");
+        verify(assessmentQueryRepository).findAssessmentByKey("theKey", "SBAC_PT");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");

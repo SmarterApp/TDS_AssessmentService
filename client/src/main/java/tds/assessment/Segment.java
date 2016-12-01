@@ -25,13 +25,12 @@ public class Segment {
     private List<Item> items;
     private Set<Strand> strands;
 
-    /**
-     * Empty constructor for frameworks
-     */
-    private Segment() {}
-
     public Segment(String key) {
         this.key = key;
+        languages = new ArrayList<>();
+        forms = new ArrayList<>();
+        items = new ArrayList<>();
+        strands = new HashSet<>();
     }
 
     /**

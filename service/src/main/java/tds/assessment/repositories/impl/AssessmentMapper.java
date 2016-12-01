@@ -1,12 +1,13 @@
 package tds.assessment.repositories.impl;
 
+import org.joda.time.Instant;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
@@ -20,51 +21,24 @@ class AssessmentMapper {
     /**
      * Maps the results to an {@link tds.assessment.Assessment}
      *
-     * @param rows
-     * @return
+     * @param rows data result rows that represent a result row from the query result
+     * @return optional with {@link tds.assessment.Assessment} otherwise empty
      */
     Optional<Assessment> mapResults(List<Map<String, Object>> rows) {
-        Map<String, SegmentInformationHolder> segments = new LinkedHashMap<>();
-        Map<String, Object> assessmentRow = null;
-        for (Map<String, Object> row : rows) {
-            if (row.get("assessmentKey") == null) { // This is the assessment row
+        Map<String, Segment> segments = new LinkedHashMap<>();
+        ResultRow assessmentRow = null;
+        for (Map<String, Object> result : rows) {
+            ResultRow row = new ResultRow(result);
+            if (row.getString("assessmentKey") == null) { // This is the assessment row
                 assessmentRow = row;
             } else {  // This is a segment row
-                String key = (String) row.get("assessmentSegmentKey");
+                String key = row.getString("assessmentSegmentKey");
 
                 if (!segments.containsKey(key)) {
-                    segments.put(key, new SegmentInformationHolder());
+                    segments.put(key, new Segment(key));
                 }
 
-                SegmentInformationHolder holder = segments.get(key);
-                String segmentKey = (String) row.get("assessmentSegmentKey");
-
-                //If holder is null this is the first record for this segment
-                Segment segment = new Segment(segmentKey);
-                segment.setSegmentId((String) row.get("assessmentSegmentId"));
-                segment.setAssessmentKey((String) row.get("assessmentKey"));
-                segment.setSelectionAlgorithm(Algorithm.fromType((String) row.get("selectionalgorithm")));
-                segment.setMinItems((int) row.get("minItems"));
-                segment.setMaxItems((int) row.get("maxItems"));
-                segment.setFieldTestMinItems((int) row.get("fieldTestMinItems"));
-                segment.setFieldTestMaxItems((int) row.get("fieldTestMaxItems"));
-                segment.setStartAbility((float) row.get("startAbility"));
-                segment.setPosition((Integer) row.get("segmentPosition"));
-                segment.setSubject((String) row.get("subject"));
-
-                holder.setSegment(segment);
-
-                //Add the language
-                if (row.containsKey("propname")) {
-                    ItemProperty language = new ItemProperty(
-                        (String) row.get("propname"),
-                        (String) row.get("propvalue"),
-                        (String) row.get("propdescription")
-                    );
-                    holder.getLanguages().add(language);
-                }
-
-                segments.put(key, holder);
+                updateSegmentWithRowData(segments.get(key), row, false);
             }
         }
 
@@ -75,63 +49,92 @@ class AssessmentMapper {
 
         List<Segment> assessmentSegments = new ArrayList<>();
         if (segments.isEmpty()) {
-            Segment segment = new Segment((String) assessmentRow.get("assessmentSegmentKey"));
-            segment.setSegmentId((String) assessmentRow.get("assessmentSegmentId"));
-            segment.setSelectionAlgorithm(Algorithm.fromType((String) assessmentRow.get("selectionalgorithm")));
-            segment.setStartAbility((float) assessmentRow.get("startAbility"));
-            segment.setAssessmentKey((String) assessmentRow.get("assessmentSegmentKey"));
-            segment.setPosition(1);
-            segment.setMinItems((int) assessmentRow.get("minItems"));
-            segment.setMaxItems((int) assessmentRow.get("maxItems"));
-            segment.setFieldTestMinItems((int) assessmentRow.get("fieldTestMinItems"));
-            segment.setFieldTestMaxItems((int) assessmentRow.get("fieldTestMaxItems"));
-            segment.setSubject((String) assessmentRow.get("subject"));
-
-            if (assessmentRow.containsKey("propname")) {
-                ItemProperty language = new ItemProperty(
-                    (String) assessmentRow.get("propname"),
-                    (String) assessmentRow.get("propvalue"),
-                    (String) assessmentRow.get("propdescription")
-                );
-
-                segment.setLanguages(Collections.singletonList(language));
-            }
-
+            Segment segment = new Segment(assessmentRow.getString("assessmentSegmentKey"));
+            segment.setAssessmentKey(assessmentRow.getString("assessmentSegmentKey"));
+            updateSegmentWithRowData(segment, assessmentRow, true);
             assessmentSegments.add(segment);
         } else {
-            assessmentSegments.addAll(segments.values()
-                .stream()
-                .map(SegmentInformationHolder::build)
-                .collect(Collectors.toList()));
+            assessmentSegments.addAll(segments.values());
         }
 
         Assessment assessment = new Assessment();
-        assessment.setKey((String) assessmentRow.get("assessmentSegmentKey"));
-        assessment.setAssessmentId((String) assessmentRow.get("assessmentSegmentId"));
-        assessment.setSelectionAlgorithm(Algorithm.fromType((String) assessmentRow.get("selectionalgorithm")));
-        assessment.setStartAbility((float) assessmentRow.get("startAbility"));
-        assessment.setSubject((String) assessmentRow.get("subject"));
+        assessment.setKey(assessmentRow.getString("assessmentSegmentKey"));
+        assessment.setAssessmentId(assessmentRow.getString("assessmentSegmentId"));
+        assessment.setSelectionAlgorithm(assessmentRow.getAlgorithm("selectionalgorithm"));
+        assessment.setStartAbility(assessmentRow.getFloat("startAbility"));
+        assessment.setSubject(assessmentRow.getString("subject"));
+        assessment.setAbilityIntercept(assessmentRow.getFloat("abilityintercept"));
+        assessment.setAbilitySlope(assessmentRow.getFloat("abilityslope"));
+        assessment.setFieldTestStartDate(assessmentRow.getJodaInstantFromTimestamp("ftstartdate"));
+        assessment.setFieldTestEndDate(assessmentRow.getJodaInstantFromTimestamp("ftenddate"));
+        assessment.setAbilitySlope(assessmentRow.getFloat("abilityslope"));
+        assessment.setAbilityIntercept(assessmentRow.getFloat("abilityintercept"));
+        assessment.setAccommodationFamily(assessmentRow.getString("accommodationfamily"));
+        assessment.setMaxOpportunities(assessmentRow.getInt("maxopportunities"));
+
         assessment.setSegments(assessmentSegments);
 
         return Optional.of(assessment);
     }
 
-    private class SegmentInformationHolder {
-        private Segment segment;
-        private List<ItemProperty> languages = new ArrayList<>();
+    private void updateSegmentWithRowData(Segment segment, ResultRow row, boolean isAssessmentRow) {
+        String assessmentKey = isAssessmentRow ? row.getString("assessmentSegmentKey") : row.getString("assessmentKey");
+        int position = isAssessmentRow ? 1 : row.getInt("segmentPosition");
 
-        List<ItemProperty> getLanguages() {
-            return languages;
-        }
+        segment.setSegmentId(row.getString("assessmentSegmentId"));
+        segment.setAssessmentKey(assessmentKey);
+        segment.setSelectionAlgorithm(row.getAlgorithm("selectionalgorithm"));
+        segment.setMinItems(row.getInt("minItems"));
+        segment.setMaxItems(row.getInt("maxItems"));
+        segment.setFieldTestMinItems(row.getInt("fieldTestMinItems"));
+        segment.setFieldTestMaxItems(row.getInt("fieldTestMaxItems"));
+        segment.setStartAbility(row.getFloat("startAbility"));
+        segment.setPosition(position);
+        segment.setSubject(row.getString("subject"));
 
-        void setSegment(Segment segment) {
-            this.segment = segment;
-        }
-
-        Segment build() {
-            segment.setLanguages(languages);
-            return segment;
+        //Add the language
+        String propName = row.getString("propname");
+        if (propName != null) {
+            ItemProperty language = new ItemProperty(
+                propName,
+                row.getString("propvalue"),
+                row.getString("propdescription")
+            );
+            segment.getLanguages().add(language);
         }
     }
 
+    private class ResultRow {
+        private final Map<String, Object> rowData;
+
+        ResultRow(Map<String, Object> rowData) {
+            this.rowData = rowData;
+        }
+
+        int getInt(String key) {
+            return rowData.get(key) != null ? (int) rowData.get(key) : 0;
+        }
+
+        float getFloat(String key) {
+            return rowData.get(key) != null ? (float) rowData.get(key) : 0;
+        }
+
+        String getString(String key) {
+            return rowData.get(key) != null ? (String) rowData.get(key) : null;
+        }
+
+        Instant getJodaInstantFromTimestamp(String key) {
+            Object data = rowData.get(key);
+            if (data == null) {
+                return null;
+            }
+
+            Timestamp time = (Timestamp) data;
+            return new Instant(time.getTime());
+        }
+
+         Algorithm getAlgorithm(String key) {
+            return rowData.get(key) != null ? Algorithm.fromType(getString(key)) : null;
+        }
+    }
 }
