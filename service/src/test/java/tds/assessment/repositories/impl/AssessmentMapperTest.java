@@ -22,12 +22,16 @@ public class AssessmentMapperTest {
     private AssessmentMapper mapper;
     private Timestamp fieldTestStartDate;
     private Timestamp fieldTestEndDate;
+    private Timestamp segFieldTestStartDate;
+    private Timestamp segFieldTestEndDate;
 
     @Before
     public void setUp() throws Exception {
         mapper = new AssessmentMapper();
         fieldTestStartDate = new Timestamp(Instant.now().minusSeconds(100000).toEpochMilli());
         fieldTestEndDate = new Timestamp(Instant.now().toEpochMilli());
+        segFieldTestStartDate = new Timestamp(Instant.now().minusSeconds(200000).toEpochMilli());
+        segFieldTestEndDate = new Timestamp(Instant.now().minusSeconds(300000).toEpochMilli());
     }
 
     @After
@@ -68,11 +72,6 @@ public class AssessmentMapperTest {
         assertThat(segment.getPosition()).isEqualTo(1);
         assertThat(segment.getStartAbility()).isEqualTo(9.5f);
         assertThat(segment.getSubject()).isEqualTo("ELA");
-        assertThat(segment.getLanguages()).hasSize(1);
-
-        assertThat(segment.getLanguages().get(0).getValue()).isEqualTo("ENU");
-        assertThat(segment.getLanguages().get(0).getDescription()).isEqualTo("English");
-        assertThat(segment.getLanguages().get(0).getName()).isEqualTo("Language");
     }
 
     @Test
@@ -109,12 +108,8 @@ public class AssessmentMapperTest {
         assertThat(segment.getPosition()).isEqualTo(1);
         assertThat(segment.getStartAbility()).isEqualTo(1.5f);
         assertThat(segment.getSubject()).isEqualTo("ELA");
-        assertThat(segment.getLanguages()).hasSize(1);
-
-        assertThat(segment.getLanguages().get(0).getValue()).isEqualTo("ENU");
-        assertThat(segment.getLanguages().get(0).getDescription()).isEqualTo("English");
-        assertThat(segment.getLanguages().get(0).getName()).isEqualTo("Language");
-
+        assertThat(segment.getFieldTestStartDate().getMillis()).isEqualTo(segFieldTestStartDate.getTime());
+        assertThat(segment.getFieldTestEndDate().getMillis()).isEqualTo(segFieldTestEndDate.getTime());
         assertThat(assessment.getSegment("segmentKey2")).isNotNull();
     }
 
@@ -142,11 +137,8 @@ public class AssessmentMapperTest {
         segmentResult.put("startAbility", 1.5f);
         segmentResult.put("segmentPosition", 1);
         segmentResult.put("subject", "ELA");
-
-        segmentResult.put("propname", "Language");
-        segmentResult.put("propvalue", "ENU");
-        segmentResult.put("propdescription", "English");
-
+        segmentResult.put("segFieldTestStartDate", segFieldTestStartDate);
+        segmentResult.put("segFieldTestEndDate", segFieldTestEndDate);
         records.add(segmentResult);
     }
 
@@ -167,10 +159,6 @@ public class AssessmentMapperTest {
         assessmentResult.put("fieldTestMaxItems", 15);
         assessmentResult.put("segmentPosition", 1);
         assessmentResult.put("subject", "ELA");
-
-        assessmentResult.put("propname", "Language");
-        assessmentResult.put("propvalue", "ENU");
-        assessmentResult.put("propdescription", "English");
 
         assessmentResult.put("ftstartdate", fieldTestStartDate);
         assessmentResult.put("ftenddate", fieldTestEndDate);

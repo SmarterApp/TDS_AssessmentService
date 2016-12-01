@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
-import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
 
 /**
@@ -91,17 +90,8 @@ class AssessmentMapper {
         segment.setStartAbility(row.getFloat("startAbility"));
         segment.setPosition(position);
         segment.setSubject(row.getString("subject"));
-
-        //Add the language
-        String propName = row.getString("propname");
-        if (propName != null) {
-            ItemProperty language = new ItemProperty(
-                propName,
-                row.getString("propvalue"),
-                row.getString("propdescription")
-            );
-            segment.getLanguages().add(language);
-        }
+        segment.setFieldTestStartDate(row.getJodaInstantFromTimestamp("segFieldTestStartDate"));
+        segment.setFieldTestEndDate(row.getJodaInstantFromTimestamp("segFieldTestEndDate"));
     }
 
     private class ResultRow {

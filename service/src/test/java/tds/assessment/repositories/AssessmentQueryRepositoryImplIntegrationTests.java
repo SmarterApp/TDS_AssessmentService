@@ -18,7 +18,6 @@ import java.util.Optional;
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.ItemConstraint;
-import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
 import tds.common.data.mapping.ResultSetMapperUtility;
 
@@ -34,6 +33,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
 
     @Autowired
     private AssessmentQueryRepository repository;
+
+    private final Instant segFtStartDate = Instant.now().minus(300000);
+    private final Instant segFtEndDate = Instant.now().plus(300000);
 
     @Before
     public void setUp() {
@@ -59,13 +61,6 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',2,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
                 "0,'bp1',NULL,NULL,'summative');";
 
-        final String tblItemPropsInsertSQL = "insert into itembank.tblitemprops (_fk_item, propname, propvalue, propdescription, _fk_adminsubject, isactive) \n" +
-                "values \n" +
-                "('item-99', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 1),\n" +
-                "('item-1', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 1),\n" +
-                "('item-23', 'Language', 'ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 0),\n" +
-                "('item-2', 'Language', 'Braille-ENU', 'Supported Language', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 1);";
-
         final String itemConstraintsInsertSql =
                 "INSERT INTO configs.client_test_itemconstraint" +
                         "(clientname, testid, propname, propvalue, tooltype, toolvalue, item_in) VALUES " +
@@ -83,6 +78,13 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
             "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3), \n" +
             "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3);\n";
 
+        SqlParameterSource segPropsParams = new MapSqlParameterSource("ftstartdate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtStartDate))
+            .addValue("ftenddate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtEndDate));
+        final String clientSegmentPropertiesInsertSQL =
+            "INSERT INTO configs.client_segmentproperties (ispermeable, clientname, entryapproval, exitapproval, itemreview, segmentid, segmentposition, parenttest, ftstartdate, ftenddate, label, modekey) VALUES " +
+            "(1, 'SBAC_PT', 0, 0, 0, 'SBAC-SEG1-MATH-8', 1, 'SBAC-Mathematics-8', :ftstartdate, :ftenddate, 'Grade 8 MATH segment', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015'), \n" +
+            "(1, 'SBAC_PT', 0, 0, 0, 'SBAC-SEG2-MATH-8', 2, 'SBAC-Mathematics-8', :ftstartdate, :ftenddate, 'Grade 8 MATH segment', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015')";
+
         jdbcTemplate.update(itemConstraintsInsertSql, new MapSqlParameterSource());
         jdbcTemplate.update(tblClientInsertSQL, new MapSqlParameterSource());
         jdbcTemplate.update(tblSubjectInsertSQL, new MapSqlParameterSource());
@@ -90,8 +92,8 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2, new MapSqlParameterSource());
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a, new MapSqlParameterSource());
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2b, new MapSqlParameterSource());
-        jdbcTemplate.update(tblItemPropsInsertSQL, new MapSqlParameterSource());
         jdbcTemplate.update(clientTestPropertiesInsertSQL, parameters);
+        jdbcTemplate.update(clientSegmentPropertiesInsertSQL, segPropsParams);
     }
 
     @Test
@@ -128,8 +130,6 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(seg.getMaxItems()).isEqualTo(4);
         assertThat(seg.getFieldTestMinItems()).isEqualTo(1);
         assertThat(seg.getFieldTestMaxItems()).isEqualTo(4);
-        assertThat(seg.getLanguages()).hasSize(1);
-        assertThat(seg.getLanguages()).containsOnly(new ItemProperty("Language", "ENU"));
         assertThat(seg.getSelectionAlgorithm()).isEqualTo(assessment.getSelectionAlgorithm());
     }
 
@@ -175,6 +175,8 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment1.getFieldTestMaxItems()).isEqualTo(3);
         assertThat(segment1.getSubject()).isEqualTo(subject);
         assertThat(segment1.getStartAbility()).isEqualTo(0);
+        assertThat(segment1.getFieldTestStartDate()).isEqualTo(segFtStartDate);
+        assertThat(segment1.getFieldTestEndDate()).isEqualTo(segFtEndDate);
 
         assertThat(segment2).isNotNull();
         assertThat(segment2.getAssessmentKey()).isEqualTo(assessmentKey);
@@ -187,9 +189,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment2.getFieldTestMinItems()).isEqualTo(1);
         assertThat(segment2.getFieldTestMaxItems()).isEqualTo(4);
         assertThat(segment2.getSubject()).isEqualTo(subject);
-        assertThat(segment2.getLanguages()).hasSize(2);
-        assertThat(segment2.getLanguages()).contains(new ItemProperty("Language", "ENU"), new ItemProperty("Language", "Braille-ENU"));
         assertThat(segment2.getStartAbility()).isEqualTo(0);
+        assertThat(segment2.getFieldTestStartDate()).isEqualTo(segFtStartDate);
+        assertThat(segment2.getFieldTestEndDate()).isEqualTo(segFtEndDate);
     }
 
     @Test
