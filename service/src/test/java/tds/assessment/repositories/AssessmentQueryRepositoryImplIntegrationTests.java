@@ -60,6 +60,11 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         String tblSetOfAdminSubjectsInsertSQL2b = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015','SBAC_PT', 'SBAC_PT-ELA','SBAC-SEG2-MATH-8'," +
                 "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',2,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
                 "0,'bp1',NULL,NULL,'summative');";
+        // Segment2 - SBAC client
+        String tblSetOfAdminSubjectsSBACInsertSQL = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC)SBAC-SEG2-MATH-8-Spring-2013-2015','SBAC', 'SBAC-ELA','SBAC-SEG2-MATH-8'," +
+            "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC)SBAC-Mathematics-8-Spring-2013-2015',2,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
+            "0,'bp1',NULL,NULL,'summative');";
+
 
         final String itemConstraintsInsertSql =
                 "INSERT INTO configs.client_test_itemconstraint" +
@@ -92,6 +97,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2, new MapSqlParameterSource());
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a, new MapSqlParameterSource());
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2b, new MapSqlParameterSource());
+        jdbcTemplate.update(tblSetOfAdminSubjectsSBACInsertSQL, new MapSqlParameterSource());
         jdbcTemplate.update(clientTestPropertiesInsertSQL, parameters);
         jdbcTemplate.update(clientSegmentPropertiesInsertSQL, segPropsParams);
     }
@@ -131,6 +137,12 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(seg.getFieldTestMinItems()).isEqualTo(1);
         assertThat(seg.getFieldTestMaxItems()).isEqualTo(4);
         assertThat(seg.getSelectionAlgorithm()).isEqualTo(assessment.getSelectionAlgorithm());
+    }
+
+    @Test
+    public void shouldNotFindAssessmentWrongClient() {
+        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "BOGUS");
+        assertThat(maybeAssessment).isNotPresent();
     }
 
     @Test
