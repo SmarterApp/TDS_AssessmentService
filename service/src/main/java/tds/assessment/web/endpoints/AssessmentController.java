@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +35,7 @@ class AssessmentController {
     @ResponseBody
     ResponseEntity<Assessment> findAssessment(@PathVariable final String clientName, @PathVariable final String key)
             throws NotFoundException {
-        final Assessment assessment = service.findAssessmentByKey(clientName, key)
+        final Assessment assessment = service.findAssessment(clientName, key)
             .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
 
         return ResponseEntity.ok(assessment);

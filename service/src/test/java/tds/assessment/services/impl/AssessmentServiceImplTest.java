@@ -46,7 +46,7 @@ public class AssessmentServiceImplTest {
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
-        Optional<Assessment> maybeAssessment = service.findAssessmentByKey("SBAC_PT", "theKey");
+        Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
         verify(assessmentQueryRepository).findAssessmentByKey("theKey", "SBAC_PT");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");

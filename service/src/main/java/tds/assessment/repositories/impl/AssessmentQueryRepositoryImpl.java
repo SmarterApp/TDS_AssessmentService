@@ -60,6 +60,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "CT.maxopportunities, \n" +
                 "CT.abilityslope, \n" +
                 "CT.abilityintercept, \n" +
+                "CT.initialabilitybysubject, \n" +
                 "SP.ftstartdate AS segFieldTestStartDate, \n" +
                 "SP.ftenddate AS segFieldTestEndDate \n" +
             "FROM itembank.tblsetofadminsubjects A \n " +
@@ -81,7 +82,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         Optional<Assessment> maybeAssessment = Optional.empty();
 
         if (rows.isEmpty()) {
-            logger.debug("Did not findAssessmentByKey a result for assessment from tblsetofadminsubjects for %s", assessmentKey);
+            logger.debug("Did not findAssessment a result for assessment from tblsetofadminsubjects for %s", assessmentKey);
         } else {
             maybeAssessment = assessmentMapper.mapResults(rows);
         }

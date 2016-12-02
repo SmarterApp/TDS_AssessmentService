@@ -50,9 +50,9 @@ public class AssessmentControllerTest {
         assessment.setKey(assessmentKey);
 
 
-        when(service.findAssessmentByKey(clientName, assessmentKey)).thenReturn(Optional.of(assessment));
+        when(service.findAssessment(clientName, assessmentKey)).thenReturn(Optional.of(assessment));
         ResponseEntity<Assessment> response = controller.findAssessment(clientName, assessmentKey);
-        verify(service).findAssessmentByKey(clientName, assessmentKey);
+        verify(service).findAssessment(clientName, assessmentKey);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getKey()).isEqualTo("theKey");
@@ -62,7 +62,7 @@ public class AssessmentControllerTest {
     public void shouldThrowSubjectByKeyCannotBeFound() {
         final String clientName = "SBAC_PT";
         final String assessmentKey = "theKey";
-        when(service.findAssessmentByKey(clientName, assessmentKey)).thenReturn(Optional.empty());
+        when(service.findAssessment(clientName, assessmentKey)).thenReturn(Optional.empty());
         controller.findAssessment(clientName, assessmentKey);
     }
 }

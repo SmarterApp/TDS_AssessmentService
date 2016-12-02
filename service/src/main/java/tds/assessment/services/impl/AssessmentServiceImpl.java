@@ -38,7 +38,7 @@ class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public Optional<Assessment> findAssessmentByKey(final String clientName, final String assessmentKey) {
+    public Optional<Assessment> findAssessment(final String clientName, final String assessmentKey) {
         Optional<Assessment> maybeAssessment = assessmentQueryRepository.findAssessmentByKey(assessmentKey, clientName);
 
         if (maybeAssessment.isPresent()) {

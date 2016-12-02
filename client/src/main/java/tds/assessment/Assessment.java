@@ -22,6 +22,7 @@ public class Assessment {
     private int maxOpportunities;
     private Instant fieldTestStartDate;
     private Instant fieldTestEndDate;
+    private boolean initialAbilityBySubject;
     private List<ItemConstraint> itemConstraints;
     private List<Segment> segments;
     private Set<Strand> strands;
@@ -202,5 +203,16 @@ public class Assessment {
 
     public void setFieldTestEndDate(Instant fieldTestEndDate) {
         this.fieldTestEndDate = fieldTestEndDate;
+    }
+
+    /**
+     * @return {@code true} if the initial ability should be by subject
+     */
+    public boolean isInitialAbilityBySubject() {
+        return initialAbilityBySubject;
+    }
+
+    public void setInitialAbilityBySubject(boolean initialAbilityBySubject) {
+        this.initialAbilityBySubject = initialAbilityBySubject;
     }
 }

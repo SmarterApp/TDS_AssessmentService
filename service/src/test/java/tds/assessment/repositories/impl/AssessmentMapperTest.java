@@ -58,6 +58,7 @@ public class AssessmentMapperTest {
         assertThat(assessment.getAbilitySlope()).isEqualTo(99.9f);
         assertThat(assessment.getMaxOpportunities()).isEqualTo(100);
         assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
+        assertThat(assessment.isInitialAbilityBySubject()).isTrue();
 
         assertThat(assessment.getSegments()).hasSize(1);
 
@@ -166,6 +167,7 @@ public class AssessmentMapperTest {
         assessmentResult.put("abilityintercept", 50.5f);
         assessmentResult.put("accommodationfamily", "family");
         assessmentResult.put("maxopportunities", 100);
+        assessmentResult.put("initialabilitybysubject", true);
 
         for (int i = 1; i <= numberOfSegments; i++) {
             updateListWithSegmentData(records, "segmentKey" + i, assessmentKey);

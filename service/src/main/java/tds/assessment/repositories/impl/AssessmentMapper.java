@@ -70,7 +70,7 @@ class AssessmentMapper {
         assessment.setAbilityIntercept(assessmentRow.getFloat("abilityintercept"));
         assessment.setAccommodationFamily(assessmentRow.getString("accommodationfamily"));
         assessment.setMaxOpportunities(assessmentRow.getInt("maxopportunities"));
-
+        assessment.setInitialAbilityBySubject(assessmentRow.getBoolean("initialabilitybysubject"));
         assessment.setSegments(assessmentSegments);
 
         return Optional.of(assessment);
@@ -123,8 +123,12 @@ class AssessmentMapper {
             return new Instant(time.getTime());
         }
 
-         Algorithm getAlgorithm(String key) {
+        Algorithm getAlgorithm(String key) {
             return rowData.get(key) != null ? Algorithm.fromType(getString(key)) : null;
+        }
+
+        boolean getBoolean(String key) {
+            return rowData.get(key) != null && (boolean) rowData.get(key);
         }
     }
 }

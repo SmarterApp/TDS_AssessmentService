@@ -79,9 +79,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                         "('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ftstartDate", ResultSetMapperUtility.mapJodaInstantToTimestamp(Instant.now()));
-        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept) VALUES " +
-            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3), \n" +
-            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3);\n";
+        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject) VALUES " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1), \n" +
+            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0);\n";
 
         SqlParameterSource segPropsParams = new MapSqlParameterSource("ftstartdate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtStartDate))
             .addValue("ftenddate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtEndDate));
@@ -123,6 +123,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.getFieldTestEndDate()).isNull();
         assertThat(assessment.getMaxOpportunities()).isEqualTo(99);
         assertThat(assessment.getAbilityIntercept()).isEqualTo(2.3f);
+        assertThat(assessment.isInitialAbilityBySubject()).isTrue();
 
         assertThat(assessment.getSegments().size()).isEqualTo(1);
         Segment seg = assessment.getSegments().get(0);
@@ -163,6 +164,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.getFieldTestEndDate()).isNull();
         assertThat(assessment.getMaxOpportunities()).isEqualTo(95);
         assertThat(assessment.getAbilityIntercept()).isEqualTo(6.3f);
+        assertThat(assessment.isInitialAbilityBySubject()).isFalse();
 
         Segment segment1 = null;
         Segment segment2 = null;
