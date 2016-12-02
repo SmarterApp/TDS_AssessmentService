@@ -18,7 +18,7 @@ public interface AssessmentQueryRepository {
      * @param clientName    the client name associated with the assessment
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
-    Optional<Assessment> findAssessmentByKey(String assessmentKey, String clientName);
+    Optional<Assessment> findAssessmentByKey(String clientName, String assessmentKey);
 
     /**
      * Finds a list of {@link tds.assessment.ItemConstraint}s for the assessment

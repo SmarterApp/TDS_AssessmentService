@@ -1,5 +1,7 @@
 package tds.assessment;
 
+import org.joda.time.Instant;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,17 +22,14 @@ public class Segment {
     private int maxItems;
     private int fieldTestMinItems;
     private int fieldTestMaxItems;
-    private List<ItemProperty> languages;
+    private Instant fieldTestStartDate;
+    private Instant fieldTestEndDate;
     private List<Form> forms;
     private List<Item> items;
     private Set<Strand> strands;
 
     public Segment(String key) {
         this.key = key;
-        languages = new ArrayList<>();
-        forms = new ArrayList<>();
-        items = new ArrayList<>();
-        strands = new HashSet<>();
     }
 
     /**
@@ -73,13 +72,6 @@ public class Segment {
      */
     public String getSubject() {
         return subject;
-    }
-
-    /**
-     * @return languages associated with the segment
-     */
-    public List<ItemProperty> getLanguages() {
-        return languages != null ? languages : new ArrayList<ItemProperty>();
     }
 
     /**
@@ -139,6 +131,20 @@ public class Segment {
         return strands != null ? strands : new HashSet<Strand>();
     }
 
+    /**
+     * @return the field test start date
+     */
+    public Instant getFieldTestStartDate() {
+        return fieldTestStartDate;
+    }
+
+    /**
+     * @return the field test end date
+     */
+    public Instant getFieldTestEndDate() {
+        return fieldTestEndDate;
+    }
+
     public void setSegmentId(String segmentId) {
         this.segmentId = segmentId;
     }
@@ -179,10 +185,6 @@ public class Segment {
         this.fieldTestMaxItems = fieldTestMaxItems;
     }
 
-    public void setLanguages(List<ItemProperty> languages) {
-        this.languages = languages;
-    }
-
     public void setForms(List<Form> forms) {
         this.forms = forms;
     }
@@ -195,4 +197,11 @@ public class Segment {
         this.strands = strands;
     }
 
+    public void setFieldTestStartDate(Instant fieldTestStartDate) {
+        this.fieldTestStartDate = fieldTestStartDate;
+    }
+
+    public void setFieldTestEndDate(Instant fieldTestEndDate) {
+        this.fieldTestEndDate = fieldTestEndDate;
+    }
 }
