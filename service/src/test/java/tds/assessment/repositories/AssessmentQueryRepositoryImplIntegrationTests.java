@@ -104,13 +104,13 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
 
     @Test
     public void shouldNotFindAssessmentByKey() {
-        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("BOGUS", "SBAC");
+        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("SBAC", "BOGUS");
         assertThat(maybeAssessment).isNotPresent();
     }
 
     @Test
     public void shouldFindNonSegmentedAssessmentByKey() {
-        Assessment assessment = repository.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "SBAC_PT").get();
+        Assessment assessment = repository.findAssessmentByKey("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016").get();
         assertThat(assessment.getKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
         assertThat(assessment.getAssessmentId()).isEqualTo("IRP-Perf-ELA-11");
@@ -141,7 +141,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
 
     @Test
     public void shouldNotFindAssessmentWrongClient() {
-        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016", "BOGUS");
+        Optional<Assessment> maybeAssessment = repository.findAssessmentByKey("BOGUS", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         assertThat(maybeAssessment).isNotPresent();
     }
 
@@ -149,7 +149,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
     public void shouldFindSegmentedAssessmentByKey() {
         final String assessmentKey = "(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015";
         final String subject = "ELA";
-        Assessment assessment = repository.findAssessmentByKey(assessmentKey, "SBAC_PT").get();
+        Assessment assessment = repository.findAssessmentByKey("SBAC_PT", assessmentKey).get();
         assertThat(assessment.getKey()).isEqualTo(assessmentKey);
         assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
         assertThat(assessment.getAssessmentId()).isEqualTo("SBAC-Mathematics-8");

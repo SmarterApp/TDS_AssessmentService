@@ -29,7 +29,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     }
 
     @Override
-    public Optional<Assessment> findAssessmentByKey(final String assessmentKey, final String clientName) {
+    public Optional<Assessment> findAssessmentByKey(final String clientName, final String assessmentKey) {
         /*
         This method fetches the base assessment object
         1. itembank.tblsetofadminsubjects - contains the structure of the assessment and segment along with some metadata
