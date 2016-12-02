@@ -64,15 +64,17 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "SP.ftenddate AS segFieldTestEndDate \n" +
             "FROM itembank.tblsetofadminsubjects A \n " +
             "JOIN configs.client_testproperties CT \n" +
-            "   ON (CT.testid = A.testid AND CT.clientname = :clientName) \n " +
-            "   OR (CT.testid = (\n " +
+            "   ON CT.testid = A.testid \n " +
+            "   OR CT.testid = (\n " +
             "    SELECT parentTsa.testid FROM itembank.tblsetofadminsubjects tsa \n " +
             "    JOIN itembank.tblsetofadminsubjects parentTsa ON tsa.virtualtest = parentTsa._key\n " +
             "    WHERE tsa._key = A._key \n " +
-            "  ) AND CT.clientname = :clientName) \n " +
+            "  ) \n " +
             "LEFT JOIN configs.client_segmentproperties SP ON SP.segmentid = A.testid AND SP.clientName = :clientName\n" +
             "LEFT JOIN itembank.tblsubject S ON S._key = A._fk_Subject \n" +
-            "WHERE (A.virtualtest = :key OR A._key = :key) \n" +
+            "WHERE \n" +
+            "   (A.virtualtest = :key OR A._key = :key) AND \n" +
+            "   (CT.clientname = :clientName OR SP.clientname = :clientName) \n" +
             "ORDER BY assessmentKey DESC";
 
         List<Map<String,Object>> rows = jdbcTemplate.queryForList(SQL, parameters);
