@@ -61,18 +61,20 @@ public class AssessmentControllerIntegrationTests {
     }
 
     @Test
-    public void shouldReturnSegmentedAssessmentByKey() throws Exception {
+    public void shouldReturnSegmentedFixedFormAssessmentByKey() throws Exception {
         List<Segment> segments = new ArrayList<>();
-        Segment seg1 = new Segment("(SBAC_PT)SBAC-SEG1-MATH-11-Summer-2015-2016");
+//        Segment seg1 = new Segment("(SBAC_PT)SBAC-SEG1-MATH-11-Summer-2015-2016");
+        // TODO: fix test
+        Segment seg1 = new Segment("(SBAC_PT)SBAC-SEG1-MATH-11-Summer-2015-2016", Algorithm.FIXED_FORM);
         seg1.setSegmentId("SBAC-SEG1-MATH-11");
-        seg1.setSelectionAlgorithm(Algorithm.FIXED_FORM);
         seg1.setStartAbility(0);
         seg1.setAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016");
         seg1.setSubject("ELA");
 
-        Segment seg2 = new Segment("(SBAC_PT)SBAC-SEG2-MATH-11-Summer-2015-2016");
+//        Segment seg2 = new Segment("(SBAC_PT)SBAC-SEG2-MATH-11-Summer-2015-2016");
+        // TODO: fix test
+        Segment seg2 = new Segment("(SBAC_PT)SBAC-SEG2-MATH-11-Summer-2015-2016", Algorithm.FIXED_FORM);
         seg2.setSegmentId("SBAC-SEG2-MATH-11");
-        seg2.setSelectionAlgorithm(Algorithm.FIXED_FORM);
         seg2.setStartAbility(0);
         seg2.setAssessmentKey("(SBAC_PT)SBAC-Mathematics-11-Summer-2015-2016");
         seg2.setSubject("ELA");

@@ -1,10 +1,12 @@
 package tds.assessment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
- * A model representing an item for an {@link Assessment}
+ * A model representing an item for an {@link tds.assessment.Assessment}
  */
 public class Item {
     private String id;
@@ -17,6 +19,7 @@ public class Item {
     private boolean required;
     private String strand;
     private List<ItemProperty> itemProperties;
+    private Set<String> formKeys;
 
     /**
      * Private empty constructor for frameworks
@@ -41,11 +44,19 @@ public class Item {
         return required;
     }
 
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
     /**
      * @return The question type of the {@link tds.assessment.Item}
      */
     public String getItemType() {
         return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
     }
 
     /**
@@ -55,11 +66,19 @@ public class Item {
         return segmentKey;
     }
 
+    public void setSegmentKey(String segmentKey) {
+        this.segmentKey = segmentKey;
+    }
+
     /**
      * @return the id of the item group the item belongs to
      */
     public String getGroupId() {
         return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     /**
@@ -69,11 +88,19 @@ public class Item {
         return groupKey;
     }
 
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
+    }
+
     /**
      * @return the position of the item in the {@link tds.assessment.Segment}
      */
     public int getPosition() {
         return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     /**
@@ -83,6 +110,10 @@ public class Item {
         return fieldTest;
     }
 
+    public void setFieldTest(boolean fieldTest) {
+        this.fieldTest = fieldTest;
+    }
+
     /**
      * @return the strand of the item
      */
@@ -90,47 +121,36 @@ public class Item {
         return strand;
     }
 
+    public void setStrand(String strand) {
+        this.strand = strand;
+    }
+
     /**
-     * @return the
+     * @return the collection of item properties for the items associated with this Item
      */
     public List<ItemProperty> getItemProperties() {
         return itemProperties != null ? itemProperties : new ArrayList<ItemProperty>();
     }
 
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
-
-    public void setSegmentKey(String segmentKey) {
-        this.segmentKey = segmentKey;
-    }
-
-    public void setGroupKey(String groupKey) {
-        this.groupKey = groupKey;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public void setFieldTest(boolean fieldTest) {
-        this.fieldTest = fieldTest;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public void setStrand(String strand) {
-        this.strand = strand;
-    }
-
     public void setItemProperties(List<ItemProperty> itemProperties) {
         this.itemProperties = itemProperties;
+    }
+
+    /**
+     * @return A collection of keys that identify the {@link tds.assessment.Form}s that this item is assigned to
+     * <p>
+     *     This collection is only used for assigning Items to the correct {@link tds.assessment.Form} in a fixed-form
+     *     {@link tds.assessment.Segment}.
+     * </p>
+     */
+    public Set<String> getFormKeys() {
+        if (formKeys == null) {
+            formKeys = new HashSet<>();
+        }
+        return formKeys;
+    }
+
+    public void setFormKeys(Set<String> formKeys) {
+        this.formKeys = formKeys;
     }
 }

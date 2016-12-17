@@ -1,7 +1,11 @@
 package tds.assessment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * A model representing a form for an {@link tds.assessment.Assessment}
+ * A model representing a form for an {@link tds.assessment.Assessment} that uses the "fixed form" algorithm to select
+ * the {@link tds.assessment.Item}s.
  */
 public class Form {
     private String key;
@@ -11,6 +15,7 @@ public class Form {
     private String segmentKey;
     private Long loadVersion;
     private Long updateVersion;
+    private List<Item> items;
 
     /**
      * Private constructor for framework
@@ -25,6 +30,7 @@ public class Form {
         segmentKey = builder.segmentKey;
         loadVersion = builder.loadVersion;
         updateVersion = builder.updateVersion;
+        items = builder.items;
     }
 
     public static class Builder {
@@ -35,6 +41,7 @@ public class Form {
         private String segmentKey;
         private Long loadVersion;
         private Long updateVersion;
+        private List<Item> items;
 
 
         public Builder (String key) {
@@ -68,6 +75,11 @@ public class Form {
 
         public Builder withUpdateVersion(Long updateVersion) {
             this.updateVersion = updateVersion;
+            return this;
+        }
+
+        public Builder withItems(List<Item> items) {
+            this.items = items;
             return this;
         }
 
@@ -125,4 +137,23 @@ public class Form {
         return updateVersion;
     }
 
+    /**
+     * @return The {@link tds.assessment.Item}s associated with this form
+     */
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    /**
+     * Determine the number of {@link tds.assessment.Item}s associated with this form.
+     *
+     * @return The number of {@link tds.assessment.Item}s in this form.  If the list is null, return 0.
+     */
+    public int getLength() {
+        return items == null ? 0 : items.size();
+    }
 }

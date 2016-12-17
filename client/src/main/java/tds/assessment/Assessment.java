@@ -26,6 +26,7 @@ public class Assessment {
     private List<ItemConstraint> itemConstraints;
     private List<Segment> segments;
     private Set<Strand> strands;
+    private Set<String> languageCodes;
 
     public Assessment() {}
 
@@ -214,5 +215,20 @@ public class Assessment {
 
     public void setInitialAbilityBySubject(boolean initialAbilityBySubject) {
         this.initialAbilityBySubject = initialAbilityBySubject;
+    }
+
+    /**
+     * @return A collection of language codes that are associated with this {@link tds.assessment.Assessment}
+     * <p>
+     *     The languageCodes that are available to an assessment are determined by collecting the unique "language"
+     *     {@link tds.assessment.ItemProperty} of the {@link tds.assessment.Item}.
+     * </p>
+     */
+    public Set<String> getLanguageCodes() {
+        return languageCodes;
+    }
+
+    public void setLanguageCodes(Set<String> languageCodes) {
+        this.languageCodes = languageCodes;
     }
 }

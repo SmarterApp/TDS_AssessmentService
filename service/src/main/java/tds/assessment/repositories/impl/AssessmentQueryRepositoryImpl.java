@@ -43,46 +43,56 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
 
         String SQL =
             "SELECT \n" +
-                "A._key AS assessmentSegmentKey, \n" +
-                "A.testid AS assessmentSegmentId, \n" +
-                "A.selectionalgorithm AS selectionAlgorithm, \n" +
-                "A.startAbility, \n" +
-                "A.testposition AS segmentPosition, \n" +
-                "A.minItems, \n" +
-                "A.maxItems, \n" +
-                "A.ftminitems AS fieldTestMinItems, \n" +
-                "A.ftmaxitems AS fieldTestMaxItems, \n" +
-                "S.name AS subject, \n" +
-                "A.virtualtest AS assessmentKey, \n" +
-                "CT.ftstartdate, \n" +
-                "CT.ftenddate, \n" +
-                "CT.accommodationfamily, \n" +
-                "CT.maxopportunities, \n" +
-                "CT.abilityslope, \n" +
-                "CT.abilityintercept, \n" +
-                "CT.initialabilitybysubject, \n" +
-                "SP.ftstartdate AS segFieldTestStartDate, \n" +
-                "SP.ftenddate AS segFieldTestEndDate \n" +
-            "FROM itembank.tblsetofadminsubjects A \n " +
-            "JOIN configs.client_testproperties CT \n" +
+            "   A._key AS assessmentSegmentKey, \n" +
+            "   A.testid AS assessmentSegmentId, \n" +
+            "   A.selectionalgorithm AS selectionAlgorithm, \n" +
+            "   A.startAbility, \n" +
+            "   A.testposition AS segmentPosition, \n" +
+            "   A.minItems, \n" +
+            "   A.maxItems, \n" +
+            "   A.ftminitems AS fieldTestMinItems, \n" +
+            "   A.ftmaxitems AS fieldTestMaxItems, \n" +
+            "   S.name AS subject, \n" +
+            "   A.virtualtest AS assessmentKey, \n" +
+            "   CT.ftstartdate, \n" +
+            "   CT.ftenddate, \n" +
+            "   CT.accommodationfamily, \n" +
+            "   CT.maxopportunities, \n" +
+            "   CT.abilityslope, \n" +
+            "   CT.abilityintercept, \n" +
+            "   CT.initialabilitybysubject, \n" +
+            "   SP.ftstartdate AS segFieldTestStartDate, \n" +
+            "   SP.ftenddate AS segFieldTestEndDate \n" +
+            "FROM \n" +
+            "   itembank.tblsetofadminsubjects A \n" +
+            "JOIN \n" +
+            "   configs.client_testproperties CT \n" +
             "   ON CT.testid = A.testid \n " +
-            "   OR CT.testid = (\n " +
-            "    SELECT parentTsa.testid FROM itembank.tblsetofadminsubjects tsa \n " +
-            "    JOIN itembank.tblsetofadminsubjects parentTsa ON tsa.virtualtest = parentTsa._key\n " +
-            "    WHERE tsa._key = A._key \n " +
-            "  ) \n " +
-            "LEFT JOIN configs.client_segmentproperties SP ON SP.segmentid = A.testid AND SP.clientName = :clientName\n" +
-            "LEFT JOIN itembank.tblsubject S ON S._key = A._fk_Subject \n" +
+            "   OR CT.testid = (\n" +
+            "       SELECT parentTsa.testid \n" +
+            "       FROM itembank.tblsetofadminsubjects tsa \n" +
+            "       JOIN itembank.tblsetofadminsubjects parentTsa ON tsa.virtualtest = parentTsa._key \n" +
+            "       WHERE tsa._key = A._key \n" +
+            "   ) \n" +
+            "LEFT JOIN \n" +
+            "   configs.client_segmentproperties SP \n" +
+            "   ON SP.segmentid = A.testid \n" +
+            "   AND SP.clientName = :clientName \n" +
+            "LEFT JOIN \n" +
+            "   itembank.tblsubject S \n" +
+            "   ON S._key = A._fk_Subject \n" +
             "WHERE \n" +
-            "   (A.virtualtest = :key OR A._key = :key) AND \n" +
-            "   (CT.clientname = :clientName OR SP.clientname = :clientName) \n" +
-            "ORDER BY assessmentKey DESC";
+            "   (A.virtualtest = :key OR A._key = :key) \n" +
+            "   AND (CT.clientname = :clientName OR SP.clientname = :clientName) \n" +
+            "ORDER BY  \n" +
+            "   assessmentKey DESC, \n" +
+            "   A.testPosition";
 
         List<Map<String,Object>> rows = jdbcTemplate.queryForList(SQL, parameters);
         Optional<Assessment> maybeAssessment = Optional.empty();
 
         if (rows.isEmpty()) {
-            logger.debug("Did not findAssessment a result for assessment from tblsetofadminsubjects for %s", assessmentKey);
+            logger.debug("Could not find an Assessment in tblsetofadminsubjects using key = '%s'", assessmentKey);
         } else {
             maybeAssessment = assessmentMapper.mapResults(rows);
         }

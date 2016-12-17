@@ -32,9 +32,14 @@ public class FormQueryRepositoryImpl implements FormQueryRepository {
             "    forms.loadconfig AS loadVersion, \n" +
             "    forms.updateconfig AS updateVersion, \n" +
             "    forms.cohort \n" +
-            "FROM itembank.tblsetofadminsubjects segments \n" +
-            "JOIN itembank.testform forms ON segments._key = forms._fk_adminsubject \n" +
-            "WHERE segments.virtualtest = :key OR segments._key = :key";
+            "FROM \n" +
+            "   itembank.tblsetofadminsubjects segments \n" +
+            "JOIN \n" +
+            "   itembank.testform forms \n" +
+            "   ON segments._key = forms._fk_adminsubject \n" +
+            "WHERE \n" +
+            "   segments.virtualtest = :key \n" +
+            "   OR segments._key = :key";
 
         return jdbcTemplate.query(formsSQL, parameters, (rs, row) ->
                 new Form.Builder(rs.getString("key"))

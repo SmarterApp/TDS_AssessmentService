@@ -3,15 +3,20 @@ package tds.assessment.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
 import tds.assessment.Item;
 import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
+import tds.assessment.Segment;
 import tds.assessment.Strand;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
@@ -31,29 +36,32 @@ class AssessmentServiceImpl implements AssessmentService {
                                  ItemQueryRepository itemQueryRepository,
                                  FormQueryRepository formQueryRepository,
                                  StrandQueryRepository strandQueryRepository) {
-        this.formQueryRepository = formQueryRepository;
         this.assessmentQueryRepository = assessmentQueryRepository;
         this.itemQueryRepository = itemQueryRepository;
+        this.formQueryRepository = formQueryRepository;
         this.strandQueryRepository = strandQueryRepository;
     }
 
     @Override
     public Optional<Assessment> findAssessment(final String clientName, final String assessmentKey) {
         Optional<Assessment> maybeAssessment = assessmentQueryRepository.findAssessmentByKey(assessmentKey, clientName);
+        List<Form> forms = new ArrayList<>();
 
         if (maybeAssessment.isPresent()) {
             Assessment assessment = maybeAssessment.get();
-            List<Form> forms = formQueryRepository.findFormsForAssessment(assessmentKey);
-            List<Item> items = itemQueryRepository.findItemsForAssessment(assessmentKey);
-            List<ItemProperty> itemProperties = itemQueryRepository.findActiveItemsProperties(assessmentKey);
-            List<ItemConstraint> itemConstraints = assessmentQueryRepository.findItemConstraintsForAssessment(clientName,
-                    assessment.getAssessmentId());
             Set<Strand> strands = strandQueryRepository.findStrands(assessmentKey);
+            List<ItemConstraint> itemConstraints = assessmentQueryRepository.findItemConstraintsForAssessment(clientName,
+                assessment.getAssessmentId());
+            List<ItemProperty> itemProperties = itemQueryRepository.findActiveItemsProperties(assessmentKey);
+            List<Item> items = itemQueryRepository.findItemsForAssessment(assessmentKey);
 
-            AssessmentAssembler.assemble(assessment, items, itemProperties, forms, itemConstraints, strands);
+            if (assessment.getSegments().stream().anyMatch(s -> s.getSelectionAlgorithm().equals(Algorithm.FIXED_FORM))) {
+                forms = formQueryRepository.findFormsForAssessment(assessmentKey);
+            }
+
+            AssessmentAssembler.assemble(assessment, strands, itemConstraints, itemProperties, items, forms);
         }
 
         return maybeAssessment;
     }
-
 }

@@ -1,10 +1,8 @@
 package tds.assessment.repositories;
 
 import java.util.List;
-import java.util.Map;
 
 import tds.assessment.Item;
-import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 
 /**
@@ -27,5 +25,4 @@ public interface ItemQueryRepository {
      * @return  A list of items for the assessment
      */
     List<Item> findItemsForAssessment(final String assessmentKey);
-
 }

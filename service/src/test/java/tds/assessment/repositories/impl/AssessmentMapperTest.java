@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +13,7 @@ import java.util.Optional;
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
+import tds.assessment.builders.AssessmentRecordBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,16 +21,16 @@ public class AssessmentMapperTest {
     private AssessmentMapper mapper;
     private Timestamp fieldTestStartDate;
     private Timestamp fieldTestEndDate;
-    private Timestamp segFieldTestStartDate;
-    private Timestamp segFieldTestEndDate;
+    private Timestamp segmentFieldTestStartDate;
+    private Timestamp segmentFieldTestEndDate;
 
     @Before
     public void setUp() throws Exception {
         mapper = new AssessmentMapper();
         fieldTestStartDate = new Timestamp(Instant.now().minusSeconds(100000).toEpochMilli());
         fieldTestEndDate = new Timestamp(Instant.now().toEpochMilli());
-        segFieldTestStartDate = new Timestamp(Instant.now().minusSeconds(200000).toEpochMilli());
-        segFieldTestEndDate = new Timestamp(Instant.now().minusSeconds(300000).toEpochMilli());
+        segmentFieldTestStartDate = new Timestamp(Instant.now().minusSeconds(200000).toEpochMilli());
+        segmentFieldTestEndDate = new Timestamp(Instant.now().minusSeconds(300000).toEpochMilli());
     }
 
     @After
@@ -39,17 +38,22 @@ public class AssessmentMapperTest {
     }
 
     @Test
-    public void shouldReturnAssessmentWithoutSegments() {
-        List<Map<String, Object>> records = createAssessmentRecord("assessmentKey1", 0);
+    public void shouldReturnANonSegmentedFixedFormAssessment() {
+        String assessmentKey = "nonSegmentedFixedFormKey";
+        List<Map<String, Object>> records =
+            AssessmentRecordBuilder.createNonSegmentedFixedFormAssessmentRecord(assessmentKey,
+                fieldTestStartDate,
+                fieldTestEndDate,
+                segmentFieldTestStartDate,
+                segmentFieldTestEndDate);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
         assertThat(maybeAssessment).isPresent();
 
         Assessment assessment = maybeAssessment.get();
-
         assertThat(assessment.getAssessmentId()).isEqualTo("assessmentId");
-        assertThat(assessment.getKey()).isEqualTo("assessmentKey1");
+        assertThat(assessment.getKey()).isEqualTo(assessmentKey);
         assertThat(assessment.getStartAbility()).isEqualTo(9.5f);
         assertThat(assessment.getSubject()).isEqualTo("ELA");
         assertThat(assessment.getFieldTestStartDate().getMillis()).isEqualTo(fieldTestStartDate.getTime());
@@ -59,34 +63,44 @@ public class AssessmentMapperTest {
         assertThat(assessment.getMaxOpportunities()).isEqualTo(100);
         assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
         assertThat(assessment.isInitialAbilityBySubject()).isTrue();
+        assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
 
         assertThat(assessment.getSegments()).hasSize(1);
 
-        Segment segment = assessment.getSegment("assessmentKey1");
-        assertThat(segment.getAssessmentKey()).isEqualTo("assessmentKey1");
-        assertThat(segment.getSegmentId()).isEqualTo("assessmentId");
-        assertThat(segment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
-        assertThat(segment.getMinItems()).isEqualTo(1);
-        assertThat(segment.getMaxItems()).isEqualTo(10);
-        assertThat(segment.getFieldTestMinItems()).isEqualTo(5);
-        assertThat(segment.getFieldTestMaxItems()).isEqualTo(15);
-        assertThat(segment.getPosition()).isEqualTo(1);
-        assertThat(segment.getStartAbility()).isEqualTo(9.5f);
-        assertThat(segment.getSubject()).isEqualTo("ELA");
+        // Since this Assessment does not have any Segment records, the Segment's key will be the same as the
+        // Assessment's key.  This is because we are examining the "default" Segment created by the AssessmentMapper to
+        // enforce the rule that all Assessments must have at least one Segment.
+        Segment defaultSegment = assessment.getSegment(assessmentKey);
+        assertThat(defaultSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(defaultSegment.getSegmentId()).isEqualTo("assessmentId");
+        assertThat(defaultSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
+        assertThat(defaultSegment.getMinItems()).isEqualTo(1);
+        assertThat(defaultSegment.getMaxItems()).isEqualTo(10);
+        assertThat(defaultSegment.getFieldTestMinItems()).isEqualTo(5);
+        assertThat(defaultSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(defaultSegment.getPosition()).isEqualTo(1);
+        assertThat(defaultSegment.getStartAbility()).isEqualTo(9.5f);
+        assertThat(defaultSegment.getSubject()).isEqualTo("ELA");
     }
 
     @Test
-    public void shouldReturnSegmentedAssessment() {
-        List<Map<String, Object>> records = createAssessmentRecord("assessmentKey1", 2);
+    public void shouldReturnSegmentedFixedFormAssessment() {
+        String assessmentKey = "segmentedFixedFormKey";
+        List<Map<String, Object>> records =
+            AssessmentRecordBuilder.createSegmentedFixedFormAssessmentRecords(assessmentKey,
+                2,
+                fieldTestStartDate,
+                fieldTestEndDate,
+                segmentFieldTestStartDate,
+                segmentFieldTestEndDate);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
         assertThat(maybeAssessment).isPresent();
 
         Assessment assessment = maybeAssessment.get();
-
         assertThat(assessment.getAssessmentId()).isEqualTo("assessmentId");
-        assertThat(assessment.getKey()).isEqualTo("assessmentKey1");
+        assertThat(assessment.getKey()).isEqualTo(assessmentKey);
         assertThat(assessment.getStartAbility()).isEqualTo(9.5f);
         assertThat(assessment.getSubject()).isEqualTo("ELA");
         assertThat(assessment.getFieldTestStartDate().getMillis()).isEqualTo(fieldTestStartDate.getTime());
@@ -95,86 +109,213 @@ public class AssessmentMapperTest {
         assertThat(assessment.getAbilitySlope()).isEqualTo(99.9f);
         assertThat(assessment.getMaxOpportunities()).isEqualTo(100);
         assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
+        assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
 
         assertThat(assessment.getSegments()).hasSize(2);
 
-        Segment segment = assessment.getSegment("segmentKey1");
-        assertThat(segment.getAssessmentKey()).isEqualTo("assessmentKey1");
-        assertThat(segment.getSegmentId()).isEqualTo("segmentId");
-        assertThat(segment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
-        assertThat(segment.getMinItems()).isEqualTo(1);
-        assertThat(segment.getMaxItems()).isEqualTo(10);
-        assertThat(segment.getFieldTestMinItems()).isEqualTo(5);
-        assertThat(segment.getFieldTestMaxItems()).isEqualTo(15);
-        assertThat(segment.getPosition()).isEqualTo(1);
-        assertThat(segment.getStartAbility()).isEqualTo(1.5f);
-        assertThat(segment.getSubject()).isEqualTo("ELA");
-        assertThat(segment.getFieldTestStartDate().getMillis()).isEqualTo(segFieldTestStartDate.getTime());
-        assertThat(segment.getFieldTestEndDate().getMillis()).isEqualTo(segFieldTestEndDate.getTime());
-        assertThat(assessment.getSegment("segmentKey2")).isNotNull();
+        // Since this Assessment has separate Segment records, each Segment will have its own unique key
+        Segment firstSegment = assessment.getSegment("segmentKey1");
+        assertThat(firstSegment.getKey()).isEqualTo("segmentKey1");
+        assertThat(firstSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(firstSegment.getSegmentId()).isEqualTo("segmentId-S1");
+        assertThat(firstSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
+        assertThat(firstSegment.getMinItems()).isEqualTo(1);
+        assertThat(firstSegment.getMaxItems()).isEqualTo(10);
+        assertThat(firstSegment.getFieldTestMinItems()).isEqualTo(5);
+        assertThat(firstSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(firstSegment.getPosition()).isEqualTo(1);
+        assertThat(firstSegment.getStartAbility()).isEqualTo(1.5f);
+        assertThat(firstSegment.getSubject()).isEqualTo("ELA");
+        assertThat(firstSegment.getFieldTestStartDate().getMillis()).isEqualTo(segmentFieldTestStartDate.getTime());
+        assertThat(firstSegment.getFieldTestEndDate().getMillis()).isEqualTo(segmentFieldTestEndDate.getTime());
+
+        Segment secondSegment = assessment.getSegment("segmentKey2");
+        assertThat(secondSegment.getKey()).isEqualTo("segmentKey2");
+        assertThat(secondSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(secondSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
+        assertThat(secondSegment.getSegmentId()).isEqualTo("segmentId-S2");
+        assertThat(secondSegment.getPosition()).isEqualTo(2);
+        // all other fields are identical to firstSegment
     }
 
     @Test
-    public void emptyResultWhenAssessmentIsNotPresent() {
-        List<Map<String, Object>> records = new ArrayList<>();
-        updateListWithSegmentData(records, "segmentKey", "assessmentKey");
+    public void shouldReturnANonSegmentedAdaptiveAssessment() {
+        String assessmentKey = "nonSegmentedAdaptiveKey";
+        List<Map<String, Object>> records =
+            AssessmentRecordBuilder.createNonSegmentedAdaptiveAssessmentRecord(assessmentKey,
+                fieldTestStartDate,
+                fieldTestEndDate,
+                segmentFieldTestStartDate,
+                segmentFieldTestEndDate);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
-        assertThat(maybeAssessment).isNotPresent();
+        assertThat(maybeAssessment).isPresent();
+
+        Assessment assessment = maybeAssessment.get();
+        assertThat(assessment.getAssessmentId()).isEqualTo("assessmentId");
+        assertThat(assessment.getKey()).isEqualTo(assessmentKey);
+        assertThat(assessment.getStartAbility()).isEqualTo(9.5f);
+        assertThat(assessment.getSubject()).isEqualTo("ELA");
+        assertThat(assessment.getFieldTestStartDate().getMillis()).isEqualTo(fieldTestStartDate.getTime());
+        assertThat(assessment.getFieldTestEndDate().getMillis()).isEqualTo(fieldTestEndDate.getTime());
+        assertThat(assessment.getAbilityIntercept()).isEqualTo(50.5f);
+        assertThat(assessment.getAbilitySlope()).isEqualTo(99.9f);
+        assertThat(assessment.getMaxOpportunities()).isEqualTo(100);
+        assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
+        assertThat(assessment.isInitialAbilityBySubject()).isTrue();
+        assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+
+        assertThat(assessment.getSegments()).hasSize(1);
+
+        // Since this Assessment does not have any Segment records, the Segment's key will be the same as the
+        // Assessment's key.  This is because we are examining the "default" Segment created by the AssessmentMapper to
+        // enforce the rule that all Assessments must have at least one Segment.
+        Segment defaultSegment = assessment.getSegment(assessmentKey);
+        assertThat(defaultSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(defaultSegment.getSegmentId()).isEqualTo("assessmentId");
+        assertThat(defaultSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+        assertThat(defaultSegment.getMinItems()).isEqualTo(1);
+        assertThat(defaultSegment.getMaxItems()).isEqualTo(10);
+        assertThat(defaultSegment.getFieldTestMinItems()).isEqualTo(5);
+        assertThat(defaultSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(defaultSegment.getPosition()).isEqualTo(1);
+        assertThat(defaultSegment.getStartAbility()).isEqualTo(9.5f);
+        assertThat(defaultSegment.getSubject()).isEqualTo("ELA");
     }
 
-    private void updateListWithSegmentData(List<Map<String, Object>> records, String segmentKey, String assessmentKey) {
-        Map<String, Object> segmentResult = new HashMap<>();
+    @Test
+    public void shouldReturnASegmentedAdaptiveAssessment() {
+        String assessmentKey = "segmentedAdaptiveKey";
+        List<Map<String, Object>> records =
+            AssessmentRecordBuilder.createSegmentedAdaptiveAssessmentRecords(assessmentKey,
+                3,
+                fieldTestStartDate,
+                fieldTestEndDate,
+                segmentFieldTestStartDate,
+                segmentFieldTestEndDate);
 
-        segmentResult.put("assessmentKey", assessmentKey);
-        segmentResult.put("assessmentSegmentKey", segmentKey);
-        segmentResult.put("assessmentSegmentId", "segmentId");
-        segmentResult.put("selectionalgorithm", Algorithm.VIRTUAL.getType());
-        segmentResult.put("minItems", 1);
-        segmentResult.put("maxItems", 10);
-        segmentResult.put("fieldTestMinItems", 5);
-        segmentResult.put("fieldTestMaxItems", 15);
-        segmentResult.put("startAbility", 1.5f);
-        segmentResult.put("segmentPosition", 1);
-        segmentResult.put("subject", "ELA");
-        segmentResult.put("segFieldTestStartDate", segFieldTestStartDate);
-        segmentResult.put("segFieldTestEndDate", segFieldTestEndDate);
-        records.add(segmentResult);
+        Optional<Assessment> maybeAssessment = mapper.mapResults(records);
+
+        assertThat(maybeAssessment).isPresent();
+
+        Assessment assessment = maybeAssessment.get();
+        assertThat(assessment.getAssessmentId()).isEqualTo("assessmentId");
+        assertThat(assessment.getKey()).isEqualTo(assessmentKey);
+        assertThat(assessment.getStartAbility()).isEqualTo(9.5f);
+        assertThat(assessment.getSubject()).isEqualTo("ELA");
+        assertThat(assessment.getFieldTestStartDate().getMillis()).isEqualTo(fieldTestStartDate.getTime());
+        assertThat(assessment.getFieldTestEndDate().getMillis()).isEqualTo(fieldTestEndDate.getTime());
+        assertThat(assessment.getAbilityIntercept()).isEqualTo(50.5f);
+        assertThat(assessment.getAbilitySlope()).isEqualTo(99.9f);
+        assertThat(assessment.getMaxOpportunities()).isEqualTo(100);
+        assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
+        assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
+
+        assertThat(assessment.getSegments()).hasSize(3);
+
+        // Since this Assessment has separate Segment records, each Segment will have its own unique key
+        Segment firstSegment = assessment.getSegment("segmentKey1");
+        assertThat(firstSegment.getKey()).isEqualTo("segmentKey1");
+        assertThat(firstSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(firstSegment.getSegmentId()).isEqualTo("segmentId-S1");
+        assertThat(firstSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+        assertThat(firstSegment.getMinItems()).isEqualTo(1);
+        assertThat(firstSegment.getMaxItems()).isEqualTo(10);
+        assertThat(firstSegment.getFieldTestMinItems()).isEqualTo(5);
+        assertThat(firstSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(firstSegment.getPosition()).isEqualTo(1);
+        assertThat(firstSegment.getStartAbility()).isEqualTo(1.5f);
+        assertThat(firstSegment.getSubject()).isEqualTo("ELA");
+        assertThat(firstSegment.getFieldTestStartDate().getMillis()).isEqualTo(segmentFieldTestStartDate.getTime());
+        assertThat(firstSegment.getFieldTestEndDate().getMillis()).isEqualTo(segmentFieldTestEndDate.getTime());
+
+        Segment secondSegment = assessment.getSegment("segmentKey2");
+        assertThat(secondSegment.getKey()).isEqualTo("segmentKey2");
+        assertThat(secondSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(secondSegment.getSegmentId()).isEqualTo("segmentId-S2");
+        assertThat(secondSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+        assertThat(secondSegment.getPosition()).isEqualTo(2);
+        // all other fields are identical to firstSegment
+
+        Segment thirdSegment = assessment.getSegment("segmentKey3");
+        assertThat(thirdSegment.getKey()).isEqualTo("segmentKey3");
+        assertThat(thirdSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(thirdSegment.getSegmentId()).isEqualTo("segmentId-S3");
+        assertThat(thirdSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+        assertThat(thirdSegment.getPosition()).isEqualTo(3);
+        // all other fields are identical to firstSegment
     }
 
-    private List<Map<String, Object>> createAssessmentRecord(String assessmentKey, int numberOfSegments) {
-        List<Map<String, Object>> records = new ArrayList<>();
-        Map<String, Object> assessmentResult = new HashMap<>();
+    @Test
+    public void shouldReturnASegmentedAssessmentWithManySelectionAlgorithms() {
+        String assessmentKey = "segmentedMultiAlgorithmKey";
+        List<Map<String, Object>> records =
+            AssessmentRecordBuilder.createSegmentedAssessmentWithManySelectionAlgorithms(assessmentKey,
+                1,
+                3,
+                fieldTestStartDate,
+                fieldTestEndDate,
+                segmentFieldTestStartDate,
+                segmentFieldTestEndDate);
 
-        assessmentResult.put("assessmentSegmentKey", assessmentKey);
-        assessmentResult.put("assessmentSegmentId", "assessmentId");
-        assessmentResult.put("selectionalgorithm", Algorithm.VIRTUAL.getType());
-        assessmentResult.put("startAbility", 9.5f);
-        assessmentResult.put("subject", "ELA");
+        Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
-        assessmentResult.put("selectionalgorithm", Algorithm.VIRTUAL.getType());
-        assessmentResult.put("minItems", 1);
-        assessmentResult.put("maxItems", 10);
-        assessmentResult.put("fieldTestMinItems", 5);
-        assessmentResult.put("fieldTestMaxItems", 15);
-        assessmentResult.put("segmentPosition", 1);
-        assessmentResult.put("subject", "ELA");
+        assertThat(maybeAssessment).isPresent();
 
-        assessmentResult.put("ftstartdate", fieldTestStartDate);
-        assessmentResult.put("ftenddate", fieldTestEndDate);
-        assessmentResult.put("abilityslope", 99.9f);
-        assessmentResult.put("abilityintercept", 50.5f);
-        assessmentResult.put("accommodationfamily", "family");
-        assessmentResult.put("maxopportunities", 100);
-        assessmentResult.put("initialabilitybysubject", true);
+        Assessment assessment = maybeAssessment.get();
+        assertThat(assessment.getAssessmentId()).isEqualTo("assessmentId");
+        assertThat(assessment.getKey()).isEqualTo(assessmentKey);
+        assertThat(assessment.getStartAbility()).isEqualTo(9.5f);
+        assertThat(assessment.getSubject()).isEqualTo("ELA");
+        assertThat(assessment.getFieldTestStartDate().getMillis()).isEqualTo(fieldTestStartDate.getTime());
+        assertThat(assessment.getFieldTestEndDate().getMillis()).isEqualTo(fieldTestEndDate.getTime());
+        assertThat(assessment.getAbilityIntercept()).isEqualTo(50.5f);
+        assertThat(assessment.getAbilitySlope()).isEqualTo(99.9f);
+        assertThat(assessment.getMaxOpportunities()).isEqualTo(100);
+        assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
+        assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
 
-        for (int i = 1; i <= numberOfSegments; i++) {
-            updateListWithSegmentData(records, "segmentKey" + i, assessmentKey);
-        }
+        assertThat(assessment.getSegments()).hasSize(4);
 
-        records.add(assessmentResult);
+        // Since this Assessment has separate Segment records, each Segment will have its own unique key
+        Segment firstSegment = assessment.getSegment("segmentKey1");
+        assertThat(firstSegment.getKey()).isEqualTo("segmentKey1");
+        assertThat(firstSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(firstSegment.getSegmentId()).isEqualTo("segmentId-S1");
+        assertThat(firstSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
+        assertThat(firstSegment.getMinItems()).isEqualTo(1);
+        assertThat(firstSegment.getMaxItems()).isEqualTo(10);
+        assertThat(firstSegment.getFieldTestMinItems()).isEqualTo(5);
+        assertThat(firstSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(firstSegment.getPosition()).isEqualTo(1);
+        assertThat(firstSegment.getStartAbility()).isEqualTo(1.5f);
+        assertThat(firstSegment.getSubject()).isEqualTo("ELA");
+        assertThat(firstSegment.getFieldTestStartDate().getMillis()).isEqualTo(segmentFieldTestStartDate.getTime());
+        assertThat(firstSegment.getFieldTestEndDate().getMillis()).isEqualTo(segmentFieldTestEndDate.getTime());
 
-        return records;
+        Segment secondSegment = assessment.getSegment("segmentKey2");
+        assertThat(secondSegment.getKey()).isEqualTo("segmentKey2");
+        assertThat(secondSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(secondSegment.getSegmentId()).isEqualTo("segmentId-S2");
+        assertThat(secondSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+        assertThat(secondSegment.getPosition()).isEqualTo(2);
+        // all other fields are identical to firstSegment
+
+        Segment thirdSegment = assessment.getSegment("segmentKey3");
+        assertThat(thirdSegment.getKey()).isEqualTo("segmentKey3");
+        assertThat(thirdSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(thirdSegment.getSegmentId()).isEqualTo("segmentId-S3");
+        assertThat(thirdSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+        assertThat(thirdSegment.getPosition()).isEqualTo(3);
+        // all other fields are identical to firstSegment
+
+        Segment fourthSegment = assessment.getSegment("segmentKey4");
+        assertThat(fourthSegment.getKey()).isEqualTo("segmentKey4");
+        assertThat(fourthSegment.getAssessmentKey()).isEqualTo(assessmentKey);
+        assertThat(fourthSegment.getSegmentId()).isEqualTo("segmentId-S4");
+        assertThat(fourthSegment.getSelectionAlgorithm()).isEqualTo(Algorithm.ADAPTIVE_2);
+        assertThat(fourthSegment.getPosition()).isEqualTo(4);
+        // all other fields are identical to firstSegment
     }
 }
