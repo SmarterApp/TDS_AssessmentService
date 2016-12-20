@@ -1,5 +1,6 @@
 package tds.assessment.services.impl;
 
+import com.google.common.base.Optional;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -63,13 +64,16 @@ public class AssessmentAssemblerTest {
         Form seg1form1 = new Form.Builder("form1")
             .withSegmentKey("seg1")
             .withLanguage("lang1")
+            .withCohort("Chargers")
             .build();
         Form seg1form2 = new Form.Builder("form2")
             .withSegmentKey("seg1")
             .withLanguage("lang2")
+            .withCohort("broncos")
             .build();
         Form seg2form1 = new Form.Builder("form3")
             .withSegmentKey("seg2")
+            .withCohort("chiefs")
             .withLanguage("lang3")
             .build();
         forms.add(seg1form1);
@@ -373,20 +377,25 @@ public class AssessmentAssemblerTest {
         assertThat(retSeg2Lang3Items).hasSize(1);
 
         // SEGMENTS - GET FORM BY LANGUAGE
-        Form retLang1Form = retSeg1.getForm("lang1");
-        assertThat(retLang1Form.getLanguage()).isEqualTo("lang1");
+        List<Form> retLang1Forms = retSeg1.getForms("lang1");
+        assertThat(retLang1Forms).hasSize(1);
+        Form retLang1Form = retLang1Forms.get(0);
+        assertThat(retLang1Form.getLanguageCode()).isEqualTo("lang1");
         assertThat(retLang1Form.getKey()).isEqualTo("form1");
         assertThat(retLang1Form.getItems()).hasSize(2);
         assertThat(retLang1Form.getSegmentKey()).isEqualTo("seg1");
 
-        Form retLang2Form = retSeg1.getForm("lang2");
-        assertThat(retLang2Form.getLanguage()).isEqualTo("lang2");
+        // SEGMENTS - GET FORM BY LANGUAGE AND COHORT
+        Optional<Form> maybeRetLang2Form = retSeg1.getForm("lang2", "broncos");
+        Form retLang2Form = maybeRetLang2Form.get();
+        assertThat(retLang2Form.getLanguageCode()).isEqualTo("lang2");
         assertThat(retLang2Form.getKey()).isEqualTo("form2");
         assertThat(retLang2Form.getItems()).hasSize(2);
         assertThat(retLang2Form.getSegmentKey()).isEqualTo("seg1");
 
-        Form retLang3Form = retSeg2.getForm("lang3");
-        assertThat(retLang3Form.getLanguage()).isEqualTo("lang3");
+        Optional<Form> maybeRetLang3Form = retSeg2.getForm("lang3", "chiefs");
+        Form retLang3Form = maybeRetLang3Form.get();
+        assertThat(retLang3Form.getLanguageCode()).isEqualTo("lang3");
         assertThat(retLang3Form.getKey()).isEqualTo("form3");
         assertThat(retLang3Form.getItems()).hasSize(1);
         assertThat(retLang3Form.getSegmentKey()).isEqualTo("seg2");
@@ -979,14 +988,16 @@ public class AssessmentAssemblerTest {
         assertThat(retSeg1Lang2Items).hasSize(2);
 
         // SEGMENTS - GET FORM BY LANGUAGE
-        Form retLang1Form = retSeg1.getForm("lang1");
-        assertThat(retLang1Form.getLanguage()).isEqualTo("lang1");
+        List<Form> retLang1Forms = retSeg1.getForms("lang1");
+        Form retLang1Form = retLang1Forms.get(0);
+        assertThat(retLang1Form.getLanguageCode()).isEqualTo("lang1");
         assertThat(retLang1Form.getKey()).isEqualTo("form1");
         assertThat(retLang1Form.getItems()).hasSize(2);
         assertThat(retLang1Form.getSegmentKey()).isEqualTo("seg1");
 
-        Form retLang2Form = retSeg1.getForm("lang2");
-        assertThat(retLang2Form.getLanguage()).isEqualTo("lang2");
+        List<Form> retLang2Forms = retSeg1.getForms("lang2");
+        Form retLang2Form = retLang2Forms.get(0);
+        assertThat(retLang2Form.getLanguageCode()).isEqualTo("lang2");
         assertThat(retLang2Form.getKey()).isEqualTo("form2");
         assertThat(retLang2Form.getItems()).hasSize(2);
         assertThat(retLang2Form.getSegmentKey()).isEqualTo("seg1");

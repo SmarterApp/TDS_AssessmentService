@@ -1,6 +1,5 @@
 package tds.assessment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +9,7 @@ import java.util.List;
 public class Form {
     private String key;
     private String id;
-    private String language;
+    private String languageCode;
     private String cohort;
     private String segmentKey;
     private Long loadVersion;
@@ -25,7 +24,7 @@ public class Form {
     private Form(Builder builder) {
         key = builder.key;
         id = builder.id;
-        language = builder.language;
+        languageCode = builder.languageCode;
         cohort = builder.cohort;
         segmentKey = builder.segmentKey;
         loadVersion = builder.loadVersion;
@@ -36,7 +35,7 @@ public class Form {
     public static class Builder {
         private String key;
         private String id;
-        private String language;
+        private String languageCode;
         private String cohort;
         private String segmentKey;
         private Long loadVersion;
@@ -54,7 +53,7 @@ public class Form {
         }
 
         public Builder withLanguage(String language) {
-            this.language = language;
+            this.languageCode = language;
             return this;
         }
 
@@ -89,10 +88,10 @@ public class Form {
     }
 
     /**
-     * @return the language for the form
+     * @return the languageCode for the form
      */
-    public String getLanguage() {
-        return language;
+    public String getLanguageCode() {
+        return languageCode;
     }
 
     /**
