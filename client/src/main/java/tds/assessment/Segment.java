@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import com.google.common.base.Optional;
 import org.joda.time.Instant;
 
 import java.util.ArrayList;
@@ -195,30 +196,53 @@ public class Segment {
     }
 
     /**
-     * Choose the {@link tds.assessment.Form} for the specified language.
+     * Choose the {@link tds.assessment.Form}s for the specified language.
      * <p>
      *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.assessment.Algorithm}.  Segments configured for the adaptive algorithm do not have forms, in which
-     *     case this method will throw an java.lang.IllegalArgumentException.
+     *     {@link tds.assessment.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
      * </p>
      *
      * @param languageCode The student's specified language
      * @return The {@link tds.assessment.Form} for the specified language
-     * @throws java.lang.IllegalArgumentException if the languageCode does not match any of the forms contained within
-     * this Segment
      */
-    public Form getForm(String languageCode) {
+    public List<Form> getForms(final String languageCode) {
+        List<Form> formsForLanguage = new ArrayList<>();
+
         if (forms == null) {
-            forms = new ArrayList<>();
+            return new ArrayList<>();
         }
 
-        for (Form f : forms) {
-            if (f.getLanguage().equalsIgnoreCase(languageCode)) {
-                return f;
+        for (Form form : this.forms) {
+            if (form.getLanguageCode().equalsIgnoreCase(languageCode)) {
+                formsForLanguage.add(form);
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not find a Form for language code '%s'", languageCode));
+        return formsForLanguage;
+    }
+
+    /**
+     * Choose the {@link tds.assessment.Form} for the specified language and form cohort.
+     * <p>
+     *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
+     *     {@link tds.assessment.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
+     * </p>
+     *
+     * @param languageCode The student's specified language
+     * @param cohort The form cohort to filter by
+     * @return The {@link tds.assessment.Form} for the specified language
+     */
+    public Optional<Form> getForm(final String languageCode, final String cohort) {
+        Optional<Form> maybeForm = Optional.absent();
+
+        for (Form form : this.forms) {
+            if (form.getLanguageCode().equalsIgnoreCase(languageCode) && form.getCohort().equalsIgnoreCase(cohort)) {
+                maybeForm = Optional.of(form);
+                break;
+            }
+        }
+
+        return maybeForm;
     }
 
     /**
@@ -252,9 +276,17 @@ public class Segment {
         // RULE: When the Segment's algorithm is set to "fixedform", the items should come from the Form that represents
         // the student's selected language.  Otherwise, the items are returned directly (because they will have been
         // collected by other means).
-        return getSelectionAlgorithm().equals(Algorithm.FIXED_FORM)
-            ? getForm(languageCode).getItems()
-            : items;
+        List<Item> retItems = new ArrayList<>();
+
+        if (getSelectionAlgorithm() == Algorithm.FIXED_FORM) {
+            for (Form form : getForms(languageCode)) {
+                retItems.addAll(form.getItems());
+            }
+        } else {
+            retItems = items;
+        }
+
+        return retItems;
     }
 
     /**
