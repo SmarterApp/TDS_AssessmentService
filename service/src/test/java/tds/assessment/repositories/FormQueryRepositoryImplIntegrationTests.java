@@ -79,7 +79,7 @@ public class FormQueryRepositoryImplIntegrationTests {
         assertThat(form1.getKey()).isEqualTo("187-510");
         assertThat(form1.getCohort()).isEqualTo("Default");
         assertThat(form1.getId()).isEqualTo("PracTest::MG4::S1::SP14");
-        assertThat(form1.getLanguage()).isEqualTo("ENU");
+        assertThat(form1.getLanguageCode()).isEqualTo("ENU");
         assertThat(form1.getLoadVersion()).isEqualTo(8233L);
         assertThat(form1.getUpdateVersion()).isNull();
         assertThat(form1.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
@@ -106,14 +106,14 @@ public class FormQueryRepositoryImplIntegrationTests {
         assertThat(form1.getKey()).isEqualTo("187-528");
         assertThat(form1.getCohort()).isEqualTo("Default");
         assertThat(form1.getId()).isEqualTo("PracTest::MG8::S1::SP14");
-        assertThat(form1.getLanguage()).isEqualTo("ENU");
+        assertThat(form1.getLanguageCode()).isEqualTo("ENU");
         assertThat(form1.getLoadVersion()).isEqualTo(8233L);
         assertThat(form1.getUpdateVersion()).isEqualTo(8234L);
         assertThat(form1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
         assertThat(form2.getKey()).isEqualTo("187-531");
         assertThat(form2.getCohort()).isEqualTo("Default");
         assertThat(form2.getId()).isEqualTo("PracTest::MG8::S2::SP14");
-        assertThat(form2.getLanguage()).isEqualTo("ENU");
+        assertThat(form2.getLanguageCode()).isEqualTo("ENU");
         assertThat(form2.getLoadVersion()).isEqualTo(8233L);
         assertThat(form2.getUpdateVersion()).isNull();
         assertThat(form2.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
