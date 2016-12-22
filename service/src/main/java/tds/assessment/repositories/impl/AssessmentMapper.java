@@ -79,7 +79,9 @@ class AssessmentMapper {
         assessment.setAbilitySlope(row.getFloat("abilityslope"));
         assessment.setAbilityIntercept(row.getFloat("abilityintercept"));
         assessment.setInitialAbilityBySubject(row.getBoolean("initialabilitybysubject"));
-
+        assessment.setValidateCompleteness(row.getBoolean("validateCompleteness"));
+        assessment.setPrefetch(row.getInt("prefetch"));
+        assessment.setDeleteUnansweredItems(row.getBoolean("deleteUnansweredItems"));
         // RULE:  An Assessment always has at least one Segment.  Create a "default" Segment from the data contained in
         // the row that represents the Assessment.  This will account for assessments that do not have any segments.  In
         // this case, the default Segment's assessmentKey will be set to the same value as the Assessment's key (to

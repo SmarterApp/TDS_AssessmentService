@@ -16,6 +16,7 @@ public class Assessment {
     private Algorithm selectionAlgorithm;
     private float startAbility;
     private String subject;
+    private int prefetch;
     private float abilitySlope;
     private float abilityIntercept;
     private String accommodationFamily;
@@ -27,6 +28,8 @@ public class Assessment {
     private List<Segment> segments;
     private Set<Strand> strands;
     private Set<String> languageCodes;
+    private boolean validateCompleteness;
+    private boolean deleteUnansweredItems;
 
     public Assessment() {}
 
@@ -126,6 +129,17 @@ public class Assessment {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    /**
+     * @return The number of pages to prefetch
+     */
+    public int getPrefetch() {
+        return prefetch;
+    }
+
+    public void setPrefetch(int prefetch) {
+        this.prefetch = prefetch;
     }
 
     /**
@@ -230,5 +244,27 @@ public class Assessment {
 
     public void setLanguageCodes(Set<String> languageCodes) {
         this.languageCodes = languageCodes;
+    }
+
+    /**
+     * @return A flag indicating whether unanswered items should be cleared automatically.
+     */
+    public boolean getDeleteUnansweredItems() {
+        return deleteUnansweredItems;
+    }
+
+    public void setDeleteUnansweredItems(boolean deleteUnansweredItems) {
+        this.deleteUnansweredItems = deleteUnansweredItems;
+    }
+
+    /**
+     * @return A flag indicating whether all items need to ansered before test submission
+     */
+    public boolean isValidateCompleteness() {
+        return validateCompleteness;
+    }
+
+    public void setValidateCompleteness(boolean validateCompleteness) {
+        this.validateCompleteness = validateCompleteness;
     }
 }
