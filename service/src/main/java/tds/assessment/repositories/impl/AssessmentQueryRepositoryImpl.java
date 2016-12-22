@@ -61,6 +61,9 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
             "   CT.abilityslope, \n" +
             "   CT.abilityintercept, \n" +
             "   CT.initialabilitybysubject, \n" +
+            "   CT.validatecompleteness AS validateCompleteness, \n" +
+            "   CT.prefetch, \n" +
+            "   CT.deleteUnansweredItems, \n" +
             "   SP.ftstartdate AS segFieldTestStartDate, \n" +
             "   SP.ftenddate AS segFieldTestEndDate \n" +
             "FROM \n" +
