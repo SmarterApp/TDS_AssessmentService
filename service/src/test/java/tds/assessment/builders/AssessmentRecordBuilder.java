@@ -39,8 +39,8 @@ public class AssessmentRecordBuilder {
     /**
      * Build a simulated record set of a fixed form Assessment that has several associated Segments.
      *
-     * @param assessmentKey The key that uniquely identifies the Assessment
-     *                      Example:  '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016'
+     * @param assessmentKey    The key that uniquely identifies the Assessment
+     *                         Example:  '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016'
      * @param numberOfSegments The number of Segments to create for this Assessment
      * @return A {@code List<Map<String, Object>>} simulating records returned from the database for a fixed form
      * Assessment with the number of associated Segments
@@ -87,8 +87,8 @@ public class AssessmentRecordBuilder {
     /**
      * Build a simulated record set of an adaptive Assessment that has several associated Segments.
      *
-     * @param assessmentKey The key that uniquely identifies the Assessment
-     *                      Example:  '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016'
+     * @param assessmentKey    The key that uniquely identifies the Assessment
+     *                         Example:  '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016'
      * @param numberOfSegments The number of Segments to create for this Assessment
      * @return A {@code List<Map<String, Object>>} simulating records returned from the database for an adaptive
      * Assessment with the number of associated Segments
@@ -112,10 +112,10 @@ public class AssessmentRecordBuilder {
     /**
      * Build a simulated record set of an Assessment that has Segments with multiple selection algorithms.
      *
-     * @param assessmentKey The key that uniquely identifies the Assessment
-     *                      Example: '(SBAC_PT)MSB-Mathematics-3' (1 adaptive, 3 fixedform segments)
+     * @param assessmentKey             The key that uniquely identifies the Assessment
+     *                                  Example: '(SBAC_PT)MSB-Mathematics-3' (1 adaptive, 3 fixedform segments)
      * @param numberOfFixedFormSegments The number of "fixed form" Segments to create for this Assessment
-     * @param numberOfAdaptiveSegments The number of "adaptive" Segments to create for this Assessment
+     * @param numberOfAdaptiveSegments  The number of "adaptive" Segments to create for this Assessment
      * @return A {@code List<Map<String, Object>>} simulating records returned from the database for an Assessment with
      * the number of associated fixed-form and adaptive Segments
      */
@@ -140,11 +140,11 @@ public class AssessmentRecordBuilder {
      * Build a collection of assessment and segment data.  These records are designed to emulate the results returned
      * from the {@code AssessmentQueryRepositoryImpl.findAssessmentByKey()} query.
      *
-     * @param assessmentKey The key that uniquely identifies the Assessment in the {@code itembank.tblsetofadminsubjects}
-     *                      table.
-     * @param selectionAlgorithm The selection algorithm that should be assigned to the assessment
+     * @param assessmentKey             The key that uniquely identifies the Assessment in the {@code itembank.tblsetofadminsubjects}
+     *                                  table.
+     * @param selectionAlgorithm        The selection algorithm that should be assigned to the assessment
      * @param numberOfFixedFormSegments The number of Segments that should be associated to this Assessment
-     * @param numberOfAdaptiveSegments The number of Segments that should be associated to this Assessment
+     * @param numberOfAdaptiveSegments  The number of Segments that should be associated to this Assessment
      * @return A {@code List<Map<String, Object>>} simulating records returned from the database for the Assessment and
      * its associated Segment(s)
      */
@@ -211,9 +211,9 @@ public class AssessmentRecordBuilder {
     /**
      * Simulate a database record that represents a segment for an assessment.
      *
-     * @param segmentIndex The index of the segment being created
+     * @param segmentIndex  The index of the segment being created
      * @param assessmentKey The key of the assessment that owns the segment
-     * @param algorithm The selection algorithm for the segment
+     * @param algorithm     The selection algorithm for the segment
      * @return A {@code Map} that represents a database record with Segment data
      */
     private static Map<String, Object> getSegmentRecord(int segmentIndex, String assessmentKey,

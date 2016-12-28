@@ -53,10 +53,10 @@ class AssessmentMapper {
     /**
      * Create an {@link tds.assessment.Assessment} from data returned by the query.
      * <p>
-     *     An assessment must always have one segment.  Since each record returned from the {@code findAssessmentByKey}
-     *     method has enough data to build an assessment and/or a segment (because assessments and segments are stored
-     *     in the same table), this method builds a "default" segment from the same record that is used to build the
-     *     assessment.
+     * An assessment must always have one segment.  Since each record returned from the {@code findAssessmentByKey}
+     * method has enough data to build an assessment and/or a segment (because assessments and segments are stored
+     * in the same table), this method builds a "default" segment from the same record that is used to build the
+     * assessment.
      * </p>
      *
      * @param row The {@link tds.assessment.repositories.impl.AssessmentMapper.ResultRow} representing the assessment

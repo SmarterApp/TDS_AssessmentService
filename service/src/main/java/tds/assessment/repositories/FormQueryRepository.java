@@ -13,7 +13,7 @@ public interface FormQueryRepository {
      * Finds a list of forms for the assessment
      *
      * @param assessmentKey the assessment key for the form's {@link tds.assessment.Assessment}
-     * @return  a list of forms for the assessment
+     * @return a list of forms for the assessment
      */
     List<Form> findFormsForAssessment(final String assessmentKey);
 }

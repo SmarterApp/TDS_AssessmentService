@@ -20,9 +20,9 @@ class AssessmentAssembler {
     /**
      * Build a complete {@link tds.assessment.Assessment} out of its components.
      *
-     * @param assessment The {@link tds.assessment.Assessment} to assemble
-     * @param strands The {@link tds.assessment.Strand}s associated with the assessment (and any of the Segments if they
-     *                are configured to use the "adaptive2" selection algorithm
+     * @param assessment      The {@link tds.assessment.Assessment} to assemble
+     * @param strands         The {@link tds.assessment.Strand}s associated with the assessment (and any of the Segments if they
+     *                        are configured to use the "adaptive2" selection algorithm
      * @param itemConstraints A collection of {@link tds.assessment.ItemConstraint}s that should be applied to all Items
      *                        in the Assessment
      */

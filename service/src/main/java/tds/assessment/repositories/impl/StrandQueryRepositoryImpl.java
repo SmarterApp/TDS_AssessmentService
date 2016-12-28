@@ -26,13 +26,13 @@ public class StrandQueryRepositoryImpl implements StrandQueryRepository {
     public Set<Strand> findStrands(final String assessmentKey) {
         SqlParameterSource parameters = new MapSqlParameterSource("key", assessmentKey);
         final String SQL =
-                "SELECT \n" +
+            "SELECT \n" +
                 "   strand._fk_strand AS name,\n" +
                 "   strand._key, \n" +
                 "   strand.minitems, \n" +
                 "   strand.maxitems,\n" +
                 "   strand.adaptivecut,\n" +
-                "   strand._fk_adminsubject as segmentKey\n" +
+                "   strand._fk_adminsubject AS segmentKey\n" +
                 "FROM \n" +
                 "   itembank.tbladminstrand strand\n" +
                 "LEFT JOIN \n" +
@@ -43,15 +43,15 @@ public class StrandQueryRepositoryImpl implements StrandQueryRepository {
                 "   segments._key = :key";
 
         return new HashSet<>(jdbcTemplate.query(SQL, parameters, (rs, row) ->
-                new Strand.Builder()
-                        .withName(rs.getString("name"))
-                        .withKey(rs.getString("_key"))
-                        .withMinItems(rs.getInt("minitems"))
-                        .withMaxItems(rs.getInt("maxitems"))
-                        // calling getObject() and casting to Float because .getFloat() defaults to 0 if null
-                        .withAdaptiveCut((Float) rs.getObject("adaptivecut"))
-                        .withSegmentKey(rs.getString("segmentKey"))
-                        .build()
+            new Strand.Builder()
+                .withName(rs.getString("name"))
+                .withKey(rs.getString("_key"))
+                .withMinItems(rs.getInt("minitems"))
+                .withMaxItems(rs.getInt("maxitems"))
+                // calling getObject() and casting to Float because .getFloat() defaults to 0 if null
+                .withAdaptiveCut((Float) rs.getObject("adaptivecut"))
+                .withSegmentKey(rs.getString("segmentKey"))
+                .build()
         ));
     }
 }

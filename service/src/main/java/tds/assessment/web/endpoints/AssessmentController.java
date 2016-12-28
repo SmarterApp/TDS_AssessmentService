@@ -34,7 +34,7 @@ class AssessmentController {
     @GetMapping(value = "/{clientName}/assessments/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<Assessment> findAssessment(@PathVariable final String clientName, @PathVariable final String key)
-            throws NotFoundException {
+        throws NotFoundException {
         final Assessment assessment = service.findAssessment(clientName, key)
             .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
 

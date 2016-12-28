@@ -30,30 +30,30 @@ public class StrandQueryRepositoryImplIntegrationTests {
 
         // Non-segmented, test
         final String tblSetOfAdminSubjectsInsertSQL1 = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016','SBAC_PT', 'SBAC_PT-ELA','IRP-Perf-ELA-11'," +
-                "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
-                "0,'bp1',NULL,NULL,'summative');";
+            "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
+            "0,'bp1',NULL,NULL,'summative');";
         // Segmented test assessment
         final String tblSetOfAdminSubjectsInsertSQL2 = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015','SBAC_PT', 'SBAC_PT-ELA','SBAC-Mathematics-8'," +
-                "0,1,4,4,1,1,NULL,NULL,0,0,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
-                "0,'bp1',NULL,NULL,'summative');";
+            "0,1,4,4,1,1,NULL,NULL,0,0,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
+            "0,'bp1',NULL,NULL,'summative');";
         // Segment 1
         final String tblSetOfAdminSubjectsInsertSQL2a = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015','SBAC_PT', 'SBAC_PT-ELA','SBAC-SEG1-MATH-8'," +
-                "0,1,4,4,1,1,NULL,NULL,2,3,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',1,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
-                "0,'bp1',NULL,NULL,'summative');";
+            "0,1,4,4,1,1,NULL,NULL,2,3,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',1,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
+            "0,'bp1',NULL,NULL,'summative');";
         // Segment2
         final String tblSetOfAdminSubjectsInsertSQL2b = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015','SBAC_PT', 'SBAC_PT-ELA','SBAC-SEG2-MATH-8'," +
-                "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',2,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
-                "0,'bp1',NULL,NULL,'summative');";
+            "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',2,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
+            "0,'bp1',NULL,NULL,'summative');";
 
         final String insertStrandSQL =
-                "INSERT INTO itembank.tbladminstrand\n" +
-                        "   (_fk_adminsubject, _key, _fk_strand, minitems, maxitems, adaptivecut)\n" +
-                        "VALUES \n" +
-                        "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'Strand1-key', 'Strand1', 2, 7, -39.234),\n" +
-                        "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'Strand2-key', 'Strand2', 0, 4, -37.432),\n" +
-                        "   ('(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015', 'Strand3-key', 'Strand3', 0, 2, null),\n" +
-                        "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'Strand4-key', 'Strand4', 1, 3, null),\n" +
-                        "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'Strand5-key', 'Strand5', 0, 4, null)";
+            "INSERT INTO itembank.tbladminstrand\n" +
+                "   (_fk_adminsubject, _key, _fk_strand, minitems, maxitems, adaptivecut)\n" +
+                "VALUES \n" +
+                "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'Strand1-key', 'Strand1', 2, 7, -39.234),\n" +
+                "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'Strand2-key', 'Strand2', 0, 4, -37.432),\n" +
+                "   ('(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015', 'Strand3-key', 'Strand3', 0, 2, null),\n" +
+                "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'Strand4-key', 'Strand4', 1, 3, null),\n" +
+                "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'Strand5-key', 'Strand5', 0, 4, null)";
 
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2);

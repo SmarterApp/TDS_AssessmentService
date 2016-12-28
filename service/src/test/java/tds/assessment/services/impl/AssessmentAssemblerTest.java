@@ -365,14 +365,14 @@ public class AssessmentAssemblerTest {
         assertThat(retSeg2Form1Item1Prop.get(1).getName()).isEqualTo("language");
         assertThat(retSeg2Form1Item1Prop.get(1).getValue()).isEqualTo("lang3");
         assertThat(retSeg2Form1Item1Prop.get(1).getDescription()).isEqualTo("desc8");
-        
+
         // SEGMENTS - GET ITEMS BY LANGUAGE
         List<Item> retSeg1Lang1Items = retSeg1.getItems("lang1");
         assertThat(retSeg1Lang1Items).hasSize(2);
-        
+
         List<Item> retSeg1Lang2Items = retSeg1.getItems("lang2");
         assertThat(retSeg1Lang2Items).hasSize(2);
-        
+
         List<Item> retSeg2Lang3Items = retSeg2.getItems("lang3");
         assertThat(retSeg2Lang3Items).hasSize(1);
 

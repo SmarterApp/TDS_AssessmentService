@@ -5,10 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
@@ -16,7 +14,6 @@ import tds.assessment.Form;
 import tds.assessment.Item;
 import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
-import tds.assessment.Segment;
 import tds.assessment.Strand;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
