@@ -51,9 +51,9 @@ public class StrandQueryRepositoryImplIntegrationTests {
                 "VALUES \n" +
                 "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'Strand1-key', 'Strand1', 2, 7, -39.234),\n" +
                 "   ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'Strand2-key', 'Strand2', 0, 4, -37.432),\n" +
-                "   ('(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015', 'Strand3-key', 'Strand3', 0, 2, null),\n" +
-                "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'Strand4-key', 'Strand4', 1, 3, null),\n" +
-                "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'Strand5-key', 'Strand5', 0, 4, null)";
+                "   ('(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015', 'Strand3-key', 'Strand3', 0, 2, NULL),\n" +
+                "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'Strand4-key', 'Strand4', 1, 3, NULL),\n" +
+                "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'Strand5-key', 'Strand5', 0, 4, NULL)";
 
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2);
