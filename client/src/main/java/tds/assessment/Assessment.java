@@ -249,7 +249,7 @@ public class Assessment {
     /**
      * @return A flag indicating whether unanswered items should be cleared automatically.
      */
-    public boolean getDeleteUnansweredItems() {
+    public boolean shouldDeleteUnansweredItems() {
         return deleteUnansweredItems;
     }
 
