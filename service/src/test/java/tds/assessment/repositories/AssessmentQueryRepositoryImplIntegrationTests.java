@@ -166,7 +166,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.getAbilityIntercept()).isEqualTo(6.3f);
         assertThat(assessment.isInitialAbilityBySubject()).isFalse();
         assertThat(assessment.getPrefetch()).isEqualTo(2);
-        assertThat(assessment.getDeleteUnansweredItems()).isFalse();
+        assertThat(assessment.shouldDeleteUnansweredItems()).isFalse();
         assertThat(assessment.isValidateCompleteness()).isTrue();
 
         Segment segment1 = null;
