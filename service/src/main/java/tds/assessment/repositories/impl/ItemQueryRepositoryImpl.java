@@ -29,34 +29,51 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
         SqlParameterSource parameters = new MapSqlParameterSource("key", assessmentKey);
         final String itemsSQL =
             "SELECT \n" +
-                "   I._key AS id,\n" +
-                "   I.itemtype,\n" +
-                "   A._fk_adminsubject AS segmentKey,\n" +
-                "   FI._fk_testform AS formKey,\n" +
-                "   A.groupid,\n" +
-                "   A.groupkey,\n" +
-                "   A.itemposition AS position,\n" +
-                "   A.isfieldtest,\n" +
-                "   A.isrequired, \n" +
-                "   A.strandname \n" +
+                "   item._key AS id,\n" +
+                "   item.itemtype,\n" +
+                "   adminItems._fk_adminsubject AS segmentKey,\n" +
+                "   formItem._fk_testform AS formKey,\n" +
+                "   adminItems.groupid,\n" +
+                "   adminItems.groupkey,\n" +
+                "   adminItems.itemposition AS position,\n" +
+                "   adminItems.isfieldtest,\n" +
+                "   adminItems.isrequired, \n" +
+                "   adminItems.strandname, \n" +
+                "   CONCAT(client.homepath, bank.homepath, bank.itempath, item.filepath, item.filename) AS itemFilePath, \n" +
+                "   CONCAT(client.homepath, bank.homepath, bank.stimulipath, stimulus.filepath, stimulus.filename) AS stimulusFilePath, \n" +
+                "   adminItems.isprintable \n" +
                 "FROM \n" +
-                "   itembank.tblsetofadminitems AS A \n" +
+                "   itembank.tblsetofadminitems AS adminItems \n" +
                 "JOIN \n" +
-                "   itembank.tblitem I \n" +
-                "   ON I._key = A._fk_item \n" +
+                "   itembank.tblitem item \n" +
+                "   ON item._key = adminItems._fk_item \n" +
                 "JOIN \n" +
-                "   itembank.testformitem FI \n" +
-                "   ON FI._fk_item = I._key \n" +
-                "JOIN " +
+                "   itembank.testformitem formItem \n" +
+                "   ON formItem._fk_item = item._key \n" +
+                "JOIN \n" +
                 "   itembank.tblsetofadminsubjects segments \n" +
-                "   ON segments._key = A._fk_adminsubject \n" +
+                "   ON segments._key = adminItems._fk_adminsubject \n" +
+                "JOIN \n" +
+                "   itembank.tblclient client \n" +
+                "   ON client.name = segments._fk_testadmin \n" +
+                "JOIN \n" +
+                "   itembank.tblitembank bank \n" +
+                "   ON bank._fk_client = client._key \n" +
+                "LEFT JOIN \n" +
+                "   tblsetofitemstimuli itemStimuli \n" +
+                "   ON itemStimuli._fk_adminsubject = segments._key \n" +
+                "   AND itemStimuli._fk_item = item._key \n" +
+                "LEFT JOIN \n" +
+                "   itembank.tblstimulus stimulus \n" +
+                "   ON stimulus._key = itemStimuli._fk_stimulus \n" +
+                "   AND stimulus._efk_itembank = bank._efk_itembank \n" +
                 "WHERE \n" +
                 "   (segments.virtualtest = :key \n" +
                 "       OR segments._key = :key) \n" +
                 "AND \n" +
-                "   A.isactive = 1 \n" +
+                "   adminItems.isactive = 1 \n" +
                 "AND \n" +
-                "   FI.isactive = 1";
+                "   formItem.isactive = 1";
 
         return jdbcTemplate.query(itemsSQL, parameters, resultExtractor -> {
             Map<String, Item> itemsMap = new HashMap<>();
@@ -77,6 +94,9 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 item.setRequired(resultExtractor.getBoolean("isrequired"));
                 item.setStrand(resultExtractor.getString("strandname"));
                 item.getFormKeys().add(resultExtractor.getString("formKey"));
+                item.setItemFilePath(resultExtractor.getString("itemFilePath"));
+                item.setStimulusFilePath(resultExtractor.getString("stimulusFilePath"));
+                item.setPrintable(resultExtractor.getBoolean("isprintable"));
             }
 
             return itemsMap.entrySet().stream()

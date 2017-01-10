@@ -20,11 +20,15 @@ public class Item {
     private String strand;
     private List<ItemProperty> itemProperties;
     private Set<String> formKeys;
+    private String itemFilePath;
+    private String stimulusFilePath;
+    private boolean isPrintable;
 
     /**
      * Private empty constructor for frameworks
      */
-    private Item() {}
+    private Item() {
+    }
 
     public Item(String id) {
         this.id = id;
@@ -104,7 +108,7 @@ public class Item {
     }
 
     /**
-     * @return  flags whether this item is a field test item
+     * @return flags whether this item is a field test item
      */
     public boolean isFieldTest() {
         return fieldTest;
@@ -137,10 +141,51 @@ public class Item {
     }
 
     /**
+     * @return The full path and file name of the item's XML file
+     */
+    public String getItemFilePath() {
+        return itemFilePath;
+    }
+
+    public void setItemFilePath(String itemFilePath) {
+        if (itemFilePath == null) {
+            itemFilePath = "";
+        }
+
+        this.itemFilePath = itemFilePath;
+    }
+
+    /**
+     * @return The full path and file name of the item's stimulus file (if there is one)
+     */
+    public String getStimulusFilePath() {
+        return stimulusFilePath;
+    }
+
+    public void setStimulusFilePath(String stimulusFilePath) {
+        if (stimulusFilePath == null) {
+            stimulusFilePath = "";
+        }
+
+        this.stimulusFilePath = stimulusFilePath;
+    }
+
+    /**
+     * @return True if the item can be printed; otherwise false
+     */
+    public boolean isPrintable() {
+        return isPrintable;
+    }
+
+    public void setPrintable(boolean printable) {
+        isPrintable = printable;
+    }
+
+    /**
      * @return A collection of keys that identify the {@link tds.assessment.Form}s that this item is assigned to
      * <p>
-     *     This collection is only used for assigning Items to the correct {@link tds.assessment.Form} in a fixed-form
-     *     {@link tds.assessment.Segment}.
+     * This collection is only used for assigning Items to the correct {@link tds.assessment.Form} in a fixed-form
+     * {@link tds.assessment.Segment}.
      * </p>
      */
     public Set<String> getFormKeys() {
