@@ -22,6 +22,6 @@ CREATE TABLE `testform` (
   `updateconfig` bigint(20) DEFAULT NULL,
   `cohort` varchar(20) NOT NULL DEFAULT 'default',
   PRIMARY KEY (`_key`),
-  KEY `fk_testform_tblsetofadminsubjects` (`_fk_adminsubject`)
---   CONSTRAINT `fk_testform_tblsetofadminsubjects` FOREIGN KEY (`_fk_adminsubject`) REFERENCES `tblsetofadminsubjects` (`_key`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `fk_testform_tblsetofadminsubjects` (`_fk_adminsubject`),
+  CONSTRAINT `fk_testform_tblsetofadminsubjects` FOREIGN KEY (`_fk_adminsubject`) REFERENCES `tblsetofadminsubjects` (`_key`) ON DELETE CASCADE ON UPDATE CASCADE
+)

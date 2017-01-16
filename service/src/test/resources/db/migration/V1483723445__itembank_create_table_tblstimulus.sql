@@ -1,3 +1,10 @@
+/***********************************************************************************************************************
+  File: V1483723445__itembank_create_table_tblstimulus.sql
+
+  Desc: Contains the stimulus information pointing to the stimulus metadata for an assessment
+
+***********************************************************************************************************************/
+
 USE itembank;
 
 DROP TABLE IF EXISTS tblstimulus;

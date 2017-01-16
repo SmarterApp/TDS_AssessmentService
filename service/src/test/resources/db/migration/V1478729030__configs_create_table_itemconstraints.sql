@@ -18,4 +18,4 @@ CREATE TABLE `client_test_itemconstraint` (
   `toolvalue` varchar(255) NOT NULL,
   `item_in` bit(1) NOT NULL,
   PRIMARY KEY (`clientname`,`testid`,`propname`,`propvalue`,`item_in`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);

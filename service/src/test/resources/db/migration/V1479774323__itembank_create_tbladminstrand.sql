@@ -40,4 +40,4 @@ CREATE TABLE `tbladminstrand` (
   PRIMARY KEY (`_key`),
   KEY `ix_adminstrand_test` (`_fk_adminsubject`),
   KEY `ix_tbladminstrand` (`loaderid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);

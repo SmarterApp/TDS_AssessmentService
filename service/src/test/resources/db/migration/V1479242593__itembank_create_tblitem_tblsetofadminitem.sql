@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
   File: V1479242593__itembank_create_tblitem_tblsetofadminitem.sql
 
-  Desc: Creates the tblitem and tblsetofadminitem tables containing item data
+  Desc: Creates the tblitem and tblsetofadminitem tables containing item data for an assessment
 
 ***********************************************************************************************************************/
 
@@ -28,7 +28,7 @@ CREATE TABLE `tblitem` (
   PRIMARY KEY (`_key`),
   UNIQUE KEY `ix_tblitem` (`_efk_itembank`,`_efk_item`),
   KEY `ix_efk_item` (`_efk_item`)
-) ENGINE=InnoDB AUTO_INCREMENT=3642 DEFAULT CHARSET=utf8;
+);
 
 CREATE TABLE `tblsetofadminitems` (
   `_fk_item` varchar(150) NOT NULL,
@@ -66,4 +66,4 @@ CREATE TABLE `tblsetofadminitems` (
   KEY `fk_tblsetofadminitems_tblitem` (`_fk_item`),
   KEY `ix_adminitemgroup2` (`_fk_adminsubject`,`groupid`,`blockid`),
   KEY `ix_adminitem_ftitemgroup` (`_fk_adminsubject`,`isfieldtest`,`groupkey`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);

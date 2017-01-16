@@ -1,3 +1,6 @@
+/*
+ *
+ */
 USE itembank;
 
 DROP TABLE IF EXISTS testformitem;
@@ -14,4 +17,4 @@ CREATE TABLE testformitem (
   UNIQUE KEY ix_formitemunique (_fk_testform,_fk_item),
   KEY ix_formitem_test (_fk_adminsubject),
   CONSTRAINT fk_formitemform FOREIGN KEY (_fk_testform) REFERENCES testform (_key) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);

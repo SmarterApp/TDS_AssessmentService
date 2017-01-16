@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
   File: V1480626277__configs_create_client_segmentproperties.sql
 
-  Desc: Creates the client segment properties
+  Desc: Creates the client segment properties leveraged when fetching assessments
 
 ***********************************************************************************************************************/
 
@@ -25,4 +25,4 @@ CREATE TABLE `client_segmentproperties` (
   `restart` int(11) DEFAULT NULL,
   `graceperiodminutes` int(11) DEFAULT NULL,
   PRIMARY KEY (`clientname`,`parenttest`,`segmentid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);

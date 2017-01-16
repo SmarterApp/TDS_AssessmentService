@@ -1,3 +1,10 @@
+/***********************************************************************************************************************
+  File: V1483723091__itembank_create_table_tblitembank.sql
+
+  Desc: Contains the information for the item content locations
+
+***********************************************************************************************************************/
+
 USE itembank;
 
 DROP TABLE IF EXISTS tblitembank;

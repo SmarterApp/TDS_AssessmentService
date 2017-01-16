@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
   File: V1480545468__configs_create_client_testproperties.sql
 
-  Desc: Creates the client test properties
+  Desc: Creates the client test properties which is included when fetching assessments
 
 ***********************************************************************************************************************/
 
