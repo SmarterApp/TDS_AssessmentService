@@ -1,6 +1,7 @@
 package tds.assessment.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
+import tds.common.configuration.CacheType;
 
 @Service
 class AssessmentServiceImpl implements AssessmentService {
@@ -40,8 +42,9 @@ class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    @Cacheable(CacheType.LONG_TERM)
     public Optional<Assessment> findAssessment(final String clientName, final String assessmentKey) {
-        Optional<Assessment> maybeAssessment = assessmentQueryRepository.findAssessmentByKey(assessmentKey, clientName);
+        Optional<Assessment> maybeAssessment = assessmentQueryRepository.findAssessmentByKey(clientName, assessmentKey);
         List<Form> forms = new ArrayList<>();
 
         if (maybeAssessment.isPresent()) {
