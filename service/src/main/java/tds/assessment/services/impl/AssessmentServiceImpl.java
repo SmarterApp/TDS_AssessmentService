@@ -21,7 +21,7 @@ import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
-import tds.common.configuration.CacheType;
+import tds.common.cache.CacheType;
 
 @Service
 class AssessmentServiceImpl implements AssessmentService {
