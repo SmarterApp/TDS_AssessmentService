@@ -49,7 +49,7 @@ public class AssessmentServiceImplTest {
         fixedFormSegments.add(fixedFormSegment);
         assessment.setSegments(fixedFormSegments);
 
-        when(assessmentQueryRepository.findAssessmentByKey("theKey", "SBAC_PT")).thenReturn(Optional.of(assessment));
+        when(assessmentQueryRepository.findAssessmentByKey("SBAC_PT", "theKey")).thenReturn(Optional.of(assessment));
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
@@ -57,7 +57,7 @@ public class AssessmentServiceImplTest {
 
         Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
 
-        verify(assessmentQueryRepository).findAssessmentByKey("theKey", "SBAC_PT");
+        verify(assessmentQueryRepository).findAssessmentByKey("SBAC_PT", "theKey");
         verify(formQueryRepository).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
@@ -75,7 +75,7 @@ public class AssessmentServiceImplTest {
         fixedFormSegments.add(fixedFormSegment);
         assessment.setSegments(fixedFormSegments);
 
-        when(assessmentQueryRepository.findAssessmentByKey("theKey", "SBAC_PT")).thenReturn(Optional.of(assessment));
+        when(assessmentQueryRepository.findAssessmentByKey("SBAC_PT", "theKey")).thenReturn(Optional.of(assessment));
         when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
@@ -83,7 +83,7 @@ public class AssessmentServiceImplTest {
 
         Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
 
-        verify(assessmentQueryRepository).findAssessmentByKey("theKey", "SBAC_PT");
+        verify(assessmentQueryRepository).findAssessmentByKey( "SBAC_PT", "theKey");
         verify(formQueryRepository, times(0)).findFormsForAssessment("theKey");
         verify(itemQueryRepository).findActiveItemsProperties("theKey");
         verify(itemQueryRepository).findItemsForAssessment("theKey");
