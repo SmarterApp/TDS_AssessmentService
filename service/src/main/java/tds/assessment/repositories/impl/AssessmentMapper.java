@@ -126,12 +126,26 @@ class AssessmentMapper {
         segment.setPosition(position);
         segment.setMinItems(row.getInt("minItems"));
         segment.setMaxItems(row.getInt("maxItems"));
-        segment.setFieldTestMinItems(row.getInt("fieldTestMinItems"));
-        segment.setFieldTestMaxItems(row.getInt("fieldTestMaxItems"));
         segment.setSubject(row.getString("subject"));
+
+        /* Field Test Fields */
+        int ftStartPosition = row.getInt("fieldTestStartPosition");
+        int ftEndPosition = row.getInt("fieldTestEndPosition");
+        int ftMinItems = row.getInt("fieldTestMinItems");
+        int ftMaxItems = row.getInt("fieldTestMaxItems");
+
+        // Make sure the start and endPos are not null or zero if field test item min/max is specified
+        if ((ftMinItems > 0 || ftMaxItems > 0) && (ftStartPosition == 0 || ftEndPosition == 0)) {
+            throw new IllegalStateException(String.format("Error mapping the segment '%s': No field test item start and " +
+                "end positions were defined, but a min and max number of field test items were specified.", segment.getKey()));
+        }
+
         segment.setFieldTestStartDate(row.getJodaInstantFromTimestamp("segFieldTestStartDate"));
         segment.setFieldTestEndDate(row.getJodaInstantFromTimestamp("segFieldTestEndDate"));
-
+        segment.setFieldTestMinItems(ftMinItems);
+        segment.setFieldTestMaxItems(ftMaxItems);
+        segment.setFieldTestStartPosition(ftStartPosition);
+        segment.setFieldTestEndPosition(ftEndPosition);
         return segment;
     }
 

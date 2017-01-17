@@ -14,6 +14,7 @@ public class Item {
     private String segmentKey;
     private String groupId;
     private String groupKey;
+    private String blockId;
     private int position;
     private boolean fieldTest;
     private boolean required;
@@ -94,6 +95,17 @@ public class Item {
 
     public void setGroupKey(String groupKey) {
         this.groupKey = groupKey;
+    }
+
+    /**
+     * @return the block id of the item group
+     */
+    public String getBlockId() {
+        return blockId;
+    }
+
+    public void setBlockId(String blockId) {
+        this.blockId = blockId;
     }
 
     /**
@@ -197,5 +209,34 @@ public class Item {
 
     public void setFormKeys(Set<String> formKeys) {
         this.formKeys = formKeys;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        if (fieldTest != item.fieldTest) return false;
+        if (!id.equals(item.id)) return false;
+        if (!itemType.equals(item.itemType)) return false;
+        if (!groupId.equals(item.groupId)) return false;
+        if (!groupKey.equals(item.groupKey)) return false;
+        if (!blockId.equals(item.blockId)) return false;
+        if (!strand.equals(item.strand)) return false;
+        if (itemProperties != null ? !itemProperties.equals(item.itemProperties) : item.itemProperties != null)
+            return false;
+        return formKeys != null ? formKeys.equals(item.formKeys) : item.formKeys == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + groupId.hashCode();
+        result = 31 * result + groupKey.hashCode();
+        result = 31 * result + blockId.hashCode();
+        result = 31 * result + strand.hashCode();
+        return result;
     }
 }

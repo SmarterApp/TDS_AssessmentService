@@ -45,7 +45,9 @@ public class AssessmentMapperTest {
                 fieldTestStartDate,
                 fieldTestEndDate,
                 segmentFieldTestStartDate,
-                segmentFieldTestEndDate);
+                segmentFieldTestEndDate,
+                5,
+                20);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
@@ -78,6 +80,8 @@ public class AssessmentMapperTest {
         assertThat(defaultSegment.getMaxItems()).isEqualTo(10);
         assertThat(defaultSegment.getFieldTestMinItems()).isEqualTo(5);
         assertThat(defaultSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(defaultSegment.getFieldTestStartPosition()).isEqualTo(5);
+        assertThat(defaultSegment.getFieldTestEndPosition()).isEqualTo(20);
         assertThat(defaultSegment.getPosition()).isEqualTo(1);
         assertThat(defaultSegment.getStartAbility()).isEqualTo(9.5f);
         assertThat(defaultSegment.getSubject()).isEqualTo("ELA");
@@ -92,7 +96,9 @@ public class AssessmentMapperTest {
                 fieldTestStartDate,
                 fieldTestEndDate,
                 segmentFieldTestStartDate,
-                segmentFieldTestEndDate);
+                segmentFieldTestEndDate,
+                5,
+                20);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
@@ -146,7 +152,9 @@ public class AssessmentMapperTest {
                 fieldTestStartDate,
                 fieldTestEndDate,
                 segmentFieldTestStartDate,
-                segmentFieldTestEndDate);
+                segmentFieldTestEndDate,
+                5,
+                20);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
@@ -179,6 +187,8 @@ public class AssessmentMapperTest {
         assertThat(defaultSegment.getMaxItems()).isEqualTo(10);
         assertThat(defaultSegment.getFieldTestMinItems()).isEqualTo(5);
         assertThat(defaultSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(defaultSegment.getFieldTestStartPosition()).isEqualTo(5);
+        assertThat(defaultSegment.getFieldTestEndPosition()).isEqualTo(20);
         assertThat(defaultSegment.getPosition()).isEqualTo(1);
         assertThat(defaultSegment.getStartAbility()).isEqualTo(9.5f);
         assertThat(defaultSegment.getSubject()).isEqualTo("ELA");
@@ -193,7 +203,9 @@ public class AssessmentMapperTest {
                 fieldTestStartDate,
                 fieldTestEndDate,
                 segmentFieldTestStartDate,
-                segmentFieldTestEndDate);
+                segmentFieldTestEndDate,
+                5,
+                20);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
@@ -224,6 +236,8 @@ public class AssessmentMapperTest {
         assertThat(firstSegment.getMaxItems()).isEqualTo(10);
         assertThat(firstSegment.getFieldTestMinItems()).isEqualTo(5);
         assertThat(firstSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(firstSegment.getFieldTestStartPosition()).isEqualTo(5);
+        assertThat(firstSegment.getFieldTestEndPosition()).isEqualTo(20);
         assertThat(firstSegment.getPosition()).isEqualTo(1);
         assertThat(firstSegment.getStartAbility()).isEqualTo(1.5f);
         assertThat(firstSegment.getSubject()).isEqualTo("ELA");
@@ -247,6 +261,44 @@ public class AssessmentMapperTest {
         // all other fields are identical to firstSegment
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowIllegalStateExceptionForNullFtStartPositions() {
+        String assessmentKey = "nullFTStartPosAssessment";
+        List<Map<String, Object>> records =
+            AssessmentRecordBuilder.createSegmentedAssessmentWithManySelectionAlgorithms(assessmentKey,
+                1,
+                3,
+                fieldTestStartDate,
+                fieldTestEndDate,
+                segmentFieldTestStartDate,
+                segmentFieldTestEndDate,
+                null,
+                null);
+
+        Optional<Assessment> maybeAssessment = mapper.mapResults(records);
+
+        assertThat(maybeAssessment).isPresent();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowIllegalStateExceptionForZeroFtStartPositions() {
+        String assessmentKey = "nullFTStartPosAssessment";
+        List<Map<String, Object>> records =
+            AssessmentRecordBuilder.createSegmentedAssessmentWithManySelectionAlgorithms(assessmentKey,
+                1,
+                3,
+                fieldTestStartDate,
+                fieldTestEndDate,
+                segmentFieldTestStartDate,
+                segmentFieldTestEndDate,
+                0,
+                0);
+
+        Optional<Assessment> maybeAssessment = mapper.mapResults(records);
+
+        assertThat(maybeAssessment).isPresent();
+    }
+
     @Test
     public void shouldReturnASegmentedAssessmentWithManySelectionAlgorithms() {
         String assessmentKey = "segmentedMultiAlgorithmKey";
@@ -257,7 +309,9 @@ public class AssessmentMapperTest {
                 fieldTestStartDate,
                 fieldTestEndDate,
                 segmentFieldTestStartDate,
-                segmentFieldTestEndDate);
+                segmentFieldTestEndDate,
+                5,
+                20);
 
         Optional<Assessment> maybeAssessment = mapper.mapResults(records);
 
@@ -288,6 +342,8 @@ public class AssessmentMapperTest {
         assertThat(firstSegment.getMaxItems()).isEqualTo(10);
         assertThat(firstSegment.getFieldTestMinItems()).isEqualTo(5);
         assertThat(firstSegment.getFieldTestMaxItems()).isEqualTo(15);
+        assertThat(firstSegment.getFieldTestStartPosition()).isEqualTo(5);
+        assertThat(firstSegment.getFieldTestEndPosition()).isEqualTo(20);
         assertThat(firstSegment.getPosition()).isEqualTo(1);
         assertThat(firstSegment.getStartAbility()).isEqualTo(1.5f);
         assertThat(firstSegment.getSubject()).isEqualTo("ELA");
