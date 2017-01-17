@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class AssessmentServiceImplIntegrationTest {
+public class AssessmentServiceImplIntegrationTests {
     @MockBean
     private AssessmentQueryRepository assessmentQueryRepository;
 
