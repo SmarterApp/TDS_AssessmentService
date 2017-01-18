@@ -35,6 +35,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   formItem._fk_testform AS formKey,\n" +
                 "   adminItems.groupid,\n" +
                 "   adminItems.groupkey,\n" +
+                "   adminItems.blockid, \n" +
                 "   adminItems.itemposition AS position,\n" +
                 "   adminItems.isfieldtest,\n" +
                 "   adminItems.isrequired, \n" +
@@ -89,6 +90,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 item.setItemType(resultExtractor.getString("itemtype"));
                 item.setGroupId(resultExtractor.getString("groupid"));
                 item.setGroupKey(resultExtractor.getString("groupkey"));
+                item.setBlockId((resultExtractor.getString("blockid")));
                 item.setPosition(resultExtractor.getInt("position"));
                 item.setFieldTest(resultExtractor.getBoolean("isfieldtest"));
                 item.setRequired(resultExtractor.getBoolean("isrequired"));

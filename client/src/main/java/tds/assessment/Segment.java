@@ -25,8 +25,8 @@ public class Segment {
     private int fieldTestMaxItems;
     private Instant fieldTestStartDate;
     private Instant fieldTestEndDate;
-    private Integer fieldTestStartPosition;
-    private Integer fieldTestEndPosition;
+    private int fieldTestStartPosition;
+    private int fieldTestEndPosition;
 
     // Fixed-form specific fields
     private List<Form> forms;
@@ -134,22 +134,22 @@ public class Segment {
     /**
      * @return The lowest possible start position in the exam where this segment may contain field test items
      */
-    public Integer getFieldTestStartPosition() {
+    public int getFieldTestStartPosition() {
         return fieldTestStartPosition;
     }
 
-    public void setFieldTestStartPosition(Integer fieldTestStartPosition) {
+    public void setFieldTestStartPosition(int fieldTestStartPosition) {
         this.fieldTestStartPosition = fieldTestStartPosition;
     }
 
     /**
      * @return The highest possible position in the exam where this segment may contain field test items
      */
-    public Integer getFieldTestEndPosition() {
+    public int getFieldTestEndPosition() {
         return fieldTestEndPosition;
     }
 
-    public void setFieldTestEndPosition(Integer fieldTestEndPosition) {
+    public void setFieldTestEndPosition(int fieldTestEndPosition) {
         this.fieldTestEndPosition = fieldTestEndPosition;
     }
 
@@ -168,7 +168,7 @@ public class Segment {
     /**
      * @return the maximum number of field test items in the {@link tds.assessment.Segment}
      */
-    public Integer getFieldTestMaxItems() {
+    public int getFieldTestMaxItems() {
         return fieldTestMaxItems;
     }
 

@@ -275,9 +275,7 @@ public class AssessmentMapperTest {
                 null,
                 null);
 
-        Optional<Assessment> maybeAssessment = mapper.mapResults(records);
-
-        assertThat(maybeAssessment).isPresent();
+        mapper.mapResults(records);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -294,9 +292,7 @@ public class AssessmentMapperTest {
                 0,
                 0);
 
-        Optional<Assessment> maybeAssessment = mapper.mapResults(records);
-
-        assertThat(maybeAssessment).isPresent();
+        mapper.mapResults(records);
     }
 
     @Test

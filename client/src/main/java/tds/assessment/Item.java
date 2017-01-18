@@ -98,7 +98,8 @@ public class Item {
     }
 
     /**
-     * @return the block id of the item group
+     * @return the block id of the item group, used to group items into blocks for the field test selection algorithm.
+     * Typically "A" for most items.
      */
     public String getBlockId() {
         return blockId;
@@ -219,24 +220,31 @@ public class Item {
         Item item = (Item) o;
 
         if (fieldTest != item.fieldTest) return false;
+        if (isPrintable != item.isPrintable) return false;
         if (!id.equals(item.id)) return false;
-        if (!itemType.equals(item.itemType)) return false;
-        if (!groupId.equals(item.groupId)) return false;
-        if (!groupKey.equals(item.groupKey)) return false;
-        if (!blockId.equals(item.blockId)) return false;
-        if (!strand.equals(item.strand)) return false;
-        if (itemProperties != null ? !itemProperties.equals(item.itemProperties) : item.itemProperties != null)
-            return false;
-        return formKeys != null ? formKeys.equals(item.formKeys) : item.formKeys == null;
+        if (itemType != null ? !itemType.equals(item.itemType) : item.itemType != null) return false;
+        if (segmentKey != null ? !segmentKey.equals(item.segmentKey) : item.segmentKey != null) return false;
+        if (groupId != null ? !groupId.equals(item.groupId) : item.groupId != null) return false;
+        if (groupKey != null ? !groupKey.equals(item.groupKey) : item.groupKey != null) return false;
+        if (blockId != null ? !blockId.equals(item.blockId) : item.blockId != null) return false;
+        if (strand != null ? !strand.equals(item.strand) : item.strand != null) return false;
+        if (itemFilePath != null ? !itemFilePath.equals(item.itemFilePath) : item.itemFilePath != null) return false;
+        return stimulusFilePath != null ? stimulusFilePath.equals(item.stimulusFilePath) : item.stimulusFilePath == null;
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + groupId.hashCode();
-        result = 31 * result + groupKey.hashCode();
-        result = 31 * result + blockId.hashCode();
-        result = 31 * result + strand.hashCode();
+        result = 31 * result + (itemType != null ? itemType.hashCode() : 0);
+        result = 31 * result + (segmentKey != null ? segmentKey.hashCode() : 0);
+        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
+        result = 31 * result + (groupKey != null ? groupKey.hashCode() : 0);
+        result = 31 * result + (blockId != null ? blockId.hashCode() : 0);
+        result = 31 * result + (fieldTest ? 1 : 0);
+        result = 31 * result + (strand != null ? strand.hashCode() : 0);
+        result = 31 * result + (itemFilePath != null ? itemFilePath.hashCode() : 0);
+        result = 31 * result + (stimulusFilePath != null ? stimulusFilePath.hashCode() : 0);
+        result = 31 * result + (isPrintable ? 1 : 0);
         return result;
     }
 }
