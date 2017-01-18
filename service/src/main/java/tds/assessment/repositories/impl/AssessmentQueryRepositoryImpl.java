@@ -52,6 +52,8 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "   A.maxItems, \n" +
                 "   A.ftminitems AS fieldTestMinItems, \n" +
                 "   A.ftmaxitems AS fieldTestMaxItems, \n" +
+                "   A.ftstartpos AS fieldTestStartPosition, \n" +
+                "   A.ftendpos AS fieldTestEndPosition, \n" +
                 "   S.name AS subject, \n" +
                 "   A.virtualtest AS assessmentKey, \n" +
                 "   CT.ftstartdate, \n" +

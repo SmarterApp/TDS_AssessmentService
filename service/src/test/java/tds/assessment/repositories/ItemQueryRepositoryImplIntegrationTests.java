@@ -57,12 +57,12 @@ public class ItemQueryRepositoryImplIntegrationTests {
 
         final String tblSetAdminItemsInsertSQL =
             "INSERT INTO itembank.tblsetofadminitems \n" +
-                "   (_fk_item, _fk_adminsubject, groupid, groupkey, itemposition, isfieldtest, isactive, isrequired, strandname, isprintable)\n" +
+                "   (_fk_item, _fk_adminsubject, groupid, groupkey, blockid, itemposition, isfieldtest, isactive, isrequired, strandname, isprintable)\n" +
                 "VALUES \n" +
-                "   ('187-1234', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-1', 'GK-1', 1, 0, 1, 1, 'strand1', 0),\n" +
-                "   ('187-1235', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-2', 'GK-2', 2, 0, 1, 1, 'strand2', 0),\n" +
-                "   ('187-1236', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'G-3', 'GK-3', 1, 0, 1, 1, 'strand3', 1),\n" +
-                "   ('187-1237', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'G-4', 'GK-4', 1, 1, 1, 1, 'silver strand', 0)";
+                "   ('187-1234', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-1', 'GK-1', 'A', 1, 0, 1, 1, 'strand1', 0),\n" +
+                "   ('187-1235', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-2', 'GK-2', 'A', 2, 0, 1, 1, 'strand2', 0),\n" +
+                "   ('187-1236', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'G-3', 'GK-3', 'A', 1, 0, 1, 1, 'strand3', 1),\n" +
+                "   ('187-1237', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'G-4', 'GK-4', 'A', 1, 1, 1, 1, 'silver strand', 0)";
 
         final String tblItemPropsInsertSQL =
             "INSERT INTO itembank.tblitemprops (_fk_item, propname, propvalue, propdescription, _fk_adminsubject, isactive) VALUES \n" +
@@ -182,6 +182,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.getId()).isEqualTo("187-1237");
         assertThat(item1.getGroupId()).isEqualTo("G-4");
         assertThat(item1.getGroupKey()).isEqualTo("GK-4");
+        assertThat(item1.getBlockId()).isEqualTo("A");
         assertThat(item1.getItemType()).isEqualTo("MC");
         assertThat(item1.getPosition()).isEqualTo(1);
         assertThat(item1.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
@@ -214,6 +215,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         }
         assertThat(item1Seg1.getGroupId()).isEqualTo("G-1");
         assertThat(item1Seg1.getGroupKey()).isEqualTo("GK-1");
+        assertThat(item1Seg1.getBlockId()).isEqualTo("A");
         assertThat(item1Seg1.getItemType()).isEqualTo("ER");
         assertThat(item1Seg1.getPosition()).isEqualTo(1);
         assertThat(item1Seg1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");

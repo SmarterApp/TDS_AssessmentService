@@ -25,7 +25,9 @@ public class AssessmentRecordBuilder {
                                                                                         Timestamp fieldTestStartDate,
                                                                                         Timestamp fieldTestEndDate,
                                                                                         Timestamp segmentFieldTestStartDate,
-                                                                                        Timestamp segmentFieldTestEndDate) {
+                                                                                        Timestamp segmentFieldTestEndDate,
+                                                                                        Integer fieldTestStartPosition,
+                                                                                        Integer fieldTestEndPosition) {
         return createAssessmentRecord(assessmentKey,
             Algorithm.FIXED_FORM,
             0,
@@ -33,7 +35,9 @@ public class AssessmentRecordBuilder {
             fieldTestStartDate,
             fieldTestEndDate,
             segmentFieldTestStartDate,
-            segmentFieldTestEndDate);
+            segmentFieldTestEndDate,
+            fieldTestStartPosition,
+            fieldTestEndPosition);
     }
 
     /**
@@ -50,7 +54,9 @@ public class AssessmentRecordBuilder {
                                                                                       Timestamp fieldTestStartDate,
                                                                                       Timestamp fieldTestEndDate,
                                                                                       Timestamp segmentFieldTestStartDate,
-                                                                                      Timestamp segmentFieldTestEndDate) {
+                                                                                      Timestamp segmentFieldTestEndDate,
+                                                                                      Integer fieldTestStartPosition,
+                                                                                      Integer fieldTestEndPosition) {
         return createAssessmentRecord(assessmentKey,
             Algorithm.VIRTUAL,
             numberOfSegments,
@@ -58,7 +64,9 @@ public class AssessmentRecordBuilder {
             fieldTestStartDate,
             fieldTestEndDate,
             segmentFieldTestStartDate,
-            segmentFieldTestEndDate);
+            segmentFieldTestEndDate,
+            fieldTestStartPosition,
+            fieldTestEndPosition);
     }
 
     /**
@@ -73,7 +81,9 @@ public class AssessmentRecordBuilder {
                                                                                        Timestamp fieldTestStartDate,
                                                                                        Timestamp fieldTestEndDate,
                                                                                        Timestamp segmentFieldTestStartDate,
-                                                                                       Timestamp segmentFieldTestEndDate) {
+                                                                                       Timestamp segmentFieldTestEndDate,
+                                                                                       Integer fieldTestStartPosition,
+                                                                                       Integer fieldTestEndPosition) {
         return createAssessmentRecord(assessmentKey,
             Algorithm.ADAPTIVE_2,
             0,
@@ -81,7 +91,9 @@ public class AssessmentRecordBuilder {
             fieldTestStartDate,
             fieldTestEndDate,
             segmentFieldTestStartDate,
-            segmentFieldTestEndDate);
+            segmentFieldTestEndDate,
+            fieldTestStartPosition,
+            fieldTestEndPosition);
     }
 
     /**
@@ -98,7 +110,9 @@ public class AssessmentRecordBuilder {
                                                                                      Timestamp fieldTestStartDate,
                                                                                      Timestamp fieldTestEndDate,
                                                                                      Timestamp segmentFieldTestStartDate,
-                                                                                     Timestamp segmentFieldTestEndDate) {
+                                                                                     Timestamp segmentFieldTestEndDate,
+                                                                                     Integer fieldTestStartPosition,
+                                                                                     Integer fieldTestEndPosition) {
         return createAssessmentRecord(assessmentKey,
             Algorithm.VIRTUAL,
             0,
@@ -106,7 +120,9 @@ public class AssessmentRecordBuilder {
             fieldTestStartDate,
             fieldTestEndDate,
             segmentFieldTestStartDate,
-            segmentFieldTestEndDate);
+            segmentFieldTestEndDate,
+            fieldTestStartPosition,
+            fieldTestEndPosition);
     }
 
     /**
@@ -125,7 +141,9 @@ public class AssessmentRecordBuilder {
                                                                                                  Timestamp fieldTestStartDate,
                                                                                                  Timestamp fieldTestEndDate,
                                                                                                  Timestamp segmentFieldTestStartDate,
-                                                                                                 Timestamp segmentFieldTestEndDate) {
+                                                                                                 Timestamp segmentFieldTestEndDate,
+                                                                                                 Integer fieldTestStartPosition,
+                                                                                                 Integer fieldTestEndPosition) {
         return createAssessmentRecord(assessmentKey,
             Algorithm.VIRTUAL,
             numberOfFixedFormSegments,
@@ -133,7 +151,10 @@ public class AssessmentRecordBuilder {
             fieldTestStartDate,
             fieldTestEndDate,
             segmentFieldTestStartDate,
-            segmentFieldTestEndDate);
+            segmentFieldTestEndDate,
+            fieldTestStartPosition,
+            fieldTestEndPosition
+            );
     }
 
     /**
@@ -155,7 +176,9 @@ public class AssessmentRecordBuilder {
                                                                     Timestamp fieldTestStartDate,
                                                                     Timestamp fieldTestEndDate,
                                                                     Timestamp segmentFieldTestStartDate,
-                                                                    Timestamp segmentFieldTestEndDate) {
+                                                                    Timestamp segmentFieldTestEndDate,
+                                                                    Integer fieldTestStartPosition,
+                                                                    Integer fieldTestEndPosition) {
         List<Map<String, Object>> records = new ArrayList<>();
         Map<String, Object> assessmentResult = new HashMap<>();
 
@@ -168,6 +191,8 @@ public class AssessmentRecordBuilder {
         assessmentResult.put("maxItems", 10);
         assessmentResult.put("fieldTestMinItems", 5);
         assessmentResult.put("fieldTestMaxItems", 15);
+        assessmentResult.put("fieldTestStartPosition", fieldTestStartPosition);
+        assessmentResult.put("fieldTestEndPosition", fieldTestEndPosition);
         assessmentResult.put("subject", "ELA");
         assessmentResult.put("assessmentKey", null); // The assessment record always has a null virtualtest
         assessmentResult.put("ftstartdate", fieldTestStartDate); // this is always null in the db; set here for testing purposes only
@@ -186,7 +211,9 @@ public class AssessmentRecordBuilder {
                 assessmentKey,
                 Algorithm.FIXED_FORM,
                 segmentFieldTestStartDate,
-                segmentFieldTestEndDate);
+                segmentFieldTestEndDate,
+                fieldTestStartPosition,
+                fieldTestEndPosition);
             records.add(segmentRecord);
         }
 
@@ -199,7 +226,9 @@ public class AssessmentRecordBuilder {
                 assessmentKey,
                 Algorithm.ADAPTIVE_2,
                 segmentFieldTestStartDate,
-                segmentFieldTestEndDate);
+                segmentFieldTestEndDate,
+                fieldTestStartPosition,
+                fieldTestEndPosition);
             records.add(segmentRecord);
         }
 
@@ -219,7 +248,9 @@ public class AssessmentRecordBuilder {
     private static Map<String, Object> getSegmentRecord(int segmentIndex, String assessmentKey,
                                                         Algorithm algorithm,
                                                         Timestamp segmentFieldTestStartDate,
-                                                        Timestamp segmentFieldTestEndDate) {
+                                                        Timestamp segmentFieldTestEndDate,
+                                                        Integer fieldTestStartPosition,
+                                                        Integer fieldTestEndPosition) {
         String segmentKey = String.format("segmentKey%s", segmentIndex);
         String segmentId = String.format("segmentId-S%s", segmentIndex);
         Map<String, Object> segmentResult = new HashMap<>();
@@ -229,6 +260,8 @@ public class AssessmentRecordBuilder {
         segmentResult.put("selectionAlgorithm", algorithm.getType());
         segmentResult.put("minItems", 1);
         segmentResult.put("maxItems", 10);
+        segmentResult.put("fieldTestStartPosition", fieldTestStartPosition);
+        segmentResult.put("fieldTestEndPosition", fieldTestEndPosition);
         segmentResult.put("fieldTestMinItems", 5);
         segmentResult.put("fieldTestMaxItems", 15);
         segmentResult.put("subject", "ELA");
