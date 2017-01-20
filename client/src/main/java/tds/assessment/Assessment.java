@@ -31,8 +31,6 @@ public class Assessment {
     private boolean validateCompleteness;
     private boolean deleteUnansweredItems;
 
-    public Assessment() {}
-
     public List<ItemConstraint> getItemConstraints() {
         return itemConstraints != null ? itemConstraints : new ArrayList<ItemConstraint>();
     }

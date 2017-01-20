@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import org.joda.time.Instant;
 
@@ -35,7 +36,8 @@ public class Segment {
     private Set<Strand> strands;
     private List<Item> items;
 
-    public Segment(String key, Algorithm algorithm) {
+    public Segment(@JsonProperty("key") String key,
+                   @JsonProperty("algorithm") Algorithm algorithm) {
         this.key = key;
         this.selectionAlgorithm = algorithm;
     }
