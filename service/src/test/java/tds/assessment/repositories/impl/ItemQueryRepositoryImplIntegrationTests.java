@@ -1,4 +1,4 @@
-package tds.assessment.repositories;
+package tds.assessment.repositories.impl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +13,7 @@ import java.util.List;
 
 import tds.assessment.Item;
 import tds.assessment.ItemProperty;
+import tds.assessment.repositories.ItemQueryRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

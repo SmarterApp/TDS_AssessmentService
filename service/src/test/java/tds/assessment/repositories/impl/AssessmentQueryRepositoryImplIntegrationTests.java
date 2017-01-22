@@ -1,4 +1,4 @@
-package tds.assessment.repositories;
+package tds.assessment.repositories.impl;
 
 import org.joda.time.Instant;
 import org.junit.Before;
@@ -19,6 +19,7 @@ import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.ItemConstraint;
 import tds.assessment.Segment;
+import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.common.data.mapping.ResultSetMapperUtility;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,4 +1,4 @@
-package tds.assessment.repositories;
+package tds.assessment.repositories.impl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 import tds.assessment.Strand;
+import tds.assessment.repositories.StrandQueryRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
