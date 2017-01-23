@@ -53,7 +53,7 @@ public class AccommodationControllerIntegrationTests {
             .build();
 
         when(mockAccommodationsService.findAccommodationsByAssessmentKey("SBAC", "key")).thenReturn(singletonList(accommodation));
-        String requestUri = UriComponentsBuilder.fromUriString("/SBAC/assessment/accommodations?assessmentKey=key")
+        String requestUri = UriComponentsBuilder.fromUriString("/SBAC/assessments/accommodations?assessmentKey=key")
             .build()
             .toUriString();
 
@@ -99,7 +99,7 @@ public class AccommodationControllerIntegrationTests {
 
         when(mockAccommodationsService.findAccommodationsByAssessmentId("SBAC", "id")).thenReturn(singletonList(accommodation));
 
-        String requestUri = UriComponentsBuilder.fromUriString("/SBAC/assessment/accommodations?assessmentId=id")
+        String requestUri = UriComponentsBuilder.fromUriString("/SBAC/assessments/accommodations?assessmentId=id")
             .build()
             .toUriString();
 
@@ -125,7 +125,7 @@ public class AccommodationControllerIntegrationTests {
 
     @Test
     public void shouldRequireAccommodationId() throws Exception {
-        String requestUri = UriComponentsBuilder.fromUriString("/SBAC/assessment/accommodations")
+        String requestUri = UriComponentsBuilder.fromUriString("/SBAC/assessments/accommodations")
             .build()
             .toUriString();
 

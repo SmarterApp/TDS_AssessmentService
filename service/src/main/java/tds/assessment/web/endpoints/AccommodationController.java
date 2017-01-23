@@ -24,7 +24,7 @@ public class AccommodationController {
         this.accommodationsService = accommodationsService;
     }
 
-    @GetMapping(value = "{clientName}/assessment/accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{clientName}/assessments/accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<List<Accommodation>> findAccommodations(@PathVariable final String clientName,
                                                            @RequestParam(required = false) final String assessmentKey,
