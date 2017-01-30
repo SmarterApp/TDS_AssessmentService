@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,65 +66,26 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
     }
 
     @Test
-    public void shouldFindAccommodationsForSegmentAndDefaultByAssessmentKey() {
-        List<Accommodation> accommodationList = repository.findAccommodationsForSegmentedAssessmentByKey("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015");
-
-        assertThat(accommodationList).hasSize(2);
-
-        Accommodation segmentAccommodation = accommodationList.get(0);
-        Accommodation defaultAccommodation = accommodationList.get(1);
-
-        assertThat(segmentAccommodation.getCode()).isEqualTo("toolTypeSegmented");
-        assertThat(segmentAccommodation.getType()).isEqualTo("toolTypeSegmented");
-        assertThat(segmentAccommodation.getValue()).isEqualTo("segmentValue");
-        assertThat(segmentAccommodation.getDependsOnToolType()).isNull();
-        assertThat(segmentAccommodation.getSegmentPosition()).isEqualTo(99);
-        assertThat(segmentAccommodation.getToolMode()).isEqualTo("ALL");
-        assertThat(segmentAccommodation.getToolTypeSortOrder()).isEqualTo(0);
-        assertThat(segmentAccommodation.getToolValueSortOrder()).isEqualTo(0);
-        assertThat(segmentAccommodation.getTypeMode()).isEqualTo("ALL");
-        assertThat(segmentAccommodation.isAllowChange()).isFalse();
-        assertThat(segmentAccommodation.isAllowCombine()).isFalse();
-        assertThat(segmentAccommodation.isDefaultAccommodation()).isTrue();
-        assertThat(segmentAccommodation.isDisableOnGuestSession()).isFalse();
-        assertThat(segmentAccommodation.isEntryControl()).isFalse();
-        assertThat(segmentAccommodation.isFunctional()).isTrue();
-        assertThat(segmentAccommodation.isSelectable()).isFalse();
-        assertThat(segmentAccommodation.isVisible()).isTrue();
-        assertThat(segmentAccommodation.getTypeTotal()).isEqualTo(0);
-        assertThat(segmentAccommodation.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015");
-
-        assertThat(defaultAccommodation.getCode()).isEqualTo("toolTypeDefault");
-        assertThat(defaultAccommodation.getType()).isEqualTo("toolTypeDefault");
-        assertThat(defaultAccommodation.getValue()).isEqualTo("defaultTool");
-        assertThat(defaultAccommodation.getDependsOnToolType()).isNull();
-        assertThat(defaultAccommodation.getSegmentPosition()).isEqualTo(0);
-        assertThat(defaultAccommodation.getToolMode()).isEqualTo("ALL");
-        assertThat(defaultAccommodation.getToolTypeSortOrder()).isEqualTo(0);
-        assertThat(defaultAccommodation.getToolValueSortOrder()).isEqualTo(0);
-        assertThat(defaultAccommodation.getTypeMode()).isEqualTo("ALL");
-        assertThat(defaultAccommodation.isAllowChange()).isFalse();
-        assertThat(defaultAccommodation.isAllowCombine()).isFalse();
-        assertThat(defaultAccommodation.isDefaultAccommodation()).isTrue();
-        assertThat(defaultAccommodation.isDisableOnGuestSession()).isFalse();
-        assertThat(defaultAccommodation.isEntryControl()).isFalse();
-        assertThat(defaultAccommodation.isFunctional()).isTrue();
-        assertThat(defaultAccommodation.isSelectable()).isFalse();
-        assertThat(defaultAccommodation.isVisible()).isTrue();
-        assertThat(defaultAccommodation.getTypeTotal()).isEqualTo(1);
-        assertThat(defaultAccommodation.getSegmentKey()).isNull();
-    }
-
-    @Test
-    public void shouldFindAccommodationsForNonSegmentAndDefaultByAssessmentKey() {
+    public void shouldFindAccommodationsByAssessmentKey() {
         Set<String> languages = new HashSet<>();
         languages.add("ENU");
-        List<Accommodation> accommodationList = repository.findAccommodationsForNonSegmentedAssessmentByKey("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015", languages);
+        List<Accommodation> accommodationList = repository.findAssessmentAccommodationsByKey("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015", languages);
 
-        assertThat(accommodationList).hasSize(2);
+        assertThat(accommodationList).hasSize(3);
 
-        Accommodation englishAccommodation = accommodationList.get(0);
-        Accommodation defaultAccommodation = accommodationList.get(1);
+        Accommodation englishAccommodation = null;
+        Accommodation defaultAccommodation = null;
+        Accommodation segmentedAccommodation = null;
+        
+        for (Accommodation accommodation : accommodationList) {
+            if (accommodation.getType().equalsIgnoreCase("Language")) {
+                englishAccommodation = accommodation;
+            } else if (accommodation.getType().equalsIgnoreCase("toolTypeDefault")) {
+                defaultAccommodation = accommodation;
+            } else if (accommodation.getType().equalsIgnoreCase("toolTypeSegmented")) {
+                segmentedAccommodation = accommodation;
+            }
+        }
 
         assertThat(englishAccommodation.getCode()).isEqualTo("ENU");
         assertThat(englishAccommodation.getType()).isEqualTo("Language");
@@ -164,6 +126,8 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
         assertThat(defaultAccommodation.isVisible()).isTrue();
         assertThat(defaultAccommodation.getTypeTotal()).isEqualTo(1);
         assertThat(defaultAccommodation.getSegmentKey()).isNull();
+        
+        assertThat(segmentedAccommodation).isNotNull();
     }
 
     @Test

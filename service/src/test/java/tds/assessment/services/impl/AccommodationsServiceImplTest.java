@@ -65,15 +65,17 @@ public class AccommodationsServiceImplTest {
     public void shouldFindSegmentedAccommodations() {
         Segment segmentOne = new Segment("key1", Algorithm.ADAPTIVE_2);
         Segment segmentTwo = new Segment("key2", Algorithm.ADAPTIVE_2);
-
+        Set<String> languages = new HashSet<>(Arrays.asList("ENU"));
+        
         Assessment assessment = new Assessment();
         assessment.setKey("key");
+        assessment.setLanguageCodes(languages);
         assessment.setSegments(Arrays.asList(segmentOne, segmentTwo));
 
         Accommodation accommodation = new Accommodation.Builder().build();
 
         when(assessmentService.findAssessment("clientName", "key")).thenReturn(Optional.of(assessment));
-        when(accommodationsQueryRepository.findAccommodationsForSegmentedAssessmentByKey("key"))
+        when(accommodationsQueryRepository.findAssessmentAccommodationsByKey("key", languages))
             .thenReturn(Collections.singletonList(accommodation));
 
         List<Accommodation> accommodationList = accommodationsService.findAccommodationsByAssessmentKey("clientName", "key");
@@ -110,13 +112,13 @@ public class AccommodationsServiceImplTest {
         when(assessmentService.findAssessment("clientName", "key")).thenReturn(Optional.of(assessment));
 
         when(accommodationsQueryRepository
-            .findAccommodationsForNonSegmentedAssessmentByKey(isA(String.class), anySetOf(String.class)))
+            .findAssessmentAccommodationsByKey(isA(String.class), anySetOf(String.class)))
             .thenReturn(Collections.singletonList(accommodation));
 
         List<Accommodation> accommodations = accommodationsService.findAccommodationsByAssessmentKey("clientName", "key");
 
         verify(accommodationsQueryRepository)
-            .findAccommodationsForNonSegmentedAssessmentByKey(isA(String.class), languageCaptor.capture());
+            .findAssessmentAccommodationsByKey(isA(String.class), languageCaptor.capture());
 
         assertThat(accommodations).containsExactly(accommodation);
         assertThat(languageCaptor.getValue()).containsOnly("ENU", "FRN", "Braille");

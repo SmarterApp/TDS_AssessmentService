@@ -36,12 +36,7 @@ public class AccommodationServiceImpl implements AccommodationsService {
         }
 
         Assessment assessment = maybeAssessment.get();
-
-        if (assessment.isSegmented()) {
-            return accommodationsQueryRepository.findAccommodationsForSegmentedAssessmentByKey(assessmentKey);
-        } else {
-            return accommodationsQueryRepository.findAccommodationsForNonSegmentedAssessmentByKey(assessment.getKey(), assessment.getLanguageCodes());
-        }
+        return accommodationsQueryRepository.findAssessmentAccommodationsByKey(assessment.getKey(), assessment.getLanguageCodes());
     }
 
     @Override
