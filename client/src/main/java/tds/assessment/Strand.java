@@ -11,6 +11,9 @@ public class Strand {
     private int maxItems;
     private Float adaptiveCut;
 
+    /**
+     * Used by frameworks
+     */
     private Strand() {}
 
     private Strand (Builder builder) {

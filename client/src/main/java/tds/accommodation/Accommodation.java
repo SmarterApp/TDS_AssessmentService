@@ -27,6 +27,9 @@ public class Accommodation {
 
     public static final String ACCOMMODATION_TYPE_LANGUAGE = "Language";
 
+    /**
+     * Used by Jackson Framework
+     */
     private Accommodation() {
     }
 
