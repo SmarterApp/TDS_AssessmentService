@@ -11,6 +11,7 @@ java \
     -Dspring.datasource.username="${ASSESSMENT_DB_USER}" \
     -Dspring.datasource.password="${ASSESSMENT_DB_PASSWORD}" \
     -Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource \
+    -Dspring.datasource.driver-class-name=com.mysql.jdbc.Driver \
     -Dflyway.enabled=false \
     -jar /tds-assessment-service.jar \
     --server-port="8080" \
