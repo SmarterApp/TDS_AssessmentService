@@ -206,7 +206,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "UNION ALL ( \n " +
                 "SELECT \n" +
                 "  distinct 0 as segment, \n" +
-                "  null as segmentKey, \n" +
+                "  MODE.testkey as segmentKey, \n" +
                 "  MODE.testid as context, \n" +
                 "  TType.DisableOnGuestSession as disableOnGuestSession, \n" +
                 "  TType.SortOrder as toolTypeSortOrder, \n" +
@@ -248,7 +248,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "(\n" +
                 "SELECT \n" +
                 "  distinct 0 as segment,\n" +
-                "  null as segmentKey, \n" +
+                "  MODE.testkey as segmentKey, \n" +
                 "  MODE.testid as context, \n" +
                 "  TType.DisableOnGuestSession as disableOnGuestSession,  \n" +
                 "  TType.SortOrder as toolTypeSortOrder, \n" +
