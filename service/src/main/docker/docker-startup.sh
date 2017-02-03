@@ -12,6 +12,9 @@ java \
     -Dspring.datasource.password="${ASSESSMENT_DB_PASSWORD}" \
     -Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource \
     -Dspring.datasource.driver-class-name=com.mysql.jdbc.Driver \
+    -Dspring.datasource.testWhileIdle=true \
+    -Dspring.datasource.timeBetweenEvictionRunsMillis=60000 \
+    -Dspring.datasource.validationQuery="SELECT 1" \
     -Dflyway.enabled=false \
     -jar /tds-assessment-service.jar \
     --server-port="8080" \
