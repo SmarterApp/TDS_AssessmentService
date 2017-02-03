@@ -23,6 +23,7 @@ public class Accommodation {
     private String dependsOnToolType;
     private String typeMode;
     private String segmentKey;
+    private String context;
     private int typeTotal;
 
     public static final String ACCOMMODATION_TYPE_LANGUAGE = "Language";
@@ -165,7 +166,14 @@ public class Accommodation {
     public String getSegmentKey() {
         return segmentKey;
     }
-
+    
+    /**
+     * @return the context of the accommodation - either an assessmentId (if global) or a segmentId, if segment-specific
+     */
+    public String getContext() {
+        return context;
+    }
+    
     public int getTypeTotal() {
         return typeTotal;
     }
@@ -190,6 +198,7 @@ public class Accommodation {
         private String typeMode;
         private boolean allowChange;
         private String segmentKey;
+        private String context;
         private int typeTotal;
 
         public Builder withSegmentPosition(int segmentPosition) {
@@ -291,6 +300,11 @@ public class Accommodation {
             this.typeTotal = typeTotal;
             return this;
         }
+        
+        public Builder withContext(String context) {
+            this.context = context;
+            return this;
+        }
 
         public Accommodation build() {
             Accommodation accommodation = new Accommodation();
@@ -314,6 +328,7 @@ public class Accommodation {
             accommodation.allowChange = this.allowChange;
             accommodation.segmentKey = this.segmentKey;
             accommodation.typeTotal = this.typeTotal;
+            accommodation.context = this.context;
             return accommodation;
         }
     }

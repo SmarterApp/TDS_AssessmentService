@@ -33,7 +33,8 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
         String SQL = "(\n" +
             "SELECT\n" +
             "  DISTINCT 0 AS segment, \n" +
-            "  NULL AS segmentKey, \n" +
+            "  MODE.testkey AS segmentKey, \n" +
+            "  MODE.testid as context, \n" +
             "  TType.DisableOnGuestSession AS disableOnGuestSession, \n" +
             "  TType.SortOrder AS toolTypeSortOrder, \n" +
             "  TT.SortOrder AS toolValueSortOrder, \n" +
@@ -52,8 +53,10 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
             "  TType.DependsOnToolType AS dependsOnToolType, \n" +
             "  (SELECT count(1) FROM configs.client_testtool TOOL WHERE TOOL.ContextType = 'TEST' AND TOOL.Context = :assessmentId AND TOOL.clientname = :clientName AND TOOL.Type = TT.Type) AS ValCount,    \n" +
             "  TType.IsEntryControl AS isEntryControl\n" +
-            "FROM\n" +
-            "  configs.client_testtooltype TType\n" +
+            "FROM \n" +
+            "  configs.client_testmode MODE \n" +
+            "JOIN configs.client_testtooltype TType ON \n" +
+            "  MODE.clientname = TType.clientname\n" +
             "JOIN configs.client_testtool TT \n" +
             "  ON TType.context = TT.context\n" +
             "  AND TType.clientname = TT.clientname\n" +
@@ -67,6 +70,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
             "SELECT\n" +
             "  DISTINCT SegmentPosition AS segment, \n" +
             "  SEG.modekey AS segmentKey,\n" +
+            "  MODE.testid as context, \n" +
             "  TType.DisableOnGuestSession AS disableOnGuestSession, \n" +
             "  TType.SortOrder AS toolTypeSortOrder, \n" +
             "  TT.SortOrder AS toolValueSortOrder, \n" +
@@ -85,8 +89,10 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
             "  NULL AS dependsOnToolType, \n" +
             "  (SELECT count(1) FROM configs.client_testtool TOOL WHERE TOOL.ContextType = 'TEST' AND TOOL.Context = :assessmentId AND TOOL.clientname = :clientName AND TOOL.Type = TT.Type) AS ValCount,  \n" +
             "  IsEntryControl AS isEntryControl \n" +
-            "FROM\n" +
-            "  configs.client_testtooltype TType\n" +
+            "FROM \n" +
+            "  configs.client_testmode MODE \n" +
+            "JOIN configs.client_testtooltype TType ON \n" +
+            "  MODE.clientname = TType.clientname\n" +
             "JOIN configs.client_testtool TT \n" +
             "  ON TType.context = TT.context\n" +
             "  AND TType.clientname = TT.clientname\n" +
@@ -102,7 +108,8 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
             ") UNION ALL (\n" +
             "SELECT \n" +
             "  DISTINCT 0 AS segment,\n" +
-            "  NULL AS segmentKey, \n" +
+            "  MODE.testkey AS segmentKey, \n" +
+            "  MODE.testid as context, \n" +
             "  TType.DisableOnGuestSession AS disableOnGuestSession,  \n" +
             "  TType.SortOrder AS toolTypeSortOrder, \n" +
             "  TT.SortOrder AS toolValueSortOrder, \n" +
@@ -121,8 +128,10 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
             "  TType.DependsOnToolType AS dependsOnToolType, \n" +
             "  (SELECT count(1) FROM configs.client_testtool TOOL WHERE TOOL.ContextType = 'TEST' AND TOOL.Context = '*' AND TOOL.clientname = :clientName AND TOOL.Type = TT.Type) AS ValCount, \n" +
             "  TType.IsEntryControl AS isEntryControl\n" +
-            "FROM\n" +
-            "  configs.client_testtooltype TType\n" +
+            "FROM \n" +
+            "  configs.client_testmode MODE \n" +
+            "JOIN configs.client_testtooltype TType ON \n" +
+            "  MODE.clientname = TType.clientname\n" +
             "JOIN configs.client_testtool TT \n" +
             "  ON TType.context = TT.context\n" +
             "  AND TType.clientname = TT.clientname\n" +
@@ -156,6 +165,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
             "SELECT \n" +
                 "  distinct SegmentPosition as segment,\n" +
                 "  SEG.modekey as segmentKey, \n" +
+                "  SEG.segmentId as context, \n" +
                 "  TType.DisableOnGuestSession as disableOnGuestSession, \n" +
                 "  TType.SortOrder as toolTypeSortOrder , \n" +
                 "  TT.SortOrder as toolValueSortOrder, \n" +
@@ -197,6 +207,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "SELECT \n" +
                 "  distinct 0 as segment, \n" +
                 "  null as segmentKey, \n" +
+                "  MODE.testid as context, \n" +
                 "  TType.DisableOnGuestSession as disableOnGuestSession, \n" +
                 "  TType.SortOrder as toolTypeSortOrder, \n" +
                 "  TT.SortOrder as toolValueSortOrder, \n" +
@@ -238,6 +249,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "SELECT \n" +
                 "  distinct 0 as segment,\n" +
                 "  null as segmentKey, \n" +
+                "  MODE.testid as context, \n" +
                 "  TType.DisableOnGuestSession as disableOnGuestSession,  \n" +
                 "  TType.SortOrder as toolTypeSortOrder, \n" +
                 "  TT.SortOrder as toolValueSortOrder, \n" +
@@ -300,6 +312,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 .withDependsOnToolType(rs.getString("dependsOnToolType"))
                 .withEntryControl(rs.getBoolean("isEntryControl"))
                 .withSegmentKey(rs.getString("segmentKey"))
+                .withContext(rs.getString("context"))
                 .withTypeTotal(rs.getInt("ValCount"))
                 .build();
         }
