@@ -2,6 +2,7 @@ package tds.assessment.repositories.impl;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Instant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +121,7 @@ public class AssessmentWindowQueryRepositoryIntegrationTests {
 
     @Test
     public void shouldReturnAssessmentWindows() {
+        Instant earlier = Instant.now().minus(100000);
         String clientTestModeInsertSQL =
             "INSERT INTO configs.client_testmode (clientname,testid,mode,algorithm,formtideselectable,issegmented,maxopps,requirertsform,requirertsformwindow,requirertsformifexists,sessiontype,testkey,_key) " +
                 "VALUES ('SBAC_PT','SBAC-Mathematics-3','online','virtual',0,1,50,0,0,1,0,'(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015',UNHEX('0431F6515F2D11E6B2C80243FCF25EAB'));";
@@ -133,6 +135,18 @@ public class AssessmentWindowQueryRepositoryIntegrationTests {
 
         List<AssessmentWindow> assessmentWindows = repository.findCurrentAssessmentWindows("SBAC_PT", "SBAC-Mathematics-3", 0, 0);
         assertThat(assessmentWindows).hasSize(1);
+
+        AssessmentWindow window = assessmentWindows.get(0);
+        assertThat(window.getAssessmentKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015");
+        assertThat(window.getEndTime().getMillis()).isGreaterThan(earlier.getMillis());
+        assertThat(window.getStartTime().getMillis()).isGreaterThan(earlier.getMillis());
+        assertThat(window.getFormKey()).isNull();
+        assertThat(window.getMode()).isEqualTo("online");
+        assertThat(window.getWindowId()).isEqualTo("ANNUAL");
+        assertThat(window.getModeMaxAttempts()).isEqualTo(50);
+        assertThat(window.getWindowSessionType()).isEqualTo(-1);
+        assertThat(window.getModeSessionType()).isEqualTo(0);
+
     }
 
     @Test

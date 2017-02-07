@@ -45,7 +45,7 @@ class AssessmentWindowQueryRepositoryImpl implements AssessmentWindowQueryReposi
             "      CASE WHEN W.startDate IS NULL THEN UTC_TIMESTAMP() ELSE ( W.startDate + INTERVAL :shiftWindowStart DAY) END AS startDate,\n" +
             "      CASE WHEN W.endDate IS NULL THEN UTC_TIMESTAMP() ELSE ( W.endDate + INTERVAL :shiftWindowEnd DAY) END AS endDate,\n" +
             "      M.mode, \n" +
-            "      M.testkey, \n" +
+            "      M.testkey as assessmentKey, \n" +
             "      M.maxopps AS modeMax,\n" +
             "      W.sessionType AS windowSession, \n" +
             "      M.sessionType AS modeSession \n" +
@@ -84,6 +84,7 @@ class AssessmentWindowQueryRepositoryImpl implements AssessmentWindowQueryReposi
                     .withModeMaxAttempts(rs.getInt("modeMax"))
                     .withWindowSessionType(rs.getInt("windowSession"))
                     .withModeSessionType(rs.getInt("modeSession"))
+                    .withAssessmentKey(rs.getString("assessmentKey"))
                     .build()
             );
         } catch (EmptyResultDataAccessException erd) {
