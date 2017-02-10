@@ -1,11 +1,14 @@
 package tds.assessment;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 /**
  * A model representing a form for an {@link tds.assessment.Assessment} that uses the "fixed form" algorithm to select
  * the {@link tds.assessment.Item}s.
  */
+@JsonIgnoreProperties(value="length", allowGetters = true)
 public class Form {
     private String key;
     private String id;

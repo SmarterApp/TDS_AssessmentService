@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.Instant;
 
 import java.util.ArrayList;
@@ -7,12 +8,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tds.accommodation.AccommodationDependency;
+
 /**
  * Represents admin information concerning an assessment and its individual segments (if any)
  */
+@JsonIgnoreProperties(value="segmented", allowGetters=true)
 public class Assessment {
     private String key;
     private String assessmentId;
+    private String label;
     private Algorithm selectionAlgorithm;
     private float startAbility;
     private String subject;
@@ -24,6 +29,7 @@ public class Assessment {
     private Instant fieldTestStartDate;
     private Instant fieldTestEndDate;
     private boolean initialAbilityBySubject;
+    private List<AccommodationDependency> accommodationDependencies;
     private List<ItemConstraint> itemConstraints;
     private List<Segment> segments;
     private Set<Strand> strands;
@@ -265,4 +271,27 @@ public class Assessment {
     public void setValidateCompleteness(boolean validateCompleteness) {
         this.validateCompleteness = validateCompleteness;
     }
+    
+    /**
+     * @return The human-readable label of the assessment
+     */
+    public String getLabel() {
+        return label;
+    }
+    
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
+    /**
+     * @return The list of accommodation/tool dependencies
+     */
+    public List<AccommodationDependency> getAccommodationDependencies() {
+        return accommodationDependencies;
+    }
+    
+    public void setAccommodationDependencies(List<AccommodationDependency> accommodationDependencies) {
+        this.accommodationDependencies = accommodationDependencies;
+    }
+    
 }
