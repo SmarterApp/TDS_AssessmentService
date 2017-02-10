@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Represents an accommodation/tool dependency
  */
-public class Dependency {
+public class AccommodationDependency {
     private String context;
     private String ifType;
     private String ifValue;
@@ -18,9 +18,9 @@ public class Dependency {
     /**
      * Empty constructor for frameworks
      */
-    private Dependency() {}
+    private AccommodationDependency() {}
     
-    public Dependency(Builder builder) {
+    public AccommodationDependency(Builder builder) {
         this.context = builder.context;
         this.ifType = builder.ifType;
         this.ifValue = builder.ifValue;
@@ -108,8 +108,8 @@ public class Dependency {
             return this;
         }
         
-        public Dependency build() {
-            return new Dependency(this);
+        public AccommodationDependency build() {
+            return new AccommodationDependency(this);
         }
     }
     
@@ -118,7 +118,7 @@ public class Dependency {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         
-        Dependency that = (Dependency) o;
+        AccommodationDependency that = (AccommodationDependency) o;
         
         if (isDefault != that.isDefault) return false;
         if (!context.equals(that.context)) return false;

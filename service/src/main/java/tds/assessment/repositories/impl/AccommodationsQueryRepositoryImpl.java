@@ -9,12 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import tds.accommodation.Accommodation;
-import tds.accommodation.Dependency;
+import tds.accommodation.AccommodationDependency;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 
 @Repository
@@ -291,7 +290,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
     }
     
     @Override
-    public List<Dependency> findAssessmentAccommodationDependencies(final String clientName, final String assessmentId) {
+    public List<AccommodationDependency> findAssessmentAccommodationDependencies(final String clientName, final String assessmentId) {
         SqlParameterSource parameters = new MapSqlParameterSource("assessmentId", assessmentId)
             .addValue("clientName", clientName);
         
@@ -309,7 +308,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "   context = :assessmentId \n";
         
         return jdbcTemplate.query(SQL, parameters, (rs, row) ->
-            new Dependency.Builder(assessmentId)
+            new AccommodationDependency.Builder(assessmentId)
                 .withIfType(rs.getString("iftype"))
                 .withIfValue(rs.getString("ifvalue"))
                 .withThenType(rs.getString("thentype"))

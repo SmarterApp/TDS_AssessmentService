@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import tds.accommodation.Dependency;
+import tds.accommodation.AccommodationDependency;
 
 /**
  * Represents admin information concerning an assessment and its individual segments (if any)
@@ -29,7 +29,7 @@ public class Assessment {
     private Instant fieldTestStartDate;
     private Instant fieldTestEndDate;
     private boolean initialAbilityBySubject;
-    private List<Dependency> accommodationDependencies;
+    private List<AccommodationDependency> accommodationDependencies;
     private List<ItemConstraint> itemConstraints;
     private List<Segment> segments;
     private Set<Strand> strands;
@@ -286,11 +286,11 @@ public class Assessment {
     /**
      * @return The list of accommodation/tool dependencies
      */
-    public List<Dependency> getAccommodationDependencies() {
+    public List<AccommodationDependency> getAccommodationDependencies() {
         return accommodationDependencies;
     }
     
-    public void setAccommodationDependencies(List<Dependency> accommodationDependencies) {
+    public void setAccommodationDependencies(List<AccommodationDependency> accommodationDependencies) {
         this.accommodationDependencies = accommodationDependencies;
     }
     

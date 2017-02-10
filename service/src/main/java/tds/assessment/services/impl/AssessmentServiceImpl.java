@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import tds.accommodation.Dependency;
+import tds.accommodation.AccommodationDependency;
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
@@ -59,7 +59,7 @@ class AssessmentServiceImpl implements AssessmentService {
                 assessment.getAssessmentId());
             List<ItemProperty> itemProperties = itemQueryRepository.findActiveItemsProperties(assessmentKey);
             List<Item> items = itemQueryRepository.findItemsForAssessment(assessmentKey);
-            List<Dependency> accommodationDependencies = accommodationsQueryRepository.findAssessmentAccommodationDependencies(clientName,
+            List<AccommodationDependency> accommodationDependencies = accommodationsQueryRepository.findAssessmentAccommodationDependencies(clientName,
                 assessment.getAssessmentId());
 
             if (assessment.getSegments().stream().anyMatch(s -> s.getSelectionAlgorithm().equals(Algorithm.FIXED_FORM))) {

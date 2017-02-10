@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import tds.accommodation.Dependency;
+import tds.accommodation.AccommodationDependency;
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
@@ -31,8 +31,8 @@ public class AssessmentAssemblerTest {
         assessment.setAssessmentId(assessmentId);
         
         // Accommodation Dependencies init
-        List<Dependency> accommodationDependencies = Arrays.asList(
-            new Dependency.Builder(assessmentId)
+        List<AccommodationDependency> accommodationDependencies = Arrays.asList(
+            new AccommodationDependency.Builder(assessmentId)
                 .withIfType("Language")
                 .withIfValue("ESN")
                 .withThenType("Word List")

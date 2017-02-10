@@ -12,13 +12,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import tds.accommodation.Accommodation;
-import tds.accommodation.Dependency;
+import tds.accommodation.AccommodationDependency;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.common.data.mapping.ResultSetMapperUtility;
 
@@ -144,7 +143,7 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
     
     @Test
     public void shouldFindAccommodationDependenciesByAssessmentIdAndClientName() {
-        List<Dependency> dependencies = repository.findAssessmentAccommodationDependencies("SBAC_PT", "SBAC-Mathematics-11");
+        List<AccommodationDependency> dependencies = repository.findAssessmentAccommodationDependencies("SBAC_PT", "SBAC-Mathematics-11");
         assertThat(dependencies).hasSize(2);
     }
 }

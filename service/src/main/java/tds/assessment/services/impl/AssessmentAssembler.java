@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import tds.accommodation.Dependency;
+import tds.accommodation.AccommodationDependency;
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
@@ -26,7 +26,7 @@ class AssessmentAssembler {
      *                                  are configured to use the "adaptive2" selection algorithm
      * @param itemConstraints           A collection of {@link tds.assessment.ItemConstraint}s that should be applied to all Items
      *                                  in the Assessment
-     * @param accommodationDependencies A collection of {@link tds.accommodation.Dependency} for accommodations of the assessment
+     * @param accommodationDependencies A collection of {@link tds.accommodation.AccommodationDependency} for accommodations of the assessment
      */
     static void assemble(Assessment assessment,
                          Set<Strand> strands,
@@ -34,7 +34,7 @@ class AssessmentAssembler {
                          List<ItemProperty> itemProperties,
                          List<Item> items,
                          List<Form> forms,
-                         List<Dependency> accommodationDependencies) {
+                         List<AccommodationDependency> accommodationDependencies) {
         // Update assessment metadata
         assessment.setItemConstraints(itemConstraints);
         assessment.setAccommodationDependencies(accommodationDependencies);
