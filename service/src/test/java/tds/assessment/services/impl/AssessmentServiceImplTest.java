@@ -11,6 +11,7 @@ import java.util.Optional;
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
+import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class AssessmentServiceImplTest {
     private AssessmentQueryRepository assessmentQueryRepository;
+    private AccommodationsQueryRepository accommodationsQueryRepository;
     private ItemQueryRepository itemQueryRepository;
     private FormQueryRepository formQueryRepository;
     private StrandQueryRepository strandQueryRepository;
@@ -36,8 +38,9 @@ public class AssessmentServiceImplTest {
         itemQueryRepository = mock(ItemQueryRepository.class);
         formQueryRepository = mock(FormQueryRepository.class);
         strandQueryRepository = mock(StrandQueryRepository.class);
+        accommodationsQueryRepository = mock(AccommodationsQueryRepository.class);
         service = new AssessmentServiceImpl(assessmentQueryRepository, itemQueryRepository, formQueryRepository,
-            strandQueryRepository);
+            strandQueryRepository, accommodationsQueryRepository);
     }
 
     @Test

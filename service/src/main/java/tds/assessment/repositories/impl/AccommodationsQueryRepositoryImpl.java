@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import tds.accommodation.Accommodation;
+import tds.accommodation.Dependency;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 
 @Repository
@@ -155,7 +156,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
 
         return jdbcTemplate.query(SQL, parameters, new ResultSetRowMapper());
     }
-  
+
     @Override
     public List<Accommodation> findAssessmentAccommodationsByKey(String assessmentKey, Set<String> languageCodes) {
         MapSqlParameterSource parameters = new MapSqlParameterSource("testKey", assessmentKey)
@@ -288,7 +289,36 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
 
         return jdbcTemplate.query(SQL, parameters, new ResultSetRowMapper());
     }
-
+    
+    @Override
+    public List<Dependency> findAssessmentAccommodationDependencies(final String clientName, final String assessmentId) {
+        SqlParameterSource parameters = new MapSqlParameterSource("assessmentId", assessmentId)
+            .addValue("clientName", clientName);
+        
+        final String SQL =
+            "SELECT \n" +
+                "   iftype, \n" +
+                "   ifvalue, \n" +
+                "   thentype, \n" +
+                "   thenvalue, \n" +
+                "   isdefault \n" +
+                "FROM \n" +
+                "   configs.client_tooldependencies \n" +
+                "WHERE \n" +
+                "   clientname = :clientName AND \n" +
+                "   context = :assessmentId \n";
+        
+        return jdbcTemplate.query(SQL, parameters, (rs, row) ->
+            new Dependency.Builder(assessmentId)
+                .withIfType(rs.getString("iftype"))
+                .withIfValue(rs.getString("ifvalue"))
+                .withThenType(rs.getString("thentype"))
+                .withThenValue(rs.getString("thenvalue"))
+                .withIsDefault(rs.getBoolean("isdefault"))
+                .build()
+        );
+    }
+    
     private static class ResultSetRowMapper implements RowMapper<Accommodation> {
         @Override
         public Accommodation mapRow(ResultSet rs, int i) throws SQLException {

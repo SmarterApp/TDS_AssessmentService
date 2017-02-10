@@ -80,9 +80,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "   ('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ftstartDate", ResultSetMapperUtility.mapJodaInstantToTimestamp(Instant.now()));
-        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems) VALUES " +
-            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0), \n" +
-            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0);\n";
+        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label) VALUES " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf'), \n" +
+            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math');\n";
 
         SqlParameterSource segPropsParams = new MapSqlParameterSource("ftstartdate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtStartDate))
             .addValue("ftenddate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtEndDate));
@@ -169,6 +169,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.getPrefetch()).isEqualTo(2);
         assertThat(assessment.shouldDeleteUnansweredItems()).isFalse();
         assertThat(assessment.isValidateCompleteness()).isTrue();
+        assertThat(assessment.getLabel()).isEqualTo("Grade 8 Math");
 
         Segment segment1 = null;
         Segment segment2 = null;
@@ -184,6 +185,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment1).isNotNull();
         assertThat(segment1.getAssessmentKey()).isEqualTo(assessmentKey);
         assertThat(segment1.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
+        assertThat(segment1.getLabel()).isEqualTo("Grade 8 MATH segment");
         assertThat(segment1.getSegmentId()).isEqualTo("SBAC-SEG1-MATH-8");
         assertThat(segment1.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
         assertThat(segment1.getPosition()).isEqualTo(1);
@@ -199,6 +201,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment2).isNotNull();
         assertThat(segment2.getAssessmentKey()).isEqualTo(assessmentKey);
         assertThat(segment2.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+        assertThat(segment2.getLabel()).isEqualTo("Grade 8 MATH segment");
         assertThat(segment2.getSegmentId()).isEqualTo("SBAC-SEG2-MATH-8");
         assertThat(segment2.getSelectionAlgorithm()).isEqualTo(Algorithm.FIXED_FORM);
         assertThat(segment2.getPosition()).isEqualTo(2);

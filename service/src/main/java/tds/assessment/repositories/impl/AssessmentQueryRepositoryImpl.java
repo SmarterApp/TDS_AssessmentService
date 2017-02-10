@@ -65,9 +65,11 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "   CT.initialabilitybysubject, \n" +
                 "   CT.validatecompleteness AS validateCompleteness, \n" +
                 "   CT.prefetch, \n" +
+                "   CT.label, \n" +
                 "   CT.deleteUnansweredItems, \n" +
                 "   SP.ftstartdate AS segFieldTestStartDate, \n" +
-                "   SP.ftenddate AS segFieldTestEndDate \n" +
+                "   SP.ftenddate AS segFieldTestEndDate, \n" +
+                "   SP.label AS segmentLabel \n" +
                 "FROM \n" +
                 "   itembank.tblsetofadminsubjects A \n" +
                 "JOIN \n" +

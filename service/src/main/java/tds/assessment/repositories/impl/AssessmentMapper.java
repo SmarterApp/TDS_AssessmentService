@@ -68,6 +68,7 @@ class AssessmentMapper {
         // identifier) of the Assessment
         Assessment assessment = new Assessment();
         assessment.setKey(row.getString("assessmentSegmentKey"));
+        assessment.setLabel(row.getString("label"));
         assessment.setAssessmentId(row.getString("assessmentSegmentId"));
         assessment.setSelectionAlgorithm(row.getAlgorithm("selectionAlgorithm"));
         assessment.setStartAbility(row.getFloat("startAbility"));
@@ -121,6 +122,7 @@ class AssessmentMapper {
         Segment segment = new Segment(row.getString("assessmentSegmentKey"),
             Algorithm.fromType(row.getString("selectionAlgorithm")));
         segment.setAssessmentKey(assessmentKey);
+        segment.setLabel(row.getString("segmentLabel"));
         segment.setSegmentId(row.getString("assessmentSegmentId"));
         segment.setStartAbility(row.getFloat("startAbility"));
         segment.setPosition(position);

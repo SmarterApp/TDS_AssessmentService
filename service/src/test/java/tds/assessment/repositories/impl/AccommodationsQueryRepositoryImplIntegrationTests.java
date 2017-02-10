@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import tds.accommodation.Accommodation;
+import tds.accommodation.Dependency;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.common.data.mapping.ResultSetMapperUtility;
 
@@ -51,7 +52,11 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
             "VALUES ('SBAC_PT', 'SBAC-Mathematics-11', 'TEST', 'Language', 'ENU', 'ENU', 1, 0, 'ALL');";
         String noSegmentTestToolInsertFrenchSQL = "INSERT INTO configs.client_testtool (clientname, context, contexttype, type, code, value, isdefault, allowcombine, testmode) " +
             "VALUES ('SBAC_PT', 'SBAC-Mathematics-11', 'TEST', 'Language', 'FRN', 'FRN', 1, 0, 'ALL');";
-
+        
+        String toolDependencies = "INSERT INTO configs.client_tooldependencies (context, contexttype, iftype, ifvalue, isdefault, thentype, thenvalue, clientname, _key, testmode) " +
+            "VALUES ('SBAC-Mathematics-11','TEST','Language','ENU',0,'Streamlined Mode','TDS_SLM1','SBAC_PT',X'16DE7974D75943C4BE266DE4835608C4','ALL'), \n" +
+            "('SBAC-Mathematics-11','TEST','Language','ENU-Braille',1,'Emboss Request Type','TDS_ERT_OR','SBAC_PT',X'17F829A06A434DC0945A62CA53ADA0C6','ALL')";
+        
         SqlParameterSource parameters = new MapSqlParameterSource("dateentered", ResultSetMapperUtility.mapJodaInstantToTimestamp(now));
 
         jdbcTemplate.update(testModeInsertSQL, parameters);
@@ -61,6 +66,7 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
         jdbcTemplate.update(defaultToolTypeInsertSQL, parameters);
         jdbcTemplate.update(defaultTestToolInsertSQL, parameters);
         jdbcTemplate.update(nonSegmentTestToolTypeInsertSQL, parameters);
+        jdbcTemplate.update(toolDependencies, parameters);
         jdbcTemplate.update(noSegmentTestToolInsertEnglishSQL, parameters);
         jdbcTemplate.update(noSegmentTestToolInsertFrenchSQL, parameters);
     }
@@ -134,5 +140,11 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
     public void shouldFindAccommodationsByAssessmentIdAndClientName() {
         List<Accommodation> accommodationList = repository.findAssessmentAccommodationsById("SBAC_PT", "SBAC-Mathematics-11");
         assertThat(accommodationList).hasSize(4);
+    }
+    
+    @Test
+    public void shouldFindAccommodationDependenciesByAssessmentIdAndClientName() {
+        List<Dependency> dependencies = repository.findAssessmentAccommodationDependencies("SBAC_PT", "SBAC-Mathematics-11");
+        assertThat(dependencies).hasSize(2);
     }
 }

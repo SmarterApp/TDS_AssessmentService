@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public class Segment {
     private final String key;
+    private String label;
     private final Algorithm selectionAlgorithm;
     private String segmentId;
     private float startAbility;
@@ -59,7 +60,18 @@ public class Segment {
     public void setAssessmentKey(String assessmentKey) {
         this.assessmentKey = assessmentKey;
     }
-
+    
+    /**
+     * @return The human-readable label of the segment
+     */
+    public String getLabel() {
+        return label;
+    }
+    
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
     /**
      * @return the associated segment id
      */

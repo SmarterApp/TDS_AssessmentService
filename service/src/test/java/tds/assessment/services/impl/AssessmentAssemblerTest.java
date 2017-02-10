@@ -4,10 +4,12 @@ import com.google.common.base.Optional;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tds.accommodation.Dependency;
 import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
@@ -27,6 +29,18 @@ public class AssessmentAssemblerTest {
         Assessment assessment = new Assessment();
         assessment.setKey("theKey");
         assessment.setAssessmentId(assessmentId);
+        
+        // Accommodation Dependencies init
+        List<Dependency> accommodationDependencies = Arrays.asList(
+            new Dependency.Builder(assessmentId)
+                .withIfType("Language")
+                .withIfValue("ESN")
+                .withThenType("Word List")
+                .withThenValue("TDS_WL_Glossary")
+                .withIsDefault(false)
+                .build()
+        );
+        assessment.setAccommodationDependencies(accommodationDependencies);
 
         // Segments init
         List<Segment> segs = new ArrayList<>();
@@ -203,7 +217,7 @@ public class AssessmentAssemblerTest {
         itemProperties.add(langProp4);
 
         // CALL ASSEMBLE - for a fixed-form Assessment
-        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms);
+        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms, accommodationDependencies);
 
         List<Segment> retSegments = assessment.getSegments();
         assertThat(retSegments).hasSize(2);
@@ -229,6 +243,9 @@ public class AssessmentAssemblerTest {
         assertThat(retCon2.getToolValue()).isEqualTo(constraint2.getToolValue());
         assertThat(retCon2.getPropertyName()).isEqualTo(constraint2.getPropertyName());
         assertThat(retCon2.getPropertyValue()).isEqualTo(constraint2.getPropertyValue());
+        
+        // Assessment Dependencies
+        assertThat(assessment.getAccommodationDependencies()).containsExactly(accommodationDependencies.get(0));
 
         // Assessment strand
         Set<Strand> retAssessmentStrands = assessment.getStrands();
@@ -521,7 +538,7 @@ public class AssessmentAssemblerTest {
         itemProperties.add(languageProp3);
 
         // CALL ASSEMBLE - for a fixed-form Assessment
-        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, new ArrayList<>());
+        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, new ArrayList<>(), new ArrayList<>());
 
         List<Segment> retSegments = assessment.getSegments();
         assertThat(retSegments).hasSize(2);
@@ -825,7 +842,7 @@ public class AssessmentAssemblerTest {
         itemProperties.add(langProp4);
 
         // CALL ASSEMBLE - for a fixed-form Assessment
-        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms);
+        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms, new ArrayList<>());
 
         List<Segment> retSegments = assessment.getSegments();
         assertThat(retSegments).hasSize(2);
