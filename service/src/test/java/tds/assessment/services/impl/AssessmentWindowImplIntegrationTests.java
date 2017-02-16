@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
@@ -28,7 +29,7 @@ This test is here to verify caching is configured in the application.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "cache-enabled")
+@TestPropertySource(properties = "tds.cache.enabled = true")
 public class AssessmentWindowImplIntegrationTests {
     @MockBean
     private AssessmentWindowQueryRepository mockAssessmentWindowQueryRepository;
