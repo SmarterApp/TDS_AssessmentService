@@ -304,6 +304,10 @@ public class Segment {
     public void setStrands(Set<Strand> strands) {
         this.strands = strands;
     }
+    
+    public List<Item> getItems() {
+        return items == null ? new ArrayList<Item>() : items;
+    }
 
     /**
      * Get a collection of {@link tds.assessment.Item}s based on this Segment's selection algorithm.
