@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import tds.accommodation.AccommodationDependency;
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
 import tds.assessment.Item;
@@ -23,6 +22,7 @@ import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
+import tds.common.Algorithm;
 import tds.common.cache.CacheType;
 
 @Service

@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import tds.accommodation.Accommodation;
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Item;
 import tds.assessment.ItemProperty;
@@ -25,6 +24,7 @@ import tds.assessment.Segment;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.assessment.services.AccommodationsService;
 import tds.assessment.services.AssessmentService;
+import tds.common.Algorithm;
 import tds.common.web.exceptions.NotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import tds.accommodation.AccommodationDependency;
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Form;
 import tds.assessment.Item;
@@ -13,6 +12,7 @@ import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.Segment;
 import tds.assessment.Strand;
+import tds.common.Algorithm;
 
 /**
  * A helper class for assembling the {@link tds.assessment.Assessment}

@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tds.common.Algorithm;
+
 /**
  * Represents admin information common to all segments, regardless of the selection algorithm.
  */
@@ -216,7 +218,7 @@ public class Segment {
      * @return All the {@link tds.assessment.Form}s associated with this segment.
      * <p>
      *     This getter/setter is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.assessment.Algorithm}.  Segments configured for the "adaptive2" algorithm do not have forms, in which case an empty
+     *     {@link tds.common.Algorithm}.  Segments configured for the "adaptive2" algorithm do not have forms, in which case an empty
      *     {@code ArrayList} is returned
      * </p>
      */
@@ -238,7 +240,7 @@ public class Segment {
      * Choose the {@link tds.assessment.Form}s for the specified language.
      * <p>
      *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.assessment.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
+     *     {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
      * </p>
      *
      * @param languageCode The student's specified language
@@ -264,7 +266,7 @@ public class Segment {
      * Choose the {@link tds.assessment.Form} for the specified language and form cohort.
      * <p>
      *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.assessment.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
+     *     {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
      * </p>
      *
      * @param languageCode The student's specified language
@@ -289,7 +291,7 @@ public class Segment {
      * {@link tds.assessment.Segment}
      * <p>
      *     This method is only used by {@link tds.assessment.Segment}s that are configured for the adaptive
-     *     {@link tds.assessment.Algorithm}.  Segments configured for the fixed form algorithm do not have strands, in
+     *     {@link tds.common.Algorithm}.  Segments configured for the fixed form algorithm do not have strands, in
      *     which case this method will return an empty {@code HashSet}.
      * </p>
      */

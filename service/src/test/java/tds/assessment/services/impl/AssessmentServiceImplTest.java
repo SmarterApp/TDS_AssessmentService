@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
 import tds.assessment.repositories.AccommodationsQueryRepository;
@@ -17,6 +16,7 @@ import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
+import tds.common.Algorithm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

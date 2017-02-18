@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
+import tds.common.Algorithm;
 
 /**
  * Mapper used to map results from the AssessmentQuery for assessments by key

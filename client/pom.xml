@@ -49,6 +49,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.opentestsystem.common</groupId>
+            <artifactId>tds-common-legacy</artifactId>
+            <version>${tds.common.legacy.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

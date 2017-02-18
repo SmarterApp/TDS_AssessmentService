@@ -23,6 +23,7 @@
 
     <properties>
         <tds.assessment.client>0.0.1-SNAPSHOT</tds.assessment.client>
+        <tds.common.legacy.version>0.0.1-SNAPSHOT</tds.common.legacy.version>
         <tds.common>0.0.1-SNAPSHOT</tds.common>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <unit-tests.skip>false</unit-tests.skip>

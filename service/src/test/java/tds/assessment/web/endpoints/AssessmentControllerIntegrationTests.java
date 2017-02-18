@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
 import tds.assessment.services.AssessmentService;
+import tds.common.Algorithm;
 import tds.common.web.advice.ExceptionAdvice;
 
 import static org.hamcrest.CoreMatchers.is;

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import tds.assessment.Algorithm;
+import tds.common.Algorithm;
 
 /**
  * Build data structures that represent what Assessment data looks like in the database.  This class is intended to

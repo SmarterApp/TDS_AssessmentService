@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
 import tds.assessment.builders.AssessmentRecordBuilder;
+import tds.common.Algorithm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

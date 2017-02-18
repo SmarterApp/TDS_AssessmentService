@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import tds.accommodation.AccommodationDependency;
+import tds.common.Algorithm;
 
 /**
  * Represents admin information concerning an assessment and its individual segments (if any)

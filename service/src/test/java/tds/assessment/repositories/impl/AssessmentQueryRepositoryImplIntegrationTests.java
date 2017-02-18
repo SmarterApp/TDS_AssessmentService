@@ -15,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import tds.assessment.Algorithm;
 import tds.assessment.Assessment;
 import tds.assessment.ItemConstraint;
 import tds.assessment.Segment;
 import tds.assessment.repositories.AssessmentQueryRepository;
+import tds.common.Algorithm;
 import tds.common.data.mapping.ResultSetMapperUtility;
 
 import static org.assertj.core.api.Assertions.assertThat;
