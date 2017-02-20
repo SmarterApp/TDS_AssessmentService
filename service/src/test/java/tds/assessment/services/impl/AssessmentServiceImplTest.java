@@ -2,6 +2,9 @@ package tds.assessment.services.impl;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,28 +22,33 @@ import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AssessmentServiceImplTest {
-    private AssessmentQueryRepository assessmentQueryRepository;
-    private AccommodationsQueryRepository accommodationsQueryRepository;
-    private ItemQueryRepository itemQueryRepository;
-    private FormQueryRepository formQueryRepository;
-    private StrandQueryRepository strandQueryRepository;
+    @Mock
+    private AssessmentQueryRepository mockAssessmentQueryRepository;
+
+    @Mock
+    private AccommodationsQueryRepository mockAccommodationsQueryRepository;
+
+    @Mock
+    private ItemQueryRepository mockItemQueryRepository;
+
+    @Mock
+    private FormQueryRepository mockFormQueryRepository;
+
+    @Mock
+    private StrandQueryRepository mockStrandQueryRepository;
+    
     private AssessmentService service;
 
     @Before
     public void setUp() {
-        assessmentQueryRepository = mock(AssessmentQueryRepository.class);
-        itemQueryRepository = mock(ItemQueryRepository.class);
-        formQueryRepository = mock(FormQueryRepository.class);
-        strandQueryRepository = mock(StrandQueryRepository.class);
-        accommodationsQueryRepository = mock(AccommodationsQueryRepository.class);
-        service = new AssessmentServiceImpl(assessmentQueryRepository, itemQueryRepository, formQueryRepository,
-            strandQueryRepository, accommodationsQueryRepository);
+        service = new AssessmentServiceImpl(mockAssessmentQueryRepository, mockItemQueryRepository, mockFormQueryRepository,
+            mockStrandQueryRepository, mockAccommodationsQueryRepository);
     }
 
     @Test
@@ -52,19 +60,19 @@ public class AssessmentServiceImplTest {
         fixedFormSegments.add(fixedFormSegment);
         assessment.setSegments(fixedFormSegments);
 
-        when(assessmentQueryRepository.findAssessmentByKey("SBAC_PT", "theKey")).thenReturn(Optional.of(assessment));
-        when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
-        when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
-        when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
-        when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
+        when(mockAssessmentQueryRepository.findAssessmentByKey("SBAC_PT", "theKey")).thenReturn(Optional.of(assessment));
+        when(mockFormQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(mockItemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
+        when(mockItemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(mockStrandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
 
         Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
 
-        verify(assessmentQueryRepository).findAssessmentByKey("SBAC_PT", "theKey");
-        verify(formQueryRepository).findFormsForAssessment("theKey");
-        verify(itemQueryRepository).findActiveItemsProperties("theKey");
-        verify(itemQueryRepository).findItemsForAssessment("theKey");
-        verify(strandQueryRepository).findStrands("theKey");
+        verify(mockAssessmentQueryRepository).findAssessmentByKey("SBAC_PT", "theKey");
+        verify(mockFormQueryRepository).findFormsForAssessment("theKey");
+        verify(mockItemQueryRepository).findActiveItemsProperties("theKey");
+        verify(mockItemQueryRepository).findItemsForAssessment("theKey");
+        verify(mockStrandQueryRepository).findStrands("theKey");
 
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
     }
@@ -78,19 +86,19 @@ public class AssessmentServiceImplTest {
         fixedFormSegments.add(fixedFormSegment);
         assessment.setSegments(fixedFormSegments);
 
-        when(assessmentQueryRepository.findAssessmentByKey("SBAC_PT", "theKey")).thenReturn(Optional.of(assessment));
-        when(formQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
-        when(itemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
-        when(itemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
-        when(strandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
+        when(mockAssessmentQueryRepository.findAssessmentByKey("SBAC_PT", "theKey")).thenReturn(Optional.of(assessment));
+        when(mockFormQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(mockItemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
+        when(mockItemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
+        when(mockStrandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
 
         Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
 
-        verify(assessmentQueryRepository).findAssessmentByKey( "SBAC_PT", "theKey");
-        verify(formQueryRepository, times(0)).findFormsForAssessment("theKey");
-        verify(itemQueryRepository).findActiveItemsProperties("theKey");
-        verify(itemQueryRepository).findItemsForAssessment("theKey");
-        verify(strandQueryRepository).findStrands("theKey");
+        verify(mockAssessmentQueryRepository).findAssessmentByKey( "SBAC_PT", "theKey");
+        verify(mockFormQueryRepository, times(0)).findFormsForAssessment("theKey");
+        verify(mockItemQueryRepository).findActiveItemsProperties("theKey");
+        verify(mockItemQueryRepository).findItemsForAssessment("theKey");
+        verify(mockStrandQueryRepository).findStrands("theKey");
 
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
     }

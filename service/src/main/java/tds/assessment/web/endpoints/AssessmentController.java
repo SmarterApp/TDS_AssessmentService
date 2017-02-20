@@ -20,7 +20,7 @@ class AssessmentController {
     private final AssessmentService service;
 
     @Autowired
-    public AssessmentController(AssessmentService service) {
+    public AssessmentController(final AssessmentService service) {
         this.service = service;
     }
 

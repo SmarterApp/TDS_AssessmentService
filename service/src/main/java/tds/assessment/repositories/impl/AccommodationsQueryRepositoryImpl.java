@@ -18,15 +18,16 @@ import tds.assessment.repositories.AccommodationsQueryRepository;
 
 @Repository
 public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRepository {
+    private static final RowMapper<Accommodation> accommodationRowMapper = new AccommodationRowMapper();
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public AccommodationsQueryRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public AccommodationsQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
   
     @Override
-    public List<Accommodation> findAssessmentAccommodationsById(String clientName, String assessmentId) {
+    public List<Accommodation> findAssessmentAccommodationsById(final String clientName, final String assessmentId) {
         SqlParameterSource parameters = new MapSqlParameterSource("assessmentId", assessmentId)
             .addValue("clientName", clientName);
 
@@ -153,7 +154,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
             "    )\n" +
             ")";
 
-        return jdbcTemplate.query(SQL, parameters, new ResultSetRowMapper());
+        return jdbcTemplate.query(SQL, parameters, accommodationRowMapper);
     }
 
     @Override
@@ -286,7 +287,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "  and not exists (select * from configs.client_testtooltype Tool where Tool.ContextType = 'TEST' and Tool.Context = MODE.testID and Tool.Toolname = TType.Toolname and Tool.Clientname = MODE.clientname)\n" +
                 ")";
 
-        return jdbcTemplate.query(SQL, parameters, new ResultSetRowMapper());
+        return jdbcTemplate.query(SQL, parameters, accommodationRowMapper);
     }
     
     @Override
@@ -318,7 +319,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
         );
     }
     
-    private static class ResultSetRowMapper implements RowMapper<Accommodation> {
+    private static class AccommodationRowMapper implements RowMapper<Accommodation> {
         @Override
         public Accommodation mapRow(ResultSet rs, int i) throws SQLException {
             return new Accommodation.Builder()

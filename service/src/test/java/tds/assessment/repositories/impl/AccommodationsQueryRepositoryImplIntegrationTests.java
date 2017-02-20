@@ -92,6 +92,7 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
             }
         }
 
+        assertThat(englishAccommodation).isNotNull();
         assertThat(englishAccommodation.getCode()).isEqualTo("ENU");
         assertThat(englishAccommodation.getType()).isEqualTo("Language");
         assertThat(englishAccommodation.getValue()).isEqualTo("ENU");
@@ -112,6 +113,7 @@ public class AccommodationsQueryRepositoryImplIntegrationTests {
         assertThat(englishAccommodation.getTypeTotal()).isEqualTo(2);
         assertThat(englishAccommodation.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015");
 
+        assertThat(defaultAccommodation).isNotNull();
         assertThat(defaultAccommodation.getCode()).isEqualTo("toolTypeDefault");
         assertThat(defaultAccommodation.getType()).isEqualTo("toolTypeDefault");
         assertThat(defaultAccommodation.getValue()).isEqualTo("defaultTool");

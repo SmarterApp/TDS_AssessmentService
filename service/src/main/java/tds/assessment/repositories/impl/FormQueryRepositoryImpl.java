@@ -16,12 +16,12 @@ public class FormQueryRepositoryImpl implements FormQueryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public FormQueryRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public FormQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public List<Form> findFormsForAssessment(String assessmentKey) {
+    public List<Form> findFormsForAssessment(final String assessmentKey) {
         SqlParameterSource parameters = new MapSqlParameterSource("key", assessmentKey);
         final String formsSQL =
             "SELECT \n" +

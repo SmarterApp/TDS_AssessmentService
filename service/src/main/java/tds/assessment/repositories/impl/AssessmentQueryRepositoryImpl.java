@@ -21,7 +21,7 @@ import tds.assessment.repositories.AssessmentQueryRepository;
 class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     private static final Logger logger = LoggerFactory.getLogger(AssessmentQueryRepositoryImpl.class);
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final AssessmentMapper assessmentMapper = new AssessmentMapper();
+    private static final AssessmentMapper assessmentMapper = new AssessmentMapper();
 
     @Autowired
     public AssessmentQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {

@@ -20,7 +20,7 @@ public class AccommodationController {
     private final AccommodationsService accommodationsService;
 
     @Autowired
-    public AccommodationController(AccommodationsService accommodationsService) {
+    public AccommodationController(final AccommodationsService accommodationsService) {
         this.accommodationsService = accommodationsService;
     }
 

@@ -154,6 +154,9 @@ public class ItemQueryRepositoryImplIntegrationTests {
             }
         }
 
+        assertThat(prop1).isNotNull();
+        assertThat(prop2).isNotNull();
+
         assertThat(prop1.getItemId()).isEqualTo("item-1");
         assertThat(prop1.getName()).isEqualTo("Language");
         assertThat(prop1.getValue()).isEqualTo("ENU");
@@ -214,6 +217,11 @@ public class ItemQueryRepositoryImplIntegrationTests {
                 item1Seg2 = item;
             }
         }
+
+        assertThat(item1Seg1).isNotNull();
+        assertThat(item2Seg1).isNotNull();
+        assertThat(item1Seg2).isNotNull();
+
         assertThat(item1Seg1.getGroupId()).isEqualTo("G-1");
         assertThat(item1Seg1.getGroupKey()).isEqualTo("GK-1");
         assertThat(item1Seg1.getBlockId()).isEqualTo("A");

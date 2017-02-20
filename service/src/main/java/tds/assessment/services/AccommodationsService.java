@@ -15,7 +15,7 @@ public interface AccommodationsService {
      * @param assessmentKey the assessment's key
      * @return list of {@link tds.accommodation.Accommodation}
      */
-    List<Accommodation> findAccommodationsByAssessmentKey(String clientName, String assessmentKey);
+    List<Accommodation> findAccommodationsByAssessmentKey(final String clientName, final String assessmentKey);
 
     /**
      * Finds the assessment accommodations for an assessment id
@@ -24,5 +24,5 @@ public interface AccommodationsService {
      * @param assessmentId the id for the assessment
      * @return
      */
-    List<Accommodation> findAccommodationsByAssessmentId(String clientName, String assessmentId);
+    List<Accommodation> findAccommodationsByAssessmentId(final String clientName, final String assessmentId);
 }

@@ -15,5 +15,5 @@ public interface StrandQueryRepository {
      * @param assessmentKey the key of the {@link tds.assessment.Assessment}
      * @return the list of the strands for the assessment and its segments
      */
-    Set<Strand> findStrands(String assessmentKey);
+    Set<Strand> findStrands(final String assessmentKey);
 }

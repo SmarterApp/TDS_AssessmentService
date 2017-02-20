@@ -34,11 +34,11 @@ class AssessmentServiceImpl implements AssessmentService {
     private final AccommodationsQueryRepository accommodationsQueryRepository;
 
     @Autowired
-    public AssessmentServiceImpl(AssessmentQueryRepository assessmentQueryRepository,
-                                 ItemQueryRepository itemQueryRepository,
-                                 FormQueryRepository formQueryRepository,
-                                 StrandQueryRepository strandQueryRepository,
-                                 AccommodationsQueryRepository accommodationsQueryRepository) {
+    public AssessmentServiceImpl(final AssessmentQueryRepository assessmentQueryRepository,
+                                 final ItemQueryRepository itemQueryRepository,
+                                 final FormQueryRepository formQueryRepository,
+                                 final StrandQueryRepository strandQueryRepository,
+                                 final AccommodationsQueryRepository accommodationsQueryRepository) {
         this.assessmentQueryRepository = assessmentQueryRepository;
         this.itemQueryRepository = itemQueryRepository;
         this.formQueryRepository = formQueryRepository;

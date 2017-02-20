@@ -28,13 +28,13 @@ class AssessmentAssembler {
      *                                  in the Assessment
      * @param accommodationDependencies A collection of {@link tds.accommodation.AccommodationDependency} for accommodations of the assessment
      */
-    static void assemble(Assessment assessment,
-                         Set<Strand> strands,
-                         List<ItemConstraint> itemConstraints,
-                         List<ItemProperty> itemProperties,
-                         List<Item> items,
-                         List<Form> forms,
-                         List<AccommodationDependency> accommodationDependencies) {
+    static void assemble(final Assessment assessment,
+                         final Set<Strand> strands,
+                         final List<ItemConstraint> itemConstraints,
+                         final List<ItemProperty> itemProperties,
+                         final List<Item> items,
+                         final List<Form> forms,
+                         final List<AccommodationDependency> accommodationDependencies) {
         // Update assessment metadata
         assessment.setItemConstraints(itemConstraints);
         assessment.setAccommodationDependencies(accommodationDependencies);

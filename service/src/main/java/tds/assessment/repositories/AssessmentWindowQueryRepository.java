@@ -19,7 +19,7 @@ public interface AssessmentWindowQueryRepository {
      * @param shiftWindowEnd   the days to append for the window
      * @return {@link tds.assessment.AssessmentWindow}
      */
-    List<AssessmentWindow> findCurrentAssessmentWindows(String clientName, String assessmentId, int shiftWindowStart, int shiftWindowEnd);
+    List<AssessmentWindow> findCurrentAssessmentWindows(final String clientName, final String assessmentId, final int shiftWindowStart, final int shiftWindowEnd);
 
     /**
      * Finds the current active assessment form windows
@@ -32,7 +32,7 @@ public interface AssessmentWindowQueryRepository {
      * @param shiftFormEnd     the days to shift for the end of the form
      * @return list of current {@link tds.assessment.AssessmentWindow}
      */
-    List<AssessmentWindow> findCurrentAssessmentFormWindows(String clientName, String assessmentId, int shiftWindowStart, int shiftWindowEnd, int shiftFormStart, int shiftFormEnd);
+    List<AssessmentWindow> findCurrentAssessmentFormWindows(final String clientName, final String assessmentId, final int shiftWindowStart, final int shiftWindowEnd, final int shiftFormStart, final int shiftFormEnd);
 
     /**
      * Finds the assessment form window properties
@@ -41,5 +41,5 @@ public interface AssessmentWindowQueryRepository {
      * @param assessmentId assessment id
      * @return {@link tds.assessment.model.AssessmentFormWindowProperties} if found otherwise empty
      */
-    Optional<AssessmentFormWindowProperties> findAssessmentFormWindowProperties(String clientName, String assessmentId);
+    Optional<AssessmentFormWindowProperties> findAssessmentFormWindowProperties(final String clientName, final String assessmentId);
 }

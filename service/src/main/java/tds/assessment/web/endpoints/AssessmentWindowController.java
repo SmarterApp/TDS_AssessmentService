@@ -20,7 +20,7 @@ public class AssessmentWindowController {
     private final AssessmentWindowService assessmentWindowService;
 
     @Autowired
-    public AssessmentWindowController(AssessmentWindowService assessmentWindowService) {
+    public AssessmentWindowController(final AssessmentWindowService assessmentWindowService) {
         this.assessmentWindowService = assessmentWindowService;
     }
 

@@ -27,13 +27,13 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
     private final AssessmentWindowQueryRepository assessmentWindowQueryRepository;
 
     @Autowired
-    public AssessmentWindowServiceImpl(AssessmentWindowQueryRepository assessmentWindowQueryRepository) {
+    public AssessmentWindowServiceImpl(final AssessmentWindowQueryRepository assessmentWindowQueryRepository) {
         this.assessmentWindowQueryRepository = assessmentWindowQueryRepository;
     }
 
     @Override
     @Cacheable(CacheType.MEDIUM_TERM)
-    public List<AssessmentWindow> findAssessmentWindows(AssessmentWindowParameters assessmentWindowParameters) {
+    public List<AssessmentWindow> findAssessmentWindows(final AssessmentWindowParameters assessmentWindowParameters) {
         long studentId = assessmentWindowParameters.getStudentId();
         String clientName = assessmentWindowParameters.getClientName();
         String assessmentId = assessmentWindowParameters.getAssessmentId();
@@ -69,7 +69,7 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
             .collect(Collectors.toList());
     }
 
-    private List<AssessmentWindow> findCurrentExamWindowFromFormWindows(AssessmentWindowParameters assessmentWindowParameters, List<AssessmentWindow> formWindows) {
+    private List<AssessmentWindow> findCurrentExamWindowFromFormWindows(final AssessmentWindowParameters assessmentWindowParameters, final List<AssessmentWindow> formWindows) {
         boolean requireFormWindow = false, requireForm = false;
 
         //Lines 3703 - 3710 in StudentDLL._GetTesteeTestForms_SP
@@ -78,7 +78,7 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
         }
 
         //Lines 3712 - 3730 in StudentDLL._GetTesteeTestForms_SP
-        //TODO - revisit this because it isn't currently bing used
+        //TODO - revisit this because it isn't currently being used
         Optional<AssessmentFormWindowProperties> maybeAssessmentProperties = assessmentWindowQueryRepository.findAssessmentFormWindowProperties(assessmentWindowParameters.getClientName(), assessmentWindowParameters.getAssessmentId());
         if (maybeAssessmentProperties.isPresent()) {
             AssessmentFormWindowProperties properties = maybeAssessmentProperties.get();
@@ -140,7 +140,7 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
         return formWindows;
     }
 
-    private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+    private static <T> Predicate<T> distinctByKey(final Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }

@@ -23,7 +23,7 @@ class AssessmentMapper {
      * @param rows data result rows that represent a result row from the query result
      * @return optional with {@link tds.assessment.Assessment} otherwise empty
      */
-    Optional<Assessment> mapResults(List<Map<String, Object>> rows) {
+    Optional<Assessment> mapResults(final List<Map<String, Object>> rows) {
         Optional<Assessment> maybeAssessment = Optional.empty();
         Map<String, Segment> segments = new LinkedHashMap<>();
 
@@ -63,7 +63,7 @@ class AssessmentMapper {
      *            record returned from the query.
      * @return An {@link tds.assessment.Assessment} with a default {@link tds.assessment.Segment}
      */
-    private Optional<Assessment> getAssessmentWithDefaultSegment(ResultRow row) {
+    private Optional<Assessment> getAssessmentWithDefaultSegment(final ResultRow row) {
         // When building the Assessment instance, the "assessmentSegmentKey" field represents the key (unique
         // identifier) of the Assessment
         Assessment assessment = new Assessment();
@@ -101,7 +101,7 @@ class AssessmentMapper {
      * @param row The database record containing data for the {@link tds.assessment.Segment}
      * @return A new {@link tds.assessment.Segment}
      */
-    private Segment getSegment(ResultRow row) {
+    private Segment getSegment(final ResultRow row) {
         // RULE:  The Segment's assessmentKey field should never be null.  If we're creating the "default" Segment (a
         // segment for an Assessment that doesn't have any Segment records in the database), the "assessmentKey" field
         // will be null, so the Segment's assessmentKey should be set to the whatever the Assessment's key is.  This

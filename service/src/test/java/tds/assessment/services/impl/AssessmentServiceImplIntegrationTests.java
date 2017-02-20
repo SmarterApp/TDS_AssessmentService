@@ -8,7 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
@@ -37,7 +37,7 @@ public class AssessmentServiceImplIntegrationTests {
         Assessment assessment = new Assessment();
         assessment.setKey("theKey");
         Segment fixedFormSegment = new Segment(assessment.getKey(), Algorithm.FIXED_FORM);
-        assessment.setSegments(Arrays.asList(fixedFormSegment));
+        assessment.setSegments(Collections.singletonList(fixedFormSegment));
 
         when(assessmentQueryRepository.findAssessmentByKey(clientName, assessment.getKey())).thenReturn(Optional.of(assessment));
         Optional<Assessment> maybeAssessment1 = service.findAssessment(clientName, assessment.getKey());

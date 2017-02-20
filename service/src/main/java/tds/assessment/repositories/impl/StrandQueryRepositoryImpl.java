@@ -18,7 +18,7 @@ public class StrandQueryRepositoryImpl implements StrandQueryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public StrandQueryRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public StrandQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

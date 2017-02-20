@@ -76,6 +76,9 @@ public class FormQueryRepositoryImplIntegrationTests {
                 form1 = form;
             }
         }
+
+        assertThat(form1).isNotNull();
+
         assertThat(forms).hasSize(3);
         assertThat(form1.getKey()).isEqualTo("187-510");
         assertThat(form1.getCohort()).isEqualTo("Default");
@@ -102,6 +105,9 @@ public class FormQueryRepositoryImplIntegrationTests {
                     break;
             }
         }
+
+        assertThat(form1).isNotNull();
+        assertThat(form2).isNotNull();
 
         // Validate forms in each segment
         assertThat(form1.getKey()).isEqualTo("187-528");

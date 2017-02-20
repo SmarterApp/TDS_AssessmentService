@@ -21,14 +21,14 @@ public class AccommodationServiceImpl implements AccommodationsService {
     private final AccommodationsQueryRepository accommodationsQueryRepository;
 
     @Autowired
-    public AccommodationServiceImpl(AssessmentService assessmentService, AccommodationsQueryRepository accommodationsQueryRepository) {
+    public AccommodationServiceImpl(final AssessmentService assessmentService, final AccommodationsQueryRepository accommodationsQueryRepository) {
         this.assessmentService = assessmentService;
         this.accommodationsQueryRepository = accommodationsQueryRepository;
     }
 
     @Override
     @Cacheable(CacheType.LONG_TERM)
-    public List<Accommodation> findAccommodationsByAssessmentKey(String clientName, String assessmentKey) {
+    public List<Accommodation> findAccommodationsByAssessmentKey(final String clientName, final String assessmentKey) {
         //Implements the replacement for CommonDLL.TestKeyAccommodations_FN
         Optional<Assessment> maybeAssessment = assessmentService.findAssessment(clientName, assessmentKey);
         if (!maybeAssessment.isPresent()) {

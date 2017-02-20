@@ -28,11 +28,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 public class AssessmentQueryRepositoryImplIntegrationTests {
+    private static final Instant segFtStartDate = Instant.now().minus(300000);
+    private static final Instant segFtEndDate = Instant.now().plus(300000);
 
-    private final Instant segFtStartDate = Instant.now().minus(300000);
-    private final Instant segFtEndDate = Instant.now().plus(300000);
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+
     @Autowired
     private AssessmentQueryRepository repository;
 

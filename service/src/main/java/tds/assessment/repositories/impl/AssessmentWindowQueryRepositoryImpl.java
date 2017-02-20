@@ -31,7 +31,7 @@ class AssessmentWindowQueryRepositoryImpl implements AssessmentWindowQueryReposi
     }
 
     @Override
-    public List<AssessmentWindow> findCurrentAssessmentWindows(String clientName, String assessmentId, int shiftWindowStart, int shiftWindowEnd) {
+    public List<AssessmentWindow> findCurrentAssessmentWindows(final String clientName, final String assessmentId, int shiftWindowStart, int shiftWindowEnd) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource("clientName", clientName)
             .addValue("assessmentId", assessmentId)
             .addValue("shiftWindowStart", shiftWindowStart)
@@ -95,7 +95,12 @@ class AssessmentWindowQueryRepositoryImpl implements AssessmentWindowQueryReposi
     }
 
     @Override
-    public List<AssessmentWindow> findCurrentAssessmentFormWindows(String clientName, String assessmentId, int shiftWindowStart, int shiftWindowEnd, int shiftFormStart, int shiftFormEnd) {
+    public List<AssessmentWindow> findCurrentAssessmentFormWindows(final String clientName,
+                                                                   final String assessmentId,
+                                                                   final int shiftWindowStart,
+                                                                   final int shiftWindowEnd,
+                                                                   final int shiftFormStart,
+                                                                   final int shiftFormEnd) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource("clientName", clientName)
             .addValue("assessmentId", assessmentId)
             .addValue("shiftWindowStart", shiftWindowStart)
@@ -191,7 +196,7 @@ class AssessmentWindowQueryRepositoryImpl implements AssessmentWindowQueryReposi
     }
 
     @Override
-    public Optional<AssessmentFormWindowProperties> findAssessmentFormWindowProperties(String clientName, String assessmentId) {
+    public Optional<AssessmentFormWindowProperties> findAssessmentFormWindowProperties(final String clientName, final String assessmentId) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource("clientName", clientName)
             .addValue("assessmentId", assessmentId)
             .addValue("sessionType", ONLINE_SESSION_TYPE);

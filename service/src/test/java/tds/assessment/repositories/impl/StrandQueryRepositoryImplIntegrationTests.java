@@ -80,12 +80,14 @@ public class StrandQueryRepositoryImplIntegrationTests {
             }
         }
 
+        assertThat(strand1).isNotNull();
         assertThat(strand1.getKey()).isEqualTo("Strand1-key");
         assertThat(strand1.getMinItems()).isEqualTo(2);
         assertThat(strand1.getMaxItems()).isEqualTo(7);
         assertThat(strand1.getSegmentKey()).isEqualTo(assessmentKey);
         assertThat(strand1.getAdaptiveCut()).isEqualTo(-39.234F);
 
+        assertThat(strand2).isNotNull();
         assertThat(strand2.getKey()).isEqualTo("Strand2-key");
         assertThat(strand2.getMinItems()).isEqualTo(0);
         assertThat(strand2.getMaxItems()).isEqualTo(4);
