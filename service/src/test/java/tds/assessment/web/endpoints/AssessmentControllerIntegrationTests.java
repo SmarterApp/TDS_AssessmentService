@@ -20,6 +20,7 @@ import tds.assessment.Assessment;
 import tds.assessment.Segment;
 import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
+import tds.common.configuration.SecurityConfiguration;
 import tds.common.web.advice.ExceptionAdvice;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AssessmentController.class)
-@Import(ExceptionAdvice.class)
+@Import({ExceptionAdvice.class, SecurityConfiguration.class})
 public class AssessmentControllerIntegrationTests {
     @Autowired
     private MockMvc http;

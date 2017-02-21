@@ -17,6 +17,7 @@ import java.util.Collections;
 import tds.assessment.AssessmentWindow;
 import tds.assessment.model.AssessmentWindowParameters;
 import tds.assessment.services.AssessmentWindowService;
+import tds.common.configuration.SecurityConfiguration;
 import tds.common.web.advice.ExceptionAdvice;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AssessmentWindowController.class)
-@Import(ExceptionAdvice.class)
+@Import({ExceptionAdvice.class, SecurityConfiguration.class})
 public class AssessmentWindowControllerIntegrationTests {
     @Autowired
     private MockMvc http;

@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import tds.accommodation.Accommodation;
 import tds.assessment.services.AccommodationsService;
+import tds.common.configuration.SecurityConfiguration;
 import tds.common.web.advice.ExceptionAdvice;
 
 import static java.util.Collections.singletonList;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AccommodationController.class)
-@Import(ExceptionAdvice.class)
+@Import({ExceptionAdvice.class, SecurityConfiguration.class})
 public class AccommodationControllerIntegrationTests {
     @Autowired
     private MockMvc http;
