@@ -12,7 +12,7 @@
     <description>The microservice for assessment data</description>
 
     <parent>
-        <groupId>org.opentestsystem.assessment</groupId>
+        <groupId>org.opentestsystem.delivery</groupId>
         <artifactId>tds-assessment</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -35,12 +35,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.opentestsystem.assessment</groupId>
+            <groupId>org.opentestsystem.delivery</groupId>
             <artifactId>tds-assessment-client</artifactId>
             <version>${tds.assessment.client}</version>
         </dependency>
         <dependency>
-            <groupId>org.opentestsystem.common</groupId>
+            <groupId>org.opentestsystem.delivery</groupId>
             <artifactId>tds-common</artifactId>
             <version>${tds.common}</version>
         </dependency>
