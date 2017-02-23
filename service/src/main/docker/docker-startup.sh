@@ -6,4 +6,4 @@
 #
 #-----------------------------------------------------------------------------------------------------------------------
 
-java -jar /tds-assessment-service.jar
+java $JAVA_OPTS -jar /tds-assessment-service.jar
