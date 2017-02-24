@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: ${sbac.jdbc.host}/itembank
+    username: ${sbac.jdbc.user}
+    password: ${sbac.jdbc.password}
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+
+flyway:
+  enabled: true
+  baseline-on-migrate: true
+  out-of-order: true
+
+server:
+  undertow:
+    buffer-size: 16384
+    buffers-per-region: 20
+    io-threads: 64
+    worker-threads: 512
+    direct-buffers: true
