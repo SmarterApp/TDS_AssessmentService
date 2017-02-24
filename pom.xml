@@ -9,6 +9,13 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
+    <scm>
+        <connection>scm:git:https://github.com/SmarterApp/TDS_AssessmentService.git</connection>
+        <developerConnection>scm:git:https://git@github.com/SmarterApp/TDS_AssessmentService.git</developerConnection>
+        <url>https://github.com/SmarterApp/TDS_AssessmentService</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <modules>
         <module>client</module>
         <module>service</module>
@@ -22,9 +29,6 @@
     </parent>
 
     <properties>
-        <tds.assessment.client>0.0.1-SNAPSHOT</tds.assessment.client>
-        <tds.common.legacy.version>0.0.1</tds.common.legacy.version>
-        <tds.common>0.0.1</tds.common>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <unit-tests.skip>false</unit-tests.skip>
         <integration-tests.skip>true</integration-tests.skip>
@@ -35,6 +39,60 @@
         <h2-database.version>1.4.191</h2-database.version>
         <spring.cloud.config.version>1.2.2.RELEASE</spring.cloud.config.version>
 
+        <tds.common.legacy.version>0.0.1</tds.common.legacy.version>
+        <tds.common>0.0.1</tds.common>
+
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
+        <maven.jar.plugin.version>2.3.2</maven.jar.plugin.version>
+        <maven.release.plugin.version>2.5.3</maven.release.plugin.version>
+        <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
+        <maven.toolchains.plugin.version>1.1</maven.toolchains.plugin.version>
+        <publish.package.name>org.opentestsystem.tds.assessment</publish.package.name>
     </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven.release.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven.source.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>${maven.toolchains.plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-smarter-app-open-test-system</id>
+            <name>smarter-app-open-test-system</name>
+            <url>https://api.bintray.com/maven/smarter-app/open-test-system/${publish.package.name}/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>
