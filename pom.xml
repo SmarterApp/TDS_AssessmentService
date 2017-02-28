@@ -37,8 +37,8 @@
         <h2-database.version>1.4.191</h2-database.version>
         <spring.cloud.config.version>1.2.2.RELEASE</spring.cloud.config.version>
 
-        <tds.common.legacy.version>0.0.1</tds.common.legacy.version>
-        <tds.common>0.0.1</tds.common>
+        <tds.common.legacy.version>0.0.2</tds.common.legacy.version>
+        <tds.common>0.0.2</tds.common>
 
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>2.3.2</maven.jar.plugin.version>
@@ -88,9 +88,9 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-smarter-app-open-test-system</id>
-            <name>smarter-app-open-test-system</name>
-            <url>https://api.bintray.com/maven/smarter-app/open-test-system/${publish.package.name}/;publish=1</url>
+            <id>central</id>
+            <name>airdev-releases</name>
+            <url>https://airdev.jfrog.io/airdev/libs-releases-local</url>
         </repository>
     </distributionManagement>
 </project>
