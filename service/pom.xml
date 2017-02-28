@@ -5,7 +5,7 @@
     <packaging>jar</packaging>
     <name>tds-assessment-service</name>
     <description>The microservice for assessment data</description>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
 
     <parent>
         <groupId>org.opentestsystem.delivery</groupId>
@@ -17,7 +17,7 @@
         <connection>scm:git:https://github.com/SmarterApp/TDS_AssessmentService.git</connection>
         <developerConnection>scm:git:git://github.com/SmarterApp/TDS_AssessmentService.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AssessmentService</url>
-        <tag>HEAD</tag>
+        <tag>tds-assessment-service-0.0.2</tag>
     </scm>
 
     <properties>
