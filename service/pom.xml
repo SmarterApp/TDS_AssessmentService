@@ -22,7 +22,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <tds.assessment.client.version>0.0.1</tds.assessment.client.version>
+        <tds.assessment.client.version>0.0.2</tds.assessment.client.version>
         <tds.common.version>0.0.2</tds.common.version>
     </properties>
 
