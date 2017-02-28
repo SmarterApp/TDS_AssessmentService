@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>tds-assessment-service</artifactId>
     <packaging>jar</packaging>
-
     <name>tds-assessment-service</name>
     <description>The microservice for assessment data</description>
+    <version>0.0.2-SNAPSHOT</version>
 
     <parent>
         <groupId>org.opentestsystem.delivery</groupId>
         <artifactId>tds-assessment</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
+
+    <scm>
+        <connection>scm:git:https://github.com/SmarterApp/TDS_AssessmentService.git</connection>
+        <developerConnection>scm:git:git://github.com/SmarterApp/TDS_AssessmentService.git</developerConnection>
+        <url>https://github.com/SmarterApp/TDS_AssessmentService</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <java.version>1.8</java.version>
+        <tds.assessment.client.version>0.0.1</tds.assessment.client.version>
+        <tds.common.version>0.0.2</tds.common.version>
     </properties>
 
     <dependencyManagement>
@@ -34,12 +42,12 @@
         <dependency>
             <groupId>org.opentestsystem.delivery</groupId>
             <artifactId>tds-assessment-client</artifactId>
-            <version>${project.version}</version>
+            <version>${tds.assessment.client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.opentestsystem.delivery</groupId>
             <artifactId>tds-common</artifactId>
-            <version>${tds.common}</version>
+            <version>${tds.common.version}</version>
         </dependency>
 
         <!-- Spring dependencies -->

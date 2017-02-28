@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>tds-assessment-client</artifactId>
     <packaging>jar</packaging>
-
     <name>tds-assessment-client</name>
     <description>The client classes for interacting with the assessment service</description>
+    <version>0.0.2-SNAPSHOT</version>
 
     <parent>
         <groupId>org.opentestsystem.delivery</groupId>
         <artifactId>tds-assessment</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
+
+    <scm>
+        <connection>scm:git:https://github.com/SmarterApp/TDS_AssessmentService.git</connection>
+        <developerConnection>scm:git:git://github.com/SmarterApp/TDS_AssessmentService.git</developerConnection>
+        <url>https://github.com/SmarterApp/TDS_AssessmentService</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <java.version>1.7</java.version>
         <assertj.version>2.5.0</assertj.version>
+        <tds.common.legacy.version>0.0.2</tds.common.legacy.version>
     </properties>
 
     <dependencies>
