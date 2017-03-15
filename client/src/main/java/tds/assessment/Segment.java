@@ -328,7 +328,11 @@ public class Segment {
                 retItems.addAll(form.getItems());
             }
         } else {
-            retItems = items;
+            for (Item item : items) {
+                if (languageCode.equalsIgnoreCase(item.getLanguageCode())) {
+                    retItems.add(item);
+                }
+            }
         }
 
         return retItems;
