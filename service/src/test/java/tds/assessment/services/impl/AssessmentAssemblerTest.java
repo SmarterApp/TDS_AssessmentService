@@ -579,7 +579,7 @@ public class AssessmentAssemblerTest {
         Segment retSeg1 = retSegments.get(0);
         assertThat(retSeg1.getKey()).isEqualTo("seg1");
         List<Item> retSeg1Items = retSeg1.getItems("lang1");
-        assertThat(retSeg1Items).hasSize(2);
+        assertThat(retSeg1Items).hasSize(1);
 
         // Seg 1 Items + item props
         Item retSeg1Item1 = retSeg1Items.get(0);
@@ -603,7 +603,9 @@ public class AssessmentAssemblerTest {
         assertThat(retSeg1Item1Prop.get(2).getValue()).isEqualTo("lang1");
         assertThat(retSeg1Item1Prop.get(2).getDescription()).isEqualTo("desc4");
 
-        Item retSeg1Item2 = retSeg1Items.get(1);
+        retSeg1Items = retSeg1.getItems("lang2");
+        assertThat(retSeg1Items).hasSize(1);
+        Item retSeg1Item2 = retSeg1Items.get(0);
         List<ItemProperty> retSeg1Item2Prop = retSeg1Item2.getItemProperties();
         assertThat(retSeg1Item2Prop).hasSize(1);
         assertThat(retSeg1Item2Prop.get(0).getItemId()).isEqualTo("item2");

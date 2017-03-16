@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tds.accommodation.Accommodation;
+
 /**
  * A model representing an item for an {@link tds.assessment.Assessment}
  */
@@ -210,6 +212,21 @@ public class Item {
 
     public void setFormKeys(Set<String> formKeys) {
         this.formKeys = formKeys;
+    }
+
+    /**
+     * Finds the language code of the item based on its item properties.
+     *
+     * @return The language code of the item if one exists in its properties - otherwise null
+     */
+    public String getLanguageCode() {
+        for (ItemProperty property : itemProperties) {
+            if (Accommodation.ACCOMMODATION_TYPE_LANGUAGE.equalsIgnoreCase(property.getName())) {
+                return property.getValue();
+            }
+        }
+
+        return null;
     }
 
     @Override
