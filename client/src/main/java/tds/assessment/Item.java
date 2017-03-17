@@ -12,7 +12,7 @@ import tds.accommodation.Accommodation;
 /**
  * A model representing an item for an {@link tds.assessment.Assessment}
  */
-@JsonIgnoreProperties(value="language", allowGetters = true)
+@JsonIgnoreProperties(value="languageCode", allowGetters = true)
 public class Item {
     private String id;
     private String itemType;
