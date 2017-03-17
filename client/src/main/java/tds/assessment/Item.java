@@ -1,5 +1,7 @@
 package tds.assessment;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +12,7 @@ import tds.accommodation.Accommodation;
 /**
  * A model representing an item for an {@link tds.assessment.Assessment}
  */
+@JsonIgnoreProperties(value="language", allowGetters = true)
 public class Item {
     private String id;
     private String itemType;
