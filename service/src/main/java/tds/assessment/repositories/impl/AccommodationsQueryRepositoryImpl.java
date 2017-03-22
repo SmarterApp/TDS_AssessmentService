@@ -282,7 +282,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "  and TType.Context = '*' \n" +
                 "  and TT.ContextType = 'TEST' \n" +
                 "  and TT.Context = '*' \n" +
-                "  and (TType.TestMode = 'ALL' AND TT.TestMode = 'ALL') \n" +
+                "  and (TType.TestMode IN ('ALL', 'online') AND TT.TestMode = 'ALL') \n" +
                 "  or (TType.TestMode = MODE.mode and TT.TestMode = MODE.mode) \n" +
                 "  and not exists (select * from configs.client_testtooltype Tool where Tool.ContextType = 'TEST' and Tool.Context = MODE.testID and Tool.Toolname = TType.Toolname and Tool.Clientname = MODE.clientname)\n" +
                 ")";
