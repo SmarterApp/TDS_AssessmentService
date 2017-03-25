@@ -274,7 +274,6 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "  JOIN configs.client_testtooltype TType ON\n" +
                 "    TType.clientname = MODE.clientname\n" +
                 "  JOIN configs.client_testtool TT ON\n" +
-                "    TT.clientname = TType.clientname AND\n" +
                 "    TT.Type = TType.Toolname\n" +
                 "WHERE \n" +
                 "  MODE.testkey = :testKey \n" +
@@ -282,6 +281,7 @@ public class AccommodationsQueryRepositoryImpl implements AccommodationsQueryRep
                 "  and TType.Context = '*' \n" +
                 "  and TT.ContextType = 'TEST' \n" +
                 "  and TT.Context = '*' \n" +
+                "  and TT.clientname = MODE.clientname \n" +
                 "  and (TType.TestMode IN ('ALL', 'online') AND TT.TestMode = 'ALL') \n" +
                 "  or (TType.TestMode = MODE.mode and TT.TestMode = MODE.mode) \n" +
                 "  and not exists (select * from configs.client_testtooltype Tool where Tool.ContextType = 'TEST' and Tool.Context = MODE.testID and Tool.Toolname = TType.Toolname and Tool.Clientname = MODE.clientname)\n" +
