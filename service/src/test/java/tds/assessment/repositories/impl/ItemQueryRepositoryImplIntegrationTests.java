@@ -10,8 +10,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import tds.assessment.Item;
+import tds.assessment.ItemFileMetadata;
+import tds.assessment.ItemFileType;
 import tds.assessment.ItemProperty;
 import tds.assessment.repositories.ItemQueryRepository;
 
@@ -147,10 +150,8 @@ public class ItemQueryRepositoryImplIntegrationTests {
         for (ItemProperty property : properties) {
             if (property.getItemId().equals("item-1")) {
                 prop1 = property;
-                continue;
             } else if (property.getItemId().equals("item-7")) {
                 prop2 = property;
-                continue;
             }
         }
 
@@ -267,5 +268,47 @@ public class ItemQueryRepositoryImplIntegrationTests {
     public void shouldRetrieveNoProperties() {
         List<ItemProperty> properties = repository.findActiveItemsProperties("InvalidAssessment");
         assertThat(properties.isEmpty());
+    }
+
+    @Test
+    public void shouldRetrieveStimulusItem() {
+        Optional<ItemFileMetadata> maybeItemFile = repository.findItemFileMetadataByStimulusKey("SBAC_PT", 187, 4321);
+
+        assertThat(maybeItemFile).isPresent();
+
+        ItemFileMetadata itemFileMetadata = maybeItemFile.get();
+
+        assertThat(itemFileMetadata.getItemType()).isEqualTo(ItemFileType.STIMULUS);
+        assertThat(itemFileMetadata.getFileName()).isEqualTo("stim-187-4321.xml");
+        assertThat(itemFileMetadata.getFilePath()).isEqualTo("stim-187-4321/");
+        assertThat(itemFileMetadata.getId()).isEqualTo("187-4321");
+    }
+
+    @Test
+    public void shouldHandleStimulusItemNotFound() {
+        Optional<ItemFileMetadata> maybeItemFile = repository.findItemFileMetadataByStimulusKey("SBAC_PT", 999, 4321);
+
+        assertThat(maybeItemFile).isNotPresent();
+    }
+
+    @Test
+    public void shouldRetrieveItem() {
+        Optional<ItemFileMetadata> maybeItemFile = repository.findItemFileMetadataByItemKey("SBAC_PT", 187, 1234);
+
+        assertThat(maybeItemFile).isPresent();
+
+        ItemFileMetadata itemFileMetadata = maybeItemFile.get();
+
+        assertThat(itemFileMetadata.getItemType()).isEqualTo(ItemFileType.ITEM);
+        assertThat(itemFileMetadata.getFileName()).isEqualTo("item-187-1234.xml");
+        assertThat(itemFileMetadata.getFilePath()).isEqualTo("item-187-1234/");
+        assertThat(itemFileMetadata.getId()).isEqualTo("187-1234");
+    }
+
+    @Test
+    public void shouldHandleItemNotFound() {
+        Optional<ItemFileMetadata> maybeItemFile = repository.findItemFileMetadataByItemKey("SBAC_PT", 999, 1234);
+
+        assertThat(maybeItemFile).isNotPresent();
     }
 }

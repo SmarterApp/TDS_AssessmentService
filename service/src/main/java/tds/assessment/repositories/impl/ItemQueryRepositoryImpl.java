@@ -1,6 +1,7 @@
 package tds.assessment.repositories.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import tds.assessment.Item;
+import tds.assessment.ItemFileMetadata;
+import tds.assessment.ItemFileType;
 import tds.assessment.ItemProperty;
 import tds.assessment.repositories.ItemQueryRepository;
 
@@ -138,4 +142,71 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
         );
     }
 
+    @Override
+    public Optional<ItemFileMetadata> findItemFileMetadataByStimulusKey(final String clientName, final long bankKey, final long stimulusKey) {
+        final SqlParameterSource parameters = new MapSqlParameterSource("clientName", clientName)
+            .addValue("stimulusKey", createItemKey(bankKey, stimulusKey));
+
+        final String SQL = "SELECT \n" +
+            "  S.FilePath, \n" +
+            "  S.FileName, \n" +
+            "  S._key AS id \n" +
+            "FROM\n" +
+            "  tblstimulus S \n" +
+            "JOIN \n" +
+            "  tblitembank B ON B._efk_Itembank = S._efk_Itembank \n" +
+            "JOIN \n" +
+            "  tblclient C ON B._fk_Client = C._Key \n" +
+            "WHERE\n" +
+            "  C.name = :clientName AND S._key = :stimulusKey";
+
+        Optional<ItemFileMetadata> maybeItemFile;
+        try {
+            maybeItemFile = Optional.of(jdbcTemplate.queryForObject(SQL, parameters, (rs, rowNum) ->
+                ItemFileMetadata.create(ItemFileType.STIMULUS,
+                    rs.getString("id"),
+                    rs.getString("filename"),
+                    rs.getString("filepath"))));
+        } catch (EmptyResultDataAccessException e) {
+            maybeItemFile = Optional.empty();
+        }
+
+        return maybeItemFile;
+    }
+
+    @Override
+    public Optional<ItemFileMetadata> findItemFileMetadataByItemKey(final String clientName, final long bankKey, final long itemKey) {
+        final SqlParameterSource parameters = new MapSqlParameterSource("clientName", clientName)
+            .addValue("itemKey", createItemKey(bankKey, itemKey));
+
+        final String SQL = "SELECT\n" +
+            "  I.Filepath,\n" +
+            "  I.filename,\n" +
+            "  I._key AS id\n" +
+            "FROM\n" +
+            "  tblitem I\n" +
+            "JOIN \n" +
+            "  tblitembank B ON B._efk_Itembank = I._efk_Itembank\n" +
+            "JOIN \n" +
+            "  tblclient C ON B._fk_Client = C._Key\n" +
+            "WHERE\n" +
+            "  C.name = :clientName AND I._key = :itemKey  ";
+
+        Optional<ItemFileMetadata> maybeItemFile;
+        try {
+            maybeItemFile = Optional.of(jdbcTemplate.queryForObject(SQL, parameters, (rs, rowNum) ->
+                ItemFileMetadata.create(ItemFileType.ITEM,
+                    rs.getString("id"),
+                    rs.getString("filename"),
+                    rs.getString("filepath"))));
+        } catch (EmptyResultDataAccessException e) {
+            maybeItemFile = Optional.empty();
+        }
+
+        return maybeItemFile;
+    }
+
+    private static String createItemKey(final long bankKey, final long key) {
+        return bankKey + "-" + key;
+    }
 }

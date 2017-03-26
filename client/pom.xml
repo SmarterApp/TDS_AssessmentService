@@ -51,6 +51,11 @@
             <artifactId>tds-common-legacy</artifactId>
             <version>${tds.common.legacy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.auto.value</groupId>
+            <artifactId>auto-value</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
     <build>
