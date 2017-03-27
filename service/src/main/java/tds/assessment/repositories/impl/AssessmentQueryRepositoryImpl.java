@@ -67,6 +67,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "   CT.prefetch, \n" +
                 "   CT.label, \n" +
                 "   CT.deleteUnansweredItems, \n" +
+                "   CT.msb AS multiStageBraille, \n" +
                 "   SP.ftstartdate AS segFieldTestStartDate, \n" +
                 "   SP.ftenddate AS segFieldTestEndDate, \n" +
                 "   SP.label AS segmentLabel \n" +

@@ -37,6 +37,7 @@ public class Assessment {
     private Set<String> languageCodes;
     private boolean validateCompleteness;
     private boolean deleteUnansweredItems;
+    private boolean multiStageBraille;
 
     public List<ItemConstraint> getItemConstraints() {
         return itemConstraints != null ? itemConstraints : new ArrayList<ItemConstraint>();
@@ -293,6 +294,17 @@ public class Assessment {
     
     public void setAccommodationDependencies(List<AccommodationDependency> accommodationDependencies) {
         this.accommodationDependencies = accommodationDependencies;
+    }
+
+    /**
+     * @return a flag indicating whethere the assessment is a multi-stage braille assessment
+     */
+    public boolean isMultiStageBraille() {
+        return multiStageBraille;
+    }
+
+    public void setMultiStageBraille(boolean multiStageBraille) {
+        this.multiStageBraille = multiStageBraille;
     }
     
 }
