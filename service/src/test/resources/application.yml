@@ -10,11 +10,6 @@ spring:
   resources:
     add-mappings: false
 
-flyway:
-  enabled: false
-  baseline-on-migrate: true
-  out-of-order: true
-
 server:
   undertow:
     buffer-size: 16384
