@@ -29,6 +29,11 @@ public class Item {
     private String itemFilePath;
     private String stimulusFilePath;
     private boolean isPrintable;
+    private String clientId;
+    private String mimeType;
+    private String contentLevel;
+    private boolean notForScoring;
+    private int maxScore;
 
     /**
      * Private empty constructor for frameworks
@@ -230,6 +235,58 @@ public class Item {
         }
 
         return null;
+    }
+
+    /**
+     * @return Also referred to as the "itemId", an optional property defined in the test package
+     */
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    /**
+     * @return The expected mimetype of this item's response
+     */
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    /**
+     * @return The content level of the item - a subset of the strand
+     */
+    public String getContentLevel() {
+        return contentLevel;
+    }
+
+    public void setContentLevel(String contentLevel) {
+        this.contentLevel = contentLevel;
+    }
+
+    /**
+     * @return Flag indicating whether or not this item should or should not be scored
+     */
+    public boolean isNotForScoring() {
+        return notForScoring;
+    }
+
+    public void setNotForScoring(boolean notForScoring) {
+        this.notForScoring = notForScoring;
+    }
+
+    public int getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(int maxScore) {
+        this.maxScore = maxScore;
     }
 
     @Override
