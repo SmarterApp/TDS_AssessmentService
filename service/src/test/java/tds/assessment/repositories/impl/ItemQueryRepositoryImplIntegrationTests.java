@@ -52,21 +52,22 @@ public class ItemQueryRepositoryImplIntegrationTests {
 
         final String tblItemInsertSQL =
             "INSERT INTO itembank.tblitem\n" +
-                "   (_key, _efk_itembank, _efk_item, itemtype, filepath, filename)\n" +
+                "   (_key, _efk_itembank, _efk_item, itemtype, filepath, filename, scorepoint, itemid)\n" +
                 "VALUES \n" +
-                "   ('187-1234', 187, 1234, 'ER', 'item-187-1234/', 'item-187-1234.xml'),\n" +
-                "   ('187-1235', 187, 1235, 'MI','item-187-1235/' , 'item-187-1235.xml'),\n" +
-                "   ('187-1236', 187, 1236, 'WER','item-187-1236/' , 'item-187-1236.xml'),\n" +
-                "   ('187-1237', 187, 1237, 'MC','item-187-1237/' , 'item-187-1237.xml')";
+                "   ('187-1234', 187, 1234, 'ER', 'item-187-1234/', 'item-187-1234.xml', 1, ''),\n" +
+                "   ('187-1235', 187, 1235, 'MI','item-187-1235/' , 'item-187-1235.xml', -1, 'clientid'),\n" +
+                "   ('187-1236', 187, 1236, 'WER','item-187-1236/' , 'item-187-1236.xml', 1, ''),\n" +
+                "   ('187-1237', 187, 1237, 'MC','item-187-1237/' , 'item-187-1237.xml', 0, '')";
 
         final String tblSetAdminItemsInsertSQL =
             "INSERT INTO itembank.tblsetofadminitems \n" +
-                "   (_fk_item, _fk_adminsubject, groupid, groupkey, blockid, itemposition, isfieldtest, isactive, isrequired, strandname, isprintable)\n" +
+                "   (_fk_item, _fk_adminsubject, groupid, groupkey, blockid, itemposition, isfieldtest, isactive, isrequired, " +
+                "   strandname, isprintable, responsemimetype, notforscoring) \n" +
                 "VALUES \n" +
-                "   ('187-1234', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-1', 'GK-1', 'A', 1, 0, 1, 1, 'strand1', 0),\n" +
-                "   ('187-1235', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-2', 'GK-2', 'A', 2, 0, 1, 1, 'strand2', 0),\n" +
-                "   ('187-1236', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'G-3', 'GK-3', 'A', 1, 0, 1, 1, 'strand3', 1),\n" +
-                "   ('187-1237', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'G-4', 'GK-4', 'A', 1, 1, 1, 1, 'silver strand', 0)";
+                "   ('187-1234', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-1', 'GK-1', 'A', 1, 0, 1, 1, 'strand1', 0, 'text/plain', 0),\n" +
+                "   ('187-1235', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-2', 'GK-2', 'A', 2, 0, 1, 1, 'strand2', 0, 'text/xml', 1),\n" +
+                "   ('187-1236', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'G-3', 'GK-3', 'A', 1, 0, 1, 1, 'strand3', 1, 'foo', 0), \n" +
+                "   ('187-1237', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'G-4', 'GK-4', 'A', 1, 1, 1, 1, 'silver strand', 0, 'bar', 1)";
 
         final String tblItemPropsInsertSQL =
             "INSERT INTO itembank.tblitemprops (_fk_item, propname, propvalue, propdescription, _fk_adminsubject, isactive) VALUES \n" +
@@ -124,6 +125,10 @@ public class ItemQueryRepositoryImplIntegrationTests {
                 "('187-1236', '187-6321', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 8185), \n" +
                 "('187-1237', '187-7321', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 8185);";
 
+        final String tblStrand =
+            "INSERT INTO itembank.tblstrand (_fk_subject, name, _key) \n" +
+                "VALUES ('ELA', 'contentLevel', 'strand1')";
+
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a);
@@ -137,6 +142,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         jdbcTemplate.update(tblItemBankInsertFromSQL);
         jdbcTemplate.update(tblStimulusInsertFromSQL);
         jdbcTemplate.update(tblSetOfItemsStimuli);
+        jdbcTemplate.update(tblStrand);
     }
 
     @Test
@@ -236,6 +242,9 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1234/item-187-1234.xml");
         assertThat(item1Seg1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-4321/stim-187-4321.xml");
         assertThat(item1Seg1.isPrintable()).isFalse();
+        assertThat(item1Seg1.getContentLevel()).isEqualTo("contentLevel");
+        assertThat(item1Seg1.getMaxScore()).isEqualTo(1);
+        assertThat(item1Seg1.getMimeType()).isEqualTo("text/plain");
 
         assertThat(item2Seg1.getGroupId()).isEqualTo("G-2");
         assertThat(item2Seg1.getGroupKey()).isEqualTo("GK-2");
@@ -249,6 +258,8 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item2Seg1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1235/item-187-1235.xml");
         assertThat(item2Seg1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-5321/stim-187-5321.xml");
         assertThat(item2Seg1.isPrintable()).isFalse();
+        assertThat(item2Seg1.getClientId()).isEqualTo("clientid");
+        assertThat(item2Seg1.isNotForScoring()).isTrue();
 
         assertThat(item1Seg2.getGroupId()).isEqualTo("G-3");
         assertThat(item1Seg2.getGroupKey()).isEqualTo("GK-3");

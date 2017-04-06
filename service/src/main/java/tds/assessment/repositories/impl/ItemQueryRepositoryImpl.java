@@ -35,8 +35,11 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "SELECT \n" +
                 "   item._key AS id,\n" +
                 "   item.itemtype,\n" +
+                "   item.scorepoint AS maxScore, \n" +
+                "   item.itemid AS clientId, \n" +
                 "   adminItems._fk_adminsubject AS segmentKey,\n" +
                 "   formItem._fk_testform AS formKey,\n" +
+                "   strands.name as contentLevel, \n" +
                 "   adminItems.groupid,\n" +
                 "   adminItems.groupkey,\n" +
                 "   adminItems.blockid, \n" +
@@ -44,6 +47,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   adminItems.isfieldtest,\n" +
                 "   adminItems.isrequired, \n" +
                 "   adminItems.strandname, \n" +
+                "   adminItems.responseMimeType, \n" +
+                "   adminItems.notForScoring, \n" +
                 "   CONCAT(client.homepath, bank.homepath, bank.itempath, item.filepath, item.filename) AS itemFilePath, \n" +
                 "   CONCAT(client.homepath, bank.homepath, bank.stimulipath, stimulus.filepath, stimulus.filename) AS stimulusFilePath, \n" +
                 "   adminItems.isprintable \n" +
@@ -72,6 +77,9 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   itembank.tblstimulus stimulus \n" +
                 "   ON stimulus._key = itemStimuli._fk_stimulus \n" +
                 "   AND stimulus._efk_itembank = bank._efk_itembank \n" +
+                "LEFT JOIN \n" +
+                "   itembank.tblstrand strands \n" +
+                "   ON strands._key = adminItems.strandname \n" +
                 "WHERE \n" +
                 "   (segments.virtualtest = :key \n" +
                 "       OR segments._key = :key) \n" +
@@ -103,6 +111,11 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 item.setItemFilePath(resultExtractor.getString("itemFilePath"));
                 item.setStimulusFilePath(resultExtractor.getString("stimulusFilePath"));
                 item.setPrintable(resultExtractor.getBoolean("isprintable"));
+                item.setMimeType(resultExtractor.getString("responseMimeType"));
+                item.setMaxScore(resultExtractor.getInt("maxScore"));
+                item.setContentLevel(resultExtractor.getString("contentLevel"));
+                item.setClientId(resultExtractor.getString("clientId"));
+                item.setNotForScoring(resultExtractor.getBoolean("notForScoring"));
             }
 
             return itemsMap.entrySet().stream()
