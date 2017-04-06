@@ -7,5 +7,6 @@
 
 USE configs;
 
-ALTER TABLE client_testproperties
-  ADD COLUMN msb BIT(1) NOT NULL DEFAULT b'0';
+/* Column already exists in V1480545468__configs_create_client_testproperties */
+--ALTER TABLE client_testproperties
+--  ADD COLUMN msb BIT(1) NOT NULL DEFAULT b'0';
