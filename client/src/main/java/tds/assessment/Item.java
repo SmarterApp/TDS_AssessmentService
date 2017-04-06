@@ -281,6 +281,9 @@ public class Item {
         this.notForScoring = notForScoring;
     }
 
+    /**
+     * @return The maximum possible score for an assessment item
+     */
     public int getMaxScore() {
         return maxScore;
     }
