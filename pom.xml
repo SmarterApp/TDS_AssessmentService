@@ -36,7 +36,7 @@
         <spring.cloud.config.version>1.2.3.RELEASE</spring.cloud.config.version>
 
         <tds.common.legacy.version>0.0.5</tds.common.legacy.version>
-        <tds.common>0.0.5</tds.common>
+        <tds.common>0.0.8</tds.common>
 
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>2.3.2</maven.jar.plugin.version>
