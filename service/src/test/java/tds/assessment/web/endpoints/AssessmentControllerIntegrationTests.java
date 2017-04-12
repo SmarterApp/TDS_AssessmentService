@@ -1,5 +1,8 @@
 package tds.assessment.web.endpoints;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.benas.randombeans.EnhancedRandomBuilder;
+import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -23,6 +27,8 @@ import tds.common.Algorithm;
 import tds.common.configuration.SecurityConfiguration;
 import tds.common.web.advice.ExceptionAdvice;
 
+import static io.github.benas.randombeans.api.EnhancedRandom.random;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,29 +42,41 @@ public class AssessmentControllerIntegrationTests {
     @Autowired
     private MockMvc http;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private AssessmentService assessmentSegmentService;
 
     @Test
     public void shouldReturnAssessmentByKey() throws Exception {
-        Assessment assessment = new Assessment();
+        EnhancedRandom rand = EnhancedRandomBuilder.aNewEnhancedRandomBuilder()
+            .collectionSizeRange(2, 5)
+            .stringLengthRange(1, 20)
+            .build();
+        Assessment assessment = rand.nextObject(Assessment.class);
         assessment.setKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         assessment.setAssessmentId("IRP-Perf-ELA-11");
         assessment.setSelectionAlgorithm(Algorithm.VIRTUAL);
         assessment.setSubject("ELA");
         assessment.setStartAbility(50F);
+        assessment.setDeleteUnansweredItems(true);
 
         when(assessmentSegmentService.findAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
         URI uri = UriComponentsBuilder.fromUriString("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016").build().toUri();
 
-        http.perform(get(uri)
+        MvcResult result = http.perform(get(uri)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("key", is("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")))
             .andExpect(jsonPath("assessmentId", is("IRP-Perf-ELA-11")))
             .andExpect(jsonPath("subject", is("ELA")))
-            .andExpect(jsonPath("selectionAlgorithm", is(Algorithm.VIRTUAL.name())));
+            .andExpect(jsonPath("selectionAlgorithm", is(Algorithm.VIRTUAL.name())))
+            .andReturn();
+
+        Assessment parsedAssessment = objectMapper.readValue(result.getResponse().getContentAsByteArray(), Assessment.class);
+        assertThat(parsedAssessment).isEqualTo(assessment);
     }
 
     @Test

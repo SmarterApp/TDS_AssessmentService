@@ -56,6 +56,10 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "   A.ftendpos AS fieldTestEndPosition, \n" +
                 "   S.name AS subject, \n" +
                 "   A.virtualtest AS assessmentKey, \n" +
+                "   A.contract, \n" +
+                "   A.testtype AS assessmentType, \n" +
+                "   A.loadconfig AS loadVersion, \n" +
+                "   A.updateconfig AS updateVersion, \n" +
                 "   CT.ftstartdate, \n" +
                 "   CT.ftenddate, \n" +
                 "   CT.accommodationfamily, \n" +
@@ -67,7 +71,9 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "   CT.prefetch, \n" +
                 "   CT.label, \n" +
                 "   CT.deleteUnansweredItems, \n" +
+                "   CT.handscoreproject AS handScored, \n " +
                 "   CT.msb AS multiStageBraille, \n" +
+                "   TA.schoolyear AS academicYear, \n" +
                 "   SP.ftstartdate AS segFieldTestStartDate, \n" +
                 "   SP.ftenddate AS segFieldTestEndDate, \n" +
                 "   SP.label AS segmentLabel \n" +
@@ -86,6 +92,12 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "   configs.client_segmentproperties SP \n" +
                 "   ON SP.segmentid = A.testid \n" +
                 "   AND SP.clientName = :clientName \n" +
+                "JOIN \n" +
+                "   itembank.tblclient CL \n" +
+                "   ON (CL.name = SP.clientname OR CL.name = CT.clientname) \n" +
+                "LEFT JOIN \n" +
+                "   itembank.tbltestadmin TA \n" +
+                "   ON TA._fk_client = CL._key \n" +
                 "LEFT JOIN \n" +
                 "   itembank.tblsubject S \n" +
                 "   ON S._key = A._fk_Subject \n" +

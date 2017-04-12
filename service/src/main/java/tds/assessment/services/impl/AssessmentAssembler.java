@@ -34,13 +34,15 @@ class AssessmentAssembler {
                          final List<ItemProperty> itemProperties,
                          final List<Item> items,
                          final List<Form> forms,
-                         final List<AccommodationDependency> accommodationDependencies) {
+                         final List<AccommodationDependency> accommodationDependencies,
+                         final List<String> grades) {
         // Update assessment metadata
         assessment.setItemConstraints(itemConstraints);
         assessment.setAccommodationDependencies(accommodationDependencies);
         assessment.setStrands(strands.stream()
             .filter(strand -> strand.getSegmentKey().equals(assessment.getKey()))
             .collect(Collectors.toSet()));
+        assessment.setGrades(grades);
         
         // To determine which language(s) are available to an assessment, we need to look at the item properties for
         // each item.  Each item should have a property with a name equal to "Language" (case-insensitive).  While

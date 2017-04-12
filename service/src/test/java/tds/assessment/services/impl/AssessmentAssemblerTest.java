@@ -19,6 +19,7 @@ import tds.assessment.Segment;
 import tds.assessment.Strand;
 import tds.common.Algorithm;
 
+import static io.github.benas.randombeans.api.EnhancedRandom.randomListOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AssessmentAssemblerTest {
@@ -216,8 +217,10 @@ public class AssessmentAssemblerTest {
         itemProperties.add(langProp3);
         itemProperties.add(langProp4);
 
+        List<String> grades = randomListOf(2, String.class);
+
         // CALL ASSEMBLE - for a fixed-form Assessment
-        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms, accommodationDependencies);
+        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms, accommodationDependencies, grades);
 
         List<Segment> retSegments = assessment.getSegments();
         assertThat(retSegments).hasSize(2);
@@ -416,6 +419,8 @@ public class AssessmentAssemblerTest {
         assertThat(retLang3Form.getKey()).isEqualTo("form3");
         assertThat(retLang3Form.getItems()).hasSize(1);
         assertThat(retLang3Form.getSegmentKey()).isEqualTo("seg2");
+
+        assertThat(assessment.getGrades()).isEqualTo(grades);
     }
 
     @Test
@@ -537,8 +542,9 @@ public class AssessmentAssemblerTest {
         itemProperties.add(languageProp2);
         itemProperties.add(languageProp3);
 
+        List<String> grades = randomListOf(2, String.class);
         // CALL ASSEMBLE - for a fixed-form Assessment
-        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, new ArrayList<>(), new ArrayList<>());
+        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, new ArrayList<>(), new ArrayList<>(), grades);
 
         List<Segment> retSegments = assessment.getSegments();
         assertThat(retSegments).hasSize(2);
@@ -673,6 +679,8 @@ public class AssessmentAssemblerTest {
         assertThat(retSeg2Item1Prop.get(1).getName()).isEqualTo("language");
         assertThat(retSeg2Item1Prop.get(1).getValue()).isEqualTo("lang3");
         assertThat(retSeg2Item1Prop.get(1).getDescription()).isEqualTo("desc6");
+
+        assertThat(assessment.getGrades()).isEqualTo(grades);
     }
 
     @Test
@@ -843,8 +851,10 @@ public class AssessmentAssemblerTest {
         itemProperties.add(langProp3);
         itemProperties.add(langProp4);
 
+        List<String> grades = randomListOf(2, String.class);
+
         // CALL ASSEMBLE - for a fixed-form Assessment
-        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms, new ArrayList<>());
+        AssessmentAssembler.assemble(assessment, allStrands, itemConstraints, itemProperties, items, forms, new ArrayList<>(), grades);
 
         List<Segment> retSegments = assessment.getSegments();
         assertThat(retSegments).hasSize(2);
@@ -1020,5 +1030,7 @@ public class AssessmentAssemblerTest {
         assertThat(retLang2Form.getKey()).isEqualTo("form2");
         assertThat(retLang2Form.getItems()).hasSize(2);
         assertThat(retLang2Form.getSegmentKey()).isEqualTo("seg1");
+
+        assertThat(assessment.getGrades()).isEqualTo(grades);
     }
 }

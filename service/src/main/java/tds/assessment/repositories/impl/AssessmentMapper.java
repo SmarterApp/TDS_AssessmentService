@@ -84,6 +84,13 @@ class AssessmentMapper {
         assessment.setPrefetch(row.getInt("prefetch"));
         assessment.setDeleteUnansweredItems(row.getBoolean("deleteUnansweredItems"));
         assessment.setMultiStageBraille(row.getBoolean("multiStageBraille"));
+        assessment.setHandScored(row.getIntNullable("handScored"));
+        assessment.setContract(row.getString("contract"));
+        assessment.setAcademicYear(row.getString("academicYear"));
+        assessment.setType(row.getString("assessmentType"));
+        assessment.setLoadVersion(row.getLongNullable("loadVersion"));
+        assessment.setUpdateVersion(row.getLongNullable("updateVersion"));
+
         // RULE:  An Assessment always has at least one Segment.  Create a "default" Segment from the data contained in
         // the row that represents the Assessment.  This will account for assessments that do not have any segments.  In
         // this case, the default Segment's assessmentKey will be set to the same value as the Assessment's key (to
@@ -172,6 +179,14 @@ class AssessmentMapper {
 
         String getString(String key) {
             return rowData.get(key) != null ? (String) rowData.get(key) : null;
+        }
+
+        Integer getIntNullable(String key) {
+            return rowData.get(key) != null ? (int) rowData.get(key) : null;
+        }
+
+        Long getLongNullable(String key) {
+            return rowData.get(key) != null ? (Long) rowData.get(key) : null;
         }
 
         Instant getJodaInstantFromTimestamp(String key) {

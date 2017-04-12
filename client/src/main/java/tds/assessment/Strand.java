@@ -112,4 +112,30 @@ public class Strand {
             return new Strand(this);
         }
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Strand strand = (Strand) o;
+
+        if (minItems != strand.minItems) return false;
+        if (maxItems != strand.maxItems) return false;
+        if (name != null ? !name.equals(strand.name) : strand.name != null) return false;
+        if (key != null ? !key.equals(strand.key) : strand.key != null) return false;
+        if (segmentKey != null ? !segmentKey.equals(strand.segmentKey) : strand.segmentKey != null) return false;
+        return adaptiveCut != null ? adaptiveCut.equals(strand.adaptiveCut) : strand.adaptiveCut == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (key != null ? key.hashCode() : 0);
+        result = 31 * result + (segmentKey != null ? segmentKey.hashCode() : 0);
+        result = 31 * result + minItems;
+        result = 31 * result + maxItems;
+        result = 31 * result + (adaptiveCut != null ? adaptiveCut.hashCode() : 0);
+        return result;
+    }
 }

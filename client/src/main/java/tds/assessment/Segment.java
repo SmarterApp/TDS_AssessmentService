@@ -346,4 +346,59 @@ public class Segment {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Segment segment = (Segment) o;
+
+        if (Float.compare(segment.startAbility, startAbility) != 0) return false;
+        if (position != segment.position) return false;
+        if (minItems != segment.minItems) return false;
+        if (maxItems != segment.maxItems) return false;
+        if (fieldTestMinItems != segment.fieldTestMinItems) return false;
+        if (fieldTestMaxItems != segment.fieldTestMaxItems) return false;
+        if (fieldTestStartPosition != segment.fieldTestStartPosition) return false;
+        if (fieldTestEndPosition != segment.fieldTestEndPosition) return false;
+        if (key != null ? !key.equals(segment.key) : segment.key != null) return false;
+        if (label != null ? !label.equals(segment.label) : segment.label != null) return false;
+        if (selectionAlgorithm != segment.selectionAlgorithm) return false;
+        if (segmentId != null ? !segmentId.equals(segment.segmentId) : segment.segmentId != null) return false;
+        if (subject != null ? !subject.equals(segment.subject) : segment.subject != null) return false;
+        if (assessmentKey != null ? !assessmentKey.equals(segment.assessmentKey) : segment.assessmentKey != null)
+            return false;
+        if (fieldTestStartDate != null ? !fieldTestStartDate.equals(segment.fieldTestStartDate) : segment.fieldTestStartDate != null)
+            return false;
+        if (fieldTestEndDate != null ? !fieldTestEndDate.equals(segment.fieldTestEndDate) : segment.fieldTestEndDate != null)
+            return false;
+        if (forms != null ? !forms.equals(segment.forms) : segment.forms != null) return false;
+        if (strands != null ? !strands.equals(segment.strands) : segment.strands != null) return false;
+        return items != null ? items.equals(segment.items) : segment.items == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (selectionAlgorithm != null ? selectionAlgorithm.hashCode() : 0);
+        result = 31 * result + (segmentId != null ? segmentId.hashCode() : 0);
+        result = 31 * result + (startAbility != +0.0f ? Float.floatToIntBits(startAbility) : 0);
+        result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + (assessmentKey != null ? assessmentKey.hashCode() : 0);
+        result = 31 * result + position;
+        result = 31 * result + minItems;
+        result = 31 * result + maxItems;
+        result = 31 * result + fieldTestMinItems;
+        result = 31 * result + fieldTestMaxItems;
+        result = 31 * result + (fieldTestStartDate != null ? fieldTestStartDate.hashCode() : 0);
+        result = 31 * result + (fieldTestEndDate != null ? fieldTestEndDate.hashCode() : 0);
+        result = 31 * result + fieldTestStartPosition;
+        result = 31 * result + fieldTestEndPosition;
+        result = 31 * result + (forms != null ? forms.hashCode() : 0);
+        result = 31 * result + (strands != null ? strands.hashCode() : 0);
+        result = 31 * result + (items != null ? items.hashCode() : 0);
+        return result;
+    }
 }
