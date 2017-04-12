@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.Instant;
 
@@ -262,7 +263,8 @@ public class Assessment {
     /**
      * @return A flag indicating whether unanswered items should be cleared automatically.
      */
-    public boolean getDeleteUnansweredItems() {
+    @JsonGetter("deleteUnansweredItems")
+    public boolean shouldDeleteUnansweredItems() {
         return deleteUnansweredItems;
     }
 
