@@ -180,7 +180,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.getAbilityIntercept()).isEqualTo(6.3f);
         assertThat(assessment.isInitialAbilityBySubject()).isFalse();
         assertThat(assessment.getPrefetch()).isEqualTo(2);
-        assertThat(assessment.shouldDeleteUnansweredItems()).isFalse();
+        assertThat(assessment.getDeleteUnansweredItems()).isFalse();
         assertThat(assessment.isValidateCompleteness()).isTrue();
         assertThat(assessment.getLabel()).isEqualTo("Grade 8 Math");
         assertThat(assessment.getAcademicYear()).isEqualTo("2112-2113");

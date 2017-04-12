@@ -112,4 +112,31 @@ public class ItemConstraint {
             return new ItemConstraint(this);
         }
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final ItemConstraint that = (ItemConstraint) o;
+
+        if (inclusive != that.inclusive) return false;
+        if (assessmentId != null ? !assessmentId.equals(that.assessmentId) : that.assessmentId != null) return false;
+        if (propertyName != null ? !propertyName.equals(that.propertyName) : that.propertyName != null) return false;
+        if (propertyValue != null ? !propertyValue.equals(that.propertyValue) : that.propertyValue != null)
+            return false;
+        if (toolType != null ? !toolType.equals(that.toolType) : that.toolType != null) return false;
+        return toolValue != null ? toolValue.equals(that.toolValue) : that.toolValue == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = assessmentId != null ? assessmentId.hashCode() : 0;
+        result = 31 * result + (propertyName != null ? propertyName.hashCode() : 0);
+        result = 31 * result + (propertyValue != null ? propertyValue.hashCode() : 0);
+        result = 31 * result + (toolType != null ? toolType.hashCode() : 0);
+        result = 31 * result + (toolValue != null ? toolValue.hashCode() : 0);
+        result = 31 * result + (inclusive ? 1 : 0);
+        return result;
+    }
 }
