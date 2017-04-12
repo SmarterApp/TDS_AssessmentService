@@ -319,10 +319,6 @@ public class Segment {
      * </p>
      */
     public Set<Strand> getStrands() {
-        if (strands == null) {
-            strands = new HashSet<>();
-        }
-
         return strands;
     }
 
@@ -331,7 +327,7 @@ public class Segment {
     }
     
     public List<Item> getItems() {
-        return items == null ? new ArrayList<Item>() : items;
+        return items;
     }
 
     /**
