@@ -10,6 +10,15 @@ public class Strand {
     private int minItems;
     private int maxItems;
     private Float adaptiveCut;
+    private boolean strictMax;
+    private float bpWeight;
+    private Float startAbility;
+    private Float abilityWeight;
+    private Float precisionTarget;
+    private Float precisionTargetMetWeight;
+    private Float precisionTargetNotMetWeight;
+    private Float startInfo;
+    private Float scalar;
 
     /**
      * Used by frameworks
@@ -23,6 +32,15 @@ public class Strand {
         this.minItems = builder.minItems;
         this.maxItems = builder.maxItems;
         this.adaptiveCut = builder.adaptiveCut;
+        this.strictMax = builder.strictMax;
+        this.bpWeight = builder.bpWeight;
+        this.startAbility = builder.startAbility;
+        this.abilityWeight = builder.abilityWeight;
+        this.precisionTarget = builder.precisionTarget;
+        this.precisionTargetMetWeight = builder.precisionTargetMetWeight;
+        this.precisionTargetNotMetWeight = builder.precisionTargetNotMetWeight;
+        this.startInfo = builder.startInfo;
+        this.scalar = builder.scalar;
     }
 
     /**
@@ -67,16 +85,82 @@ public class Strand {
         return adaptiveCut;
     }
 
-    public static class Builder {
+    /**
+     * @return {@code true} if there is a strict max
+     */
+    public boolean isStrictMax() {
+        return strictMax;
+    }
+
+    /**
+     * @return the blueprint weight
+     */
+    public float getBpWeight() {
+        return bpWeight;
+    }
+
+    /**
+     * @return start ability associated with the strand
+     */
+    public Float getStartAbility() {
+        return startAbility;
+    }
+
+    /**
+     * @return ability weight
+     */
+    public Float getAbilityWeight() {
+        return abilityWeight;
+    }
+
+    /**
+     * @return precision target
+     */
+    public Float getPrecisionTarget() {
+        return precisionTarget;
+    }
+
+    /**
+     * @return precision target met weight
+     */
+    public Float getPrecisionTargetMetWeight() {
+        return precisionTargetMetWeight;
+    }
+
+    /**
+     * @return precision target not met weight
+     */
+    public Float getPrecisionTargetNotMetWeight() {
+        return precisionTargetNotMetWeight;
+    }
+
+    /**
+     * @return start information
+     */
+    public Float getStartInfo() {
+        return startInfo;
+    }
+
+    public Float getScalar() {
+        return scalar;
+    }
+
+    public static final class Builder {
         private String name;
         private String key;
         private String segmentKey;
         private int minItems;
         private int maxItems;
         private Float adaptiveCut;
-
-        public Builder() {
-        }
+        private boolean strictMax;
+        private float bpWeight;
+        private Float startAbility;
+        private Float abilityWeight;
+        private Float precisionTarget;
+        private Float precisionTargetMetWeight;
+        private Float precisionTargetNotMetWeight;
+        private Float startInfo;
+        private Float scalar;
 
         public Builder withName(String name) {
             this.name = name;
@@ -105,6 +189,51 @@ public class Strand {
 
         public Builder withAdaptiveCut(Float adaptiveCut) {
             this.adaptiveCut = adaptiveCut;
+            return this;
+        }
+
+        public Builder withStrictMax(boolean strictMax) {
+            this.strictMax = strictMax;
+            return this;
+        }
+
+        public Builder withBpWeight(float bpWeight) {
+            this.bpWeight = bpWeight;
+            return this;
+        }
+
+        public Builder withStartAbility(Float startAbility) {
+            this.startAbility = startAbility;
+            return this;
+        }
+
+        public Builder withAbilityWeight(Float abilityWeight) {
+            this.abilityWeight = abilityWeight;
+            return this;
+        }
+
+        public Builder withPrecisionTarget(Float precisionTarget) {
+            this.precisionTarget = precisionTarget;
+            return this;
+        }
+
+        public Builder withPrecisionTargetMetWeight(Float precisionTargetMetWeight) {
+            this.precisionTargetMetWeight = precisionTargetMetWeight;
+            return this;
+        }
+
+        public Builder withPrecisionTargetNotMetWeight(Float precisionTargetNotMetWeight) {
+            this.precisionTargetNotMetWeight = precisionTargetNotMetWeight;
+            return this;
+        }
+
+        public Builder withStartInfo(Float startInfo) {
+            this.startInfo = startInfo;
+            return this;
+        }
+
+        public Builder withScalar(Float scalar) {
+            this.scalar = scalar;
             return this;
         }
 

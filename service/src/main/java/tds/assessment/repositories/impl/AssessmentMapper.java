@@ -156,6 +156,30 @@ class AssessmentMapper {
         segment.setFieldTestMaxItems(ftMaxItems);
         segment.setFieldTestStartPosition(ftStartPosition);
         segment.setFieldTestEndPosition(ftEndPosition);
+
+        segment.setBlueprintWeight(row.getFloat("blueprintWeight"));
+        segment.setItemWeight(row.getFloat("itemweight"));
+        segment.setAbilityOffset(row.getFloat("abilityOffset"));
+        segment.setCandidateSet1Size(row.getInt("cset1size"));
+        segment.setCandidateSet1Order(row.getString("cset1order"));
+        segment.setRandomizer(row.getInt("cset2random"));
+        segment.setInitialRandom(row.getInt("cset2initialrandom"));
+        segment.setSlope(row.getFloat("slope"));
+        segment.setIntercept(row.getFloat("intercept"));
+        segment.setAdaptiveVersion(row.getString("adaptiveVersion"));
+        segment.setAbilityWeight(row.getFloat("abilityWeight"));
+        segment.setReportingCandidateAbilityWeight(row.getFloat("rcAbilityWeight"));
+        segment.setPrecisionTarget(row.getFloat("precisionTarget"));
+        segment.setPrecisionTargetMetWeight(row.getFloat("precisionTargetMetWeight"));
+        segment.setPrecisionTargetNotMetWeight(row.getFloat("precisionTargetNotMetWeight"));
+        segment.setAdaptiveCut(row.getFloat("adaptiveCut"));
+        segment.setTooCloseStandardErrors(row.getFloat("tooCloseSEs"));
+        segment.setTerminationFlagsAnd(row.getBoolean("terminationFlagsAnd"));
+        segment.setTerminationMinCount(row.getBoolean("terminationMinCount"));
+        segment.setTerminationOverallInformation(row.getBoolean("terminationOverallInfo"));
+        segment.setTerminationReportingCategoryInfo(row.getBoolean("terminationRCInfo"));
+        segment.setTerminationTooClose(row.getBoolean("terminationTooClose"));
+
         return segment;
     }
 
@@ -171,6 +195,10 @@ class AssessmentMapper {
 
         int getInt(String key) {
             return rowData.get(key) != null ? (int) rowData.get(key) : 0;
+        }
+
+        long getLong(String key) {
+            return rowData.get(key) != null ? (long) rowData.get(key) : 0;
         }
 
         float getFloat(String key) {

@@ -268,4 +268,28 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(itemConstraints).isEmpty();
     }
 
+    @Test
+    public void shouldFindAssessmentBySegmentKey() {
+        final String segmentKey = "(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015";
+        Assessment assessment = repository.findAssessmentBySegmentKey(segmentKey).get();
+
+        assertThat(assessment.getKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015");
+
+        Segment segment1 = null;
+        Segment segment2 = null;
+
+        for (Segment segment : assessment.getSegments()) {
+            if (segment.getKey().equals("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015")) {
+                segment1 = segment;
+            } else {
+                segment2 = segment;
+            }
+        }
+
+        assertThat(segment1).isNotNull();
+        assertThat(segment2).isNotNull();
+
+        assertThat(segment1.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
+        assertThat(segment2.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+    }
 }

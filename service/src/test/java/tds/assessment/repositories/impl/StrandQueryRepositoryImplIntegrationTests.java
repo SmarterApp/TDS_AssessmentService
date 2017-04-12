@@ -9,8 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
+import tds.assessment.ContentLevelSpecification;
 import tds.assessment.Strand;
 import tds.assessment.repositories.StrandQueryRepository;
 
@@ -46,7 +48,10 @@ public class StrandQueryRepositoryImplIntegrationTests {
             "0,1,4,4,1,1,NULL,NULL,1,4,NULL,'fixedform',NULL,5,1,20,1,5,'(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015',2,0,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
             "0,'bp1',NULL,NULL,'summative');";
 
-        final String insertStrandSQL =
+        final String insertTblStrandSQL =
+            "INSERT INTO tblstrand (_fk_subject, name, _key) VALUES ('SBAC-MATH', '1-IT', 'Strand5');";
+
+        final String insertAdminStrandSQL =
             "INSERT INTO itembank.tbladminstrand\n" +
                 "   (_fk_adminsubject, _key, _fk_strand, minitems, maxitems, adaptivecut)\n" +
                 "VALUES \n" +
@@ -56,12 +61,49 @@ public class StrandQueryRepositoryImplIntegrationTests {
                 "   ('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'Strand4-key', 'Strand4', 1, 3, NULL),\n" +
                 "   ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'Strand5-key', 'Strand5', 0, 4, NULL)";
 
+        final String insertAffinityGroupSQL =
+            "INSERT INTO affinitygroup (_fk_adminsubject, groupid, minitems, maxitems, isstrictmax, weight, precisiontarget, startability) " +
+                "VALUES ('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'MATHG8_Test3_S2_Claim2_EE_T136', 99, 98, 1, 97.2, 96.1, 100)";
+
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL1);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2a);
         jdbcTemplate.update(tblSetOfAdminSubjectsInsertSQL2b);
-        jdbcTemplate.update(insertStrandSQL);
+        jdbcTemplate.update(insertTblStrandSQL);
+        jdbcTemplate.update(insertAdminStrandSQL);
+        jdbcTemplate.update(insertAffinityGroupSQL);
     }
+
+    @Test
+    public void shouldFindContentLevelSpecificationsBySegmentKey() {
+       final String segmentKey = "(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015";
+
+       List<ContentLevelSpecification> specifications = repository.findContentLevelSpeficationsBySegmentKey(segmentKey);
+
+       assertThat(specifications).hasSize(2);
+
+       ContentLevelSpecification affinitySpec = null;
+       ContentLevelSpecification strandSpec = null;
+
+       for(ContentLevelSpecification spec : specifications) {
+           if("MATHG8_Test3_S2_Claim2_EE_T136".equals(spec.getContentLevel())) {
+               affinitySpec = spec;
+           } else {
+               strandSpec = spec;
+           }
+       }
+
+       assertThat(affinitySpec).isNotNull();
+       assertThat(affinitySpec.getContentLevel()).isEqualTo("MATHG8_Test3_S2_Claim2_EE_T136");
+       assertThat(affinitySpec.isReportingCategory()).isTrue();
+       assertThat(affinitySpec.getElementType()).isEqualTo(2);
+
+       assertThat(strandSpec).isNotNull();
+       assertThat(strandSpec.getContentLevel()).isEqualTo("Strand5");
+       assertThat(strandSpec.isReportingCategory()).isFalse();
+       assertThat(strandSpec.getElementType()).isEqualTo(0);
+    }
+
 
     @Test
     public void shouldFindBothStrandsForNonSegmented() {
@@ -86,6 +128,13 @@ public class StrandQueryRepositoryImplIntegrationTests {
         assertThat(strand1.getMaxItems()).isEqualTo(7);
         assertThat(strand1.getSegmentKey()).isEqualTo(assessmentKey);
         assertThat(strand1.getAdaptiveCut()).isEqualTo(-39.234F);
+        assertThat(strand1.getBpWeight()).isEqualTo(1f);
+        assertThat(strand1.getAbilityWeight()).isNull();
+        assertThat(strand1.getPrecisionTarget()).isNull();
+        assertThat(strand1.getPrecisionTargetMetWeight()).isNull();
+        assertThat(strand1.getPrecisionTargetNotMetWeight()).isNull();
+        assertThat(strand1.getScalar()).isNull();
+        assertThat(strand1.getStartInfo()).isNull();
 
         assertThat(strand2).isNotNull();
         assertThat(strand2.getKey()).isEqualTo("Strand2-key");
@@ -93,6 +142,13 @@ public class StrandQueryRepositoryImplIntegrationTests {
         assertThat(strand2.getMaxItems()).isEqualTo(4);
         assertThat(strand2.getSegmentKey()).isEqualTo(assessmentKey);
         assertThat(strand2.getAdaptiveCut()).isEqualTo(-37.432F);
+        assertThat(strand2.getBpWeight()).isEqualTo(1f);
+        assertThat(strand2.getAbilityWeight()).isNull();
+        assertThat(strand2.getPrecisionTarget()).isNull();
+        assertThat(strand2.getPrecisionTargetMetWeight()).isNull();
+        assertThat(strand2.getPrecisionTargetNotMetWeight()).isNull();
+        assertThat(strand2.getScalar()).isNull();
+        assertThat(strand2.getStartInfo()).isNull();
     }
 
 
@@ -115,6 +171,10 @@ public class StrandQueryRepositoryImplIntegrationTests {
                 strand5 = strand;
             }
         }
+
+        assertThat(strand3).isNotNull();
+        assertThat(strand4).isNotNull();
+        assertThat(strand5).isNotNull();
 
         assertThat(strand3.getKey()).isEqualTo("Strand3-key");
         assertThat(strand3.getMinItems()).isEqualTo(0);

@@ -1,7 +1,9 @@
 package tds.assessment.repositories;
 
+import java.util.List;
 import java.util.Set;
 
+import tds.assessment.ContentLevelSpecification;
 import tds.assessment.Strand;
 
 /**
@@ -16,4 +18,6 @@ public interface StrandQueryRepository {
      * @return the list of the strands for the assessment and its segments
      */
     Set<Strand> findStrands(final String assessmentKey);
+
+    List<ContentLevelSpecification> findContentLevelSpeficationsBySegmentKey(final String segmentKey);
 }

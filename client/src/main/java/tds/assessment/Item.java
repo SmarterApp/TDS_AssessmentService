@@ -12,7 +12,7 @@ import tds.accommodation.Accommodation;
 /**
  * A model representing an item for an {@link tds.assessment.Assessment}
  */
-@JsonIgnoreProperties(value="languageCode", allowGetters = true)
+@JsonIgnoreProperties(value = "languageCode", allowGetters = true)
 public class Item {
     private String id;
     private String itemType;
@@ -24,7 +24,7 @@ public class Item {
     private boolean fieldTest;
     private boolean required;
     private String strand;
-    private List<ItemProperty> itemProperties;
+    private List<ItemProperty> itemProperties = new ArrayList<>();
     private Set<String> formKeys;
     private String itemFilePath;
     private String stimulusFilePath;
@@ -34,6 +34,12 @@ public class Item {
     private String contentLevel;
     private boolean notForScoring;
     private int maxScore;
+    private String itemResponseTheoryModel;
+    private Float itemResponseTheoryAParameter;
+    private String itemResponseTheoryBParameter;
+    private Float itemResponseTheoryCParameter;
+    private String bVector;
+    private String claims;
 
     /**
      * Private empty constructor for frameworks
@@ -292,39 +298,145 @@ public class Item {
         this.maxScore = maxScore;
     }
 
+    public void setId(final String id) {
+        this.id = id;
+    }
+
+    /**
+     * @return item response theory model
+     */
+    public String getItemResponseTheoryModel() {
+        return itemResponseTheoryModel;
+    }
+
+    public void setItemResponseTheoryModel(final String itemResponseTheoryModel) {
+        this.itemResponseTheoryModel = itemResponseTheoryModel;
+    }
+
+    /**
+     * @return item response theory A parameter.  There are 3 parameters passed in for the statistical models (a, b, c)
+     */
+    public Float getItemResponseTheoryAParameter() {
+        return itemResponseTheoryAParameter;
+    }
+
+    public void setItemResponseTheoryAParameter(final Float itemResponseTheoryAParameter) {
+        this.itemResponseTheoryAParameter = itemResponseTheoryAParameter;
+    }
+
+    /**
+     * @return item response theory B parameter.  There are 3 parameters passed in for the statistical models (a, b, c)
+     */
+    public String getItemResponseTheoryBParameter() {
+        return itemResponseTheoryBParameter;
+    }
+
+    public void setItemResponseTheoryBParameter(final String itemResponseTheoryBParameter) {
+        this.itemResponseTheoryBParameter = itemResponseTheoryBParameter;
+    }
+
+    /**
+     * @return item response theory C parameter.  There are 3 parameters passed in for the statistical models (a, b, c)
+     */
+    public Float getItemResponseTheoryCParameter() {
+        return itemResponseTheoryCParameter;
+    }
+
+    public void setItemResponseTheoryCParameter(final Float itemResponseTheoryCParameter) {
+        this.itemResponseTheoryCParameter = itemResponseTheoryCParameter;
+    }
+
+    /**
+     * @return item b vector
+     */
+    public String getbVector() {
+        return bVector;
+    }
+
+    public void setbVector(final String bVector) {
+        this.bVector = bVector;
+    }
+
+    /**
+     * @return the claims associated with the item
+     */
+    public String getClaims() {
+        return claims;
+    }
+
+    public void setClaims(final String claims) {
+        this.claims = claims;
+    }
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Item item = (Item) o;
+        final Item item = (Item) o;
 
+        if (position != item.position) return false;
         if (fieldTest != item.fieldTest) return false;
+        if (required != item.required) return false;
         if (isPrintable != item.isPrintable) return false;
-        if (!id.equals(item.id)) return false;
+        if (notForScoring != item.notForScoring) return false;
+        if (maxScore != item.maxScore) return false;
+        if (id != null ? !id.equals(item.id) : item.id != null) return false;
         if (itemType != null ? !itemType.equals(item.itemType) : item.itemType != null) return false;
         if (segmentKey != null ? !segmentKey.equals(item.segmentKey) : item.segmentKey != null) return false;
         if (groupId != null ? !groupId.equals(item.groupId) : item.groupId != null) return false;
         if (groupKey != null ? !groupKey.equals(item.groupKey) : item.groupKey != null) return false;
         if (blockId != null ? !blockId.equals(item.blockId) : item.blockId != null) return false;
         if (strand != null ? !strand.equals(item.strand) : item.strand != null) return false;
+        if (itemProperties != null ? !itemProperties.equals(item.itemProperties) : item.itemProperties != null)
+            return false;
+        if (formKeys != null ? !formKeys.equals(item.formKeys) : item.formKeys != null) return false;
         if (itemFilePath != null ? !itemFilePath.equals(item.itemFilePath) : item.itemFilePath != null) return false;
-        return stimulusFilePath != null ? stimulusFilePath.equals(item.stimulusFilePath) : item.stimulusFilePath == null;
+        if (stimulusFilePath != null ? !stimulusFilePath.equals(item.stimulusFilePath) : item.stimulusFilePath != null)
+            return false;
+        if (clientId != null ? !clientId.equals(item.clientId) : item.clientId != null) return false;
+        if (mimeType != null ? !mimeType.equals(item.mimeType) : item.mimeType != null) return false;
+        if (contentLevel != null ? !contentLevel.equals(item.contentLevel) : item.contentLevel != null) return false;
+        if (itemResponseTheoryModel != null ? !itemResponseTheoryModel.equals(item.itemResponseTheoryModel) : item.itemResponseTheoryModel != null)
+            return false;
+        if (itemResponseTheoryAParameter != null ? !itemResponseTheoryAParameter.equals(item.itemResponseTheoryAParameter) : item.itemResponseTheoryAParameter != null)
+            return false;
+        if (itemResponseTheoryBParameter != null ? !itemResponseTheoryBParameter.equals(item.itemResponseTheoryBParameter) : item.itemResponseTheoryBParameter != null)
+            return false;
+        if (itemResponseTheoryCParameter != null ? !itemResponseTheoryCParameter.equals(item.itemResponseTheoryCParameter) : item.itemResponseTheoryCParameter != null)
+            return false;
+        if (bVector != null ? !bVector.equals(item.bVector) : item.bVector != null) return false;
+        return claims != null ? claims.equals(item.claims) : item.claims == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (itemType != null ? itemType.hashCode() : 0);
         result = 31 * result + (segmentKey != null ? segmentKey.hashCode() : 0);
         result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
         result = 31 * result + (groupKey != null ? groupKey.hashCode() : 0);
         result = 31 * result + (blockId != null ? blockId.hashCode() : 0);
+        result = 31 * result + position;
         result = 31 * result + (fieldTest ? 1 : 0);
+        result = 31 * result + (required ? 1 : 0);
         result = 31 * result + (strand != null ? strand.hashCode() : 0);
+        result = 31 * result + (itemProperties != null ? itemProperties.hashCode() : 0);
+        result = 31 * result + (formKeys != null ? formKeys.hashCode() : 0);
         result = 31 * result + (itemFilePath != null ? itemFilePath.hashCode() : 0);
         result = 31 * result + (stimulusFilePath != null ? stimulusFilePath.hashCode() : 0);
         result = 31 * result + (isPrintable ? 1 : 0);
+        result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
+        result = 31 * result + (mimeType != null ? mimeType.hashCode() : 0);
+        result = 31 * result + (contentLevel != null ? contentLevel.hashCode() : 0);
+        result = 31 * result + (notForScoring ? 1 : 0);
+        result = 31 * result + maxScore;
+        result = 31 * result + (itemResponseTheoryModel != null ? itemResponseTheoryModel.hashCode() : 0);
+        result = 31 * result + (itemResponseTheoryAParameter != null ? itemResponseTheoryAParameter.hashCode() : 0);
+        result = 31 * result + (itemResponseTheoryBParameter != null ? itemResponseTheoryBParameter.hashCode() : 0);
+        result = 31 * result + (itemResponseTheoryCParameter != null ? itemResponseTheoryCParameter.hashCode() : 0);
+        result = 31 * result + (bVector != null ? bVector.hashCode() : 0);
+        result = 31 * result + (claims != null ? claims.hashCode() : 0);
         return result;
     }
 }

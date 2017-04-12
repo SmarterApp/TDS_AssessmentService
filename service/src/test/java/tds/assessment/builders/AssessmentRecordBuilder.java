@@ -270,6 +270,28 @@ public class AssessmentRecordBuilder {
         segmentResult.put("segmentPosition", segmentIndex);
         segmentResult.put("segFieldTestStartDate", segmentFieldTestStartDate);
         segmentResult.put("segFieldTestEndDate", segmentFieldTestEndDate);
+        segmentResult.put("blueprintWeight", 99.9f);
+        segmentResult.put("itemweight", 99.8f);
+        segmentResult.put("abilityOffset", 99.7f);
+        segmentResult.put("cset1size", 201);
+        segmentResult.put("cset1order", "ability");
+        segmentResult.put("cset2random", 199);
+        segmentResult.put("cset2initialrandom", 198);
+        segmentResult.put("slope", 99.3f);
+        segmentResult.put("intercept", 99.2f);
+        segmentResult.put("adaptiveVersion", "apVersion");
+        segmentResult.put("abilityWeight", 197.1f);
+        segmentResult.put("rcAbilityWeight", 99f);
+        segmentResult.put("precisionTarget", 98.9f);
+        segmentResult.put("precisionTargetMetWeight", 98.8f);
+        segmentResult.put("precisionTargetNotMetWeight",98.7f);
+        segmentResult.put("adaptiveCut", 98.6f);
+        segmentResult.put("tooCloseSEs", 98.5f);
+        segmentResult.put("terminationFlagsAnd", true);
+        segmentResult.put("terminationMinCount", true);
+        segmentResult.put("terminationOverallInfo", true);
+        segmentResult.put("terminationRCInfo", true);
+        segmentResult.put("terminationTooClose", true);
 
         return segmentResult;
     }

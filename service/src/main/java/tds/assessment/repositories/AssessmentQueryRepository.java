@@ -29,4 +29,5 @@ public interface AssessmentQueryRepository {
      */
     List<ItemConstraint> findItemConstraintsForAssessment(final String clientName, final String assessmentId);
 
+    Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey);
 }

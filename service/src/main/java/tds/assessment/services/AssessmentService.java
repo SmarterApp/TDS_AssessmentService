@@ -17,4 +17,11 @@ public interface AssessmentService {
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
     Optional<Assessment> findAssessment(final String clientName, final String assessmentKey);
+
+    /**
+     * Finds an assessment by the segment key including single segmented assessments
+     * @param segmentKey the segment key
+     * @return optional with {@link tds.assessment.Assessment} if found otherwise empty
+     */
+    Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey);
 }

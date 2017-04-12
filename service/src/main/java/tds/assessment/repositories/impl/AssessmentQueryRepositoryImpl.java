@@ -23,6 +23,66 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final AssessmentMapper assessmentMapper = new AssessmentMapper();
 
+    private static final String ASSESSMENT_SELECT_SQL = "SELECT \n" +
+        "   A._key AS assessmentSegmentKey, \n" +
+        "   A.testid AS assessmentSegmentId, \n" +
+        "   A.selectionalgorithm AS selectionAlgorithm, \n" +
+        "   A.startAbility, \n" +
+        "   A.testposition AS segmentPosition, \n" +
+        "   A.minItems, \n" +
+        "   A.maxItems, \n" +
+        "   A.ftminitems AS fieldTestMinItems, \n" +
+        "   A.ftmaxitems AS fieldTestMaxItems, \n" +
+        "   A.ftstartpos AS fieldTestStartPosition, \n" +
+        "   A.ftendpos AS fieldTestEndPosition, \n" +
+        "   S.name AS subject, \n" +
+        "   A.virtualtest AS assessmentKey, \n" +
+        "   A.contract, \n" +
+        "   A.testtype AS assessmentType, \n" +
+        "   A.loadconfig AS loadVersion, \n" +
+        "   A.updateconfig AS updateVersion, \n" +
+        "   CT.ftstartdate, \n" +
+        "   CT.ftenddate, \n" +
+        "   CT.accommodationfamily, \n" +
+        "   CT.maxopportunities, \n" +
+        "   CT.abilityslope, \n" +
+        "   CT.abilityintercept, \n" +
+        "   CT.initialabilitybysubject, \n" +
+        "   CT.validatecompleteness AS validateCompleteness, \n" +
+        "   CT.prefetch, \n" +
+        "   CT.label, \n" +
+        "   CT.deleteUnansweredItems, \n" +
+        "   CT.handscoreproject AS handScored, \n " +
+        "   CT.msb AS multiStageBraille, \n" +
+        "   TA.schoolyear AS academicYear, \n" +
+        "   SP.ftstartdate AS segFieldTestStartDate, \n" +
+        "   SP.ftenddate AS segFieldTestEndDate, \n" +
+        "   SP.label AS segmentLabel, \n" +
+        "   A.blueprintWeight, \n" +
+        "   A.itemWeight, \n" +
+        "   A.abilityOffset, \n " +
+        "   A.cset1size, \n " +
+        "   A.cset1order, \n " +
+        "   A.cset2random, \n " +
+        "   A.cset2initialrandom, \n " +
+        "   A.startAbility, \n " +
+        "   A.startInfo, \n " +
+        "   A.slope, \n " +
+        "   A.intercept, \n " +
+        "   A.bpmetricfunction as adaptiveVersion, \n " +
+        "   A.abilityWeight, \n " +
+        "   A.rcAbilityWeight, \n " +
+        "   A.precisionTarget, \n " +
+        "   A.precisionTargetMetWeight, \n " +
+        "   A.precisionTargetNotMetWeight, \n " +
+        "   A.adaptiveCut, \n " +
+        "   A.tooCloseSEs, \n " +
+        "   A.terminationOverallInfo, \n " +
+        "   A.terminationRCInfo, \n " +
+        "   A.terminationMinCount, \n " +
+        "   A.terminationTooClose, \n " +
+        "   A.terminationFlagsAnd \n ";
+
     @Autowired
     public AssessmentQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -42,41 +102,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
             .addValue("clientName", clientName);
 
         String SQL =
-            "SELECT \n" +
-                "   A._key AS assessmentSegmentKey, \n" +
-                "   A.testid AS assessmentSegmentId, \n" +
-                "   A.selectionalgorithm AS selectionAlgorithm, \n" +
-                "   A.startAbility, \n" +
-                "   A.testposition AS segmentPosition, \n" +
-                "   A.minItems, \n" +
-                "   A.maxItems, \n" +
-                "   A.ftminitems AS fieldTestMinItems, \n" +
-                "   A.ftmaxitems AS fieldTestMaxItems, \n" +
-                "   A.ftstartpos AS fieldTestStartPosition, \n" +
-                "   A.ftendpos AS fieldTestEndPosition, \n" +
-                "   S.name AS subject, \n" +
-                "   A.virtualtest AS assessmentKey, \n" +
-                "   A.contract, \n" +
-                "   A.testtype AS assessmentType, \n" +
-                "   A.loadconfig AS loadVersion, \n" +
-                "   A.updateconfig AS updateVersion, \n" +
-                "   CT.ftstartdate, \n" +
-                "   CT.ftenddate, \n" +
-                "   CT.accommodationfamily, \n" +
-                "   CT.maxopportunities, \n" +
-                "   CT.abilityslope, \n" +
-                "   CT.abilityintercept, \n" +
-                "   CT.initialabilitybysubject, \n" +
-                "   CT.validatecompleteness AS validateCompleteness, \n" +
-                "   CT.prefetch, \n" +
-                "   CT.label, \n" +
-                "   CT.deleteUnansweredItems, \n" +
-                "   CT.handscoreproject AS handScored, \n " +
-                "   CT.msb AS multiStageBraille, \n" +
-                "   TA.schoolyear AS academicYear, \n" +
-                "   SP.ftstartdate AS segFieldTestStartDate, \n" +
-                "   SP.ftenddate AS segFieldTestEndDate, \n" +
-                "   SP.label AS segmentLabel \n" +
+            ASSESSMENT_SELECT_SQL +
                 "FROM \n" +
                 "   itembank.tblsetofadminsubjects A \n" +
                 "JOIN \n" +
@@ -151,5 +177,54 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 .withAssessmentId(rs.getString("assessmentId"))
                 .build()
         );
+    }
+
+    @Override
+    public Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey) {
+        SqlParameterSource parameters = new MapSqlParameterSource("segmentKey", segmentKey);
+
+        String SQL =
+            ASSESSMENT_SELECT_SQL +
+                "FROM \n" +
+                "   itembank.tblsetofadminsubjects A \n" +
+                "LEFT JOIN tblsetofadminsubjects B \n" +
+                "   ON (A.virtualtest = B.virtualtest OR B.virtualtest = A._key) \n" +
+                "JOIN \n" +
+                "   configs.client_testproperties CT \n" +
+                "   ON CT.testid = A.testid \n " +
+                "   OR CT.testid = (\n" +
+                "       SELECT parentTsa.testid \n" +
+                "       FROM itembank.tblsetofadminsubjects tsa \n" +
+                "       JOIN itembank.tblsetofadminsubjects parentTsa ON tsa.virtualtest = parentTsa._key \n" +
+                "       WHERE tsa._key = A._key \n" +
+                "   ) \n" +
+                "LEFT JOIN \n" +
+                "   configs.client_segmentproperties SP \n" +
+                "   ON SP.segmentid = A.testid \n" +
+                "LEFT JOIN \n" +
+                "   itembank.tblsubject S \n" +
+                "   ON S._key = A._fk_Subject \n" +
+                "JOIN \n" +
+                "   itembank.tblclient CL \n" +
+                "   ON (CL.name = SP.clientname OR CL.name = CT.clientname) \n" +
+                "LEFT JOIN \n" +
+                "   itembank.tbltestadmin TA \n" +
+                "   ON TA._fk_client = CL._key \n" +
+                "WHERE \n" +
+                "   B._key = :segmentKey \n" +
+                "ORDER BY  \n" +
+                "   assessmentKey DESC, \n" +
+                "   A.testPosition";
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL, parameters);
+        Optional<Assessment> maybeAssessment = Optional.empty();
+
+        if (rows.isEmpty()) {
+            logger.debug("Could not find an Assessment in tblsetofadminsubjects using segmentKey = '%s'", segmentKey);
+        } else {
+            maybeAssessment = assessmentMapper.mapResults(rows);
+        }
+
+        return maybeAssessment;
     }
 }

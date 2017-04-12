@@ -39,7 +39,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   item.itemid AS clientId, \n" +
                 "   adminItems._fk_adminsubject AS segmentKey,\n" +
                 "   formItem._fk_testform AS formKey,\n" +
-                "   strands.name as contentLevel, \n" +
+                "   strands.name AS contentLevel, \n" +
                 "   adminItems.groupid,\n" +
                 "   adminItems.groupkey,\n" +
                 "   adminItems.blockid, \n" +
@@ -51,6 +51,12 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   adminItems.notForScoring, \n" +
                 "   CONCAT(client.homepath, bank.homepath, bank.itempath, item.filepath, item.filename) AS itemFilePath, \n" +
                 "   CONCAT(client.homepath, bank.homepath, bank.stimulipath, stimulus.filepath, stimulus.filename) AS stimulusFilePath, \n" +
+                "   upper(adminItems.IRT_Model) AS irtModel, \n" +
+                "   adminItems.IRT_b AS irtB, \n" +
+                "   adminItems.IRT_a AS irtA, \n" +
+                "   adminItems.IRT_c AS irtC, \n" +
+                "   adminItems.bVector, \n" +
+                "   adminItems.clString, \n" +
                 "   adminItems.isprintable \n" +
                 "FROM \n" +
                 "   itembank.tblsetofadminitems AS adminItems \n" +
@@ -116,6 +122,12 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 item.setContentLevel(resultExtractor.getString("contentLevel"));
                 item.setClientId(resultExtractor.getString("clientId"));
                 item.setNotForScoring(resultExtractor.getBoolean("notForScoring"));
+                item.setbVector(resultExtractor.getString("bVector"));
+                item.setItemResponseTheoryModel(resultExtractor.getString("irtModel"));
+                item.setItemResponseTheoryAParameter((Float) resultExtractor.getObject("irtA"));
+                item.setItemResponseTheoryBParameter(resultExtractor.getString("irtB"));
+                item.setItemResponseTheoryCParameter((Float) resultExtractor.getObject("irtC"));
+                item.setClaims(resultExtractor.getString("clString"));
             }
 
             return itemsMap.entrySet().stream()
@@ -217,6 +229,67 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
         }
 
         return maybeItemFile;
+    }
+
+    @Override
+    public List<Item> findItemsForSegment(final String segmentKey) {
+        SqlParameterSource parameters = new MapSqlParameterSource("segmentKey", segmentKey);
+
+        String SQL = "SELECT" +
+            "   item._key AS itemId,\n" +
+            "   item.itemtype,\n" +
+            "   item.scorepoint AS maxScore, \n" +
+            "   item.itemid AS clientId, \n" +
+            "   adminItems.groupid,\n" +
+            "   adminItems.groupkey,\n" +
+            "   adminItems.blockid, \n" +
+            "   adminItems.itemposition AS position,\n" +
+            "   adminItems.isfieldtest,\n" +
+            "   adminItems.isrequired, \n" +
+            "   adminItems.strandname, \n" +
+            "   adminItems.responseMimeType, \n" +
+            "   adminItems.notForScoring, \n" +
+            "   adminItems._fk_Item AS itemkey, \n" +
+            "   adminItems.isActive, " +
+            "   upper(adminItems.IRT_Model) AS irtModel, \n" +
+            "   adminItems.IRT_b AS irtB, \n" +
+            "   adminItems.IRT_a AS irtA, \n" +
+            "   adminItems.IRT_c AS irtC, \n" +
+            "   adminItems.bVector, \n" +
+            "   adminItems.clString, \n" +
+            "   adminItems.isPrintable \n" +
+            "FROM \n" +
+            "   itembank.tblsetofadminitems AS adminItems \n" +
+            "JOIN \n" +
+            "   itembank.tblitem item \n" +
+            "   ON item._key = adminItems._fk_item \n" +
+            "WHERE \n" +
+            "   _fk_AdminSubject = :segmentKey";
+
+        return jdbcTemplate.query(SQL, parameters, (rs, rowNum) -> {
+            Item item = new Item(rs.getString("itemId"));
+            item.setItemType(rs.getString("itemtype"));
+            item.setGroupId(rs.getString("groupid"));
+            item.setGroupKey(rs.getString("groupkey"));
+            item.setBlockId((rs.getString("blockid")));
+            item.setPosition(rs.getInt("position"));
+            item.setFieldTest(rs.getBoolean("isfieldtest"));
+            item.setRequired(rs.getBoolean("isrequired"));
+            item.setStrand(rs.getString("strandname"));
+            item.setPrintable(rs.getBoolean("isprintable"));
+            item.setMimeType(rs.getString("responseMimeType"));
+            item.setMaxScore(rs.getInt("maxScore"));
+            item.setClientId(rs.getString("clientId"));
+            item.setNotForScoring(rs.getBoolean("notForScoring"));
+            item.setbVector(rs.getString("bVector"));
+            item.setItemResponseTheoryModel(rs.getString("irtModel"));
+            item.setItemResponseTheoryAParameter((Float) rs.getObject("irtA"));
+            item.setItemResponseTheoryBParameter(rs.getString("irtB"));
+            item.setItemResponseTheoryCParameter((Float) rs.getObject("irtC"));
+            item.setClaims(rs.getString("clString"));
+
+            return item;
+        });
     }
 
     private static String createItemKey(final long bankKey, final long key) {

@@ -62,12 +62,12 @@ public class ItemQueryRepositoryImplIntegrationTests {
         final String tblSetAdminItemsInsertSQL =
             "INSERT INTO itembank.tblsetofadminitems \n" +
                 "   (_fk_item, _fk_adminsubject, groupid, groupkey, blockid, itemposition, isfieldtest, isactive, isrequired, " +
-                "   strandname, isprintable, responsemimetype, notforscoring) \n" +
+                "   strandname, isprintable, responsemimetype, notforscoring, irt_model, irt_a, irt_b, irt_c, clstring, bvector) \n" +
                 "VALUES \n" +
-                "   ('187-1234', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-1', 'GK-1', 'A', 1, 0, 1, 1, 'strand1', 0, 'text/plain', 0),\n" +
-                "   ('187-1235', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-2', 'GK-2', 'A', 2, 0, 1, 1, 'strand2', 0, 'text/xml', 1),\n" +
-                "   ('187-1236', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'G-3', 'GK-3', 'A', 1, 0, 1, 1, 'strand3', 1, 'foo', 0), \n" +
-                "   ('187-1237', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'G-4', 'GK-4', 'A', 1, 1, 1, 1, 'silver strand', 0, 'bar', 1)";
+                "   ('187-1234', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-1', 'GK-1', 'A', 1, 0, 1, 1, 'strand1', 0, 'text/plain', 0, NULL, NULL, NULL, NULL, NULL, NULL),\n" +
+                "   ('187-1235', '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 'G-2', 'GK-2', 'A', 2, 0, 1, 1, 'strand2', 0, 'text/xml', 1, NULL, NULL, NULL, NULL, NULL, NULL),\n" +
+                "   ('187-1236', '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 'G-3', 'GK-3', 'A', 1, 0, 1, 1, 'strand3', 1, 'foo', 0, 'IRT3PLn', 0.54343, '1.2160500288009644', 0, 'SBAC-2-W;SBAC-2-W|9-5', 1.21605), \n" +
+                "   ('187-1237', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 'G-4', 'GK-4', 'A', 1, 1, 1, 1, 'silver strand', 0, 'bar', 1, NULL, NULL, NULL, NULL, NULL, NULL)";
 
         final String tblItemPropsInsertSQL =
             "INSERT INTO itembank.tblitemprops (_fk_item, propname, propvalue, propdescription, _fk_adminsubject, isactive) VALUES \n" +
@@ -321,5 +321,28 @@ public class ItemQueryRepositoryImplIntegrationTests {
         Optional<ItemFileMetadata> maybeItemFile = repository.findItemFileMetadataByItemKey("SBAC_PT", 999, 1234);
 
         assertThat(maybeItemFile).isNotPresent();
+    }
+
+    @Test
+    public void shouldFindItemsForSegmentKey() {
+        List<Item> items = repository.findItemsForSegment("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+
+        assertThat(items).hasSize(1);
+
+        Item item = items.get(0);
+
+        assertThat(item.getId()).isEqualTo("187-1236");
+        assertThat(item.getItemType()).isEqualTo("WER");
+        assertThat(item.getGroupId()).isEqualTo("G-3");
+        assertThat(item.getGroupKey()).isEqualTo("GK-3");
+        assertThat(item.getBlockId()).isEqualTo("A");
+        assertThat(item.getPosition()).isEqualTo(1);
+        assertThat(item.getStrand()).isEqualTo("strand3");
+        assertThat(item.getItemResponseTheoryModel()).isEqualTo("IRT3PLN");
+        assertThat(item.getItemResponseTheoryAParameter()).isEqualTo(0.54343f);
+        assertThat(item.getItemResponseTheoryBParameter()).isEqualTo("1.2160500288009644");
+        assertThat(item.getItemResponseTheoryCParameter()).isEqualTo(0f);
+        assertThat(item.getbVector()).isEqualTo("1.21605");
+        assertThat(item.getClaims()).isEqualTo("SBAC-2-W;SBAC-2-W|9-5");
     }
 }

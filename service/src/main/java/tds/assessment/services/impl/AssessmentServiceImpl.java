@@ -77,4 +77,9 @@ class AssessmentServiceImpl implements AssessmentService {
 
         return maybeAssessment;
     }
+
+    @Override
+    public Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey) {
+        return assessmentQueryRepository.findAssessmentBySegmentKey(segmentKey);
+    }
 }

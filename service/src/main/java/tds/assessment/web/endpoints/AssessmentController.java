@@ -13,7 +13,7 @@ import tds.assessment.services.AssessmentService;
 import tds.common.web.exceptions.NotFoundException;
 
 /**
- * Controller handling admin subject related entities
+ * Controller handling Assessments
  */
 @RestController
 class AssessmentController {
