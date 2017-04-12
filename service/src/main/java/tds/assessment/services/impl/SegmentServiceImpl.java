@@ -67,7 +67,7 @@ public class SegmentServiceImpl implements SegmentService {
         Assessment assessment = maybeAssessment.get();
         Segment segment = assessment.getSegment(segmentKey);
 
-        List<ContentLevelSpecification> specifications = strandQueryRepository.findContentLevelSpeficationsBySegmentKey(segmentKey);
+        List<ContentLevelSpecification> specifications = strandQueryRepository.findContentLevelSpecificationsBySegmentKey(segmentKey);
         List<ItemGroup> itemGroups = itemGroupQueryRepository.findItemGroupsBySegment(segmentKey);
         List<Item> segmentItems = itemQueryRepository.findItemsForSegment(segmentKey);
         List<Item> assessmentItems = new ArrayList<>();

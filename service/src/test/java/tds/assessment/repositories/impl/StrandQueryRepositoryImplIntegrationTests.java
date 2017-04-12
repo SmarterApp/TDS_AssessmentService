@@ -78,7 +78,7 @@ public class StrandQueryRepositoryImplIntegrationTests {
     public void shouldFindContentLevelSpecificationsBySegmentKey() {
        final String segmentKey = "(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015";
 
-       List<ContentLevelSpecification> specifications = repository.findContentLevelSpeficationsBySegmentKey(segmentKey);
+       List<ContentLevelSpecification> specifications = repository.findContentLevelSpecificationsBySegmentKey(segmentKey);
 
        assertThat(specifications).hasSize(2);
 

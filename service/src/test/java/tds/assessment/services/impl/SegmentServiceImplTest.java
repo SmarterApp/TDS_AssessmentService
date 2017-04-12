@@ -98,7 +98,7 @@ public class SegmentServiceImplTest {
         ItemProperty relevantProperty = new ItemProperty(PROP_NAME_TYPE, OFFGADE_PROP_VALUE_PREFIX + "_Something");
 
         when(mockAssessmentService.findAssessmentBySegmentKey("segmentKey")).thenReturn(Optional.of(assessment));
-        when(mockStrandQueryRepository.findContentLevelSpeficationsBySegmentKey("segmentKey")).thenReturn(Collections.singletonList(spec));
+        when(mockStrandQueryRepository.findContentLevelSpecificationsBySegmentKey("segmentKey")).thenReturn(Collections.singletonList(spec));
         when(mockItemControlParametersQueryRepository.findControlParametersForSegment("segmentKey")).thenReturn(Collections.singletonList(itemControlParameter));
         when(mockItemGroupQueryRepository.findItemGroupsBySegment("segmentKey")).thenReturn(Collections.singletonList(itemGroup));
         when(mockItemQueryRepository.findItemsForSegment("assessmentKey")).thenReturn(Collections.singletonList(parentItem));

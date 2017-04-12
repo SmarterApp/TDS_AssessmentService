@@ -60,7 +60,7 @@ public class StrandQueryRepositoryImpl implements StrandQueryRepository {
     }
 
     @Override
-    public List<ContentLevelSpecification> findContentLevelSpeficationsBySegmentKey(final String segmentKey) {
+    public List<ContentLevelSpecification> findContentLevelSpecificationsBySegmentKey(final String segmentKey) {
         SqlParameterSource parameters = new MapSqlParameterSource("segmentKey", segmentKey);
 
         final String SQL = "(SELECT" +

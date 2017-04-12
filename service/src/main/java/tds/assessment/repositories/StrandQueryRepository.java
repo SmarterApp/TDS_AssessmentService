@@ -19,5 +19,11 @@ public interface StrandQueryRepository {
      */
     Set<Strand> findStrands(final String assessmentKey);
 
-    List<ContentLevelSpecification> findContentLevelSpeficationsBySegmentKey(final String segmentKey);
+    /**
+     * Finds the content level specifications by segment key
+     *
+     * @param segmentKey the segment key
+     * @return list of {@link tds.assessment.ContentLevelSpecification}
+     */
+    List<ContentLevelSpecification> findContentLevelSpecificationsBySegmentKey(final String segmentKey);
 }

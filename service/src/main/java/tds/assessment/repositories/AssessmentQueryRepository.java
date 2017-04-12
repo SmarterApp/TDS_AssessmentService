@@ -23,11 +23,17 @@ public interface AssessmentQueryRepository {
     /**
      * Finds a list of {@link tds.assessment.ItemConstraint}s for the assessment
      *
-     * @param clientName the client name associated with the assessment
+     * @param clientName   the client name associated with the assessment
      * @param assessmentId the assessment id for the item's {@link tds.assessment.Assessment}
      * @return A list of item constraints for the assessment
      */
     List<ItemConstraint> findItemConstraintsForAssessment(final String clientName, final String assessmentId);
 
+    /**
+     * Finds an {@link tds.assessment.Assessment} by a segment key
+     *
+     * @param segmentKey the segment's key
+     * @return a {@link tds.assessment.Assessment} if found otherwise empty
+     */
     Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey);
 }
