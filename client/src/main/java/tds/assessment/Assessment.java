@@ -38,6 +38,13 @@ public class Assessment {
     private boolean validateCompleteness;
     private boolean deleteUnansweredItems;
     private boolean multiStageBraille;
+    private List<String> grades;
+    private Integer handScoreProjectId;
+    private String contract;
+    private String type;
+    private String academicYear;
+    private Long loadVersion;
+    private Long updateVersion;
 
     public List<ItemConstraint> getItemConstraints() {
         return itemConstraints != null ? itemConstraints : new ArrayList<ItemConstraint>();
@@ -306,5 +313,81 @@ public class Assessment {
     public void setMultiStageBraille(boolean multiStageBraille) {
         this.multiStageBraille = multiStageBraille;
     }
-    
+
+    /**
+     * @return The string representing the grade or grades of the assessment
+     */
+    public List<String> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(List<String> grades) {
+        this.grades = grades;
+    }
+
+    /**
+     * @return the id of the handscore project (optional)
+     */
+    public Integer getHandScoreProjectId() {
+        return handScoreProjectId;
+    }
+
+    public void setHandScored(Integer handScoreProjectId) {
+        this.handScoreProjectId = handScoreProjectId;
+    }
+
+    /**
+     * @return The contract name of the assessment
+     */
+    public String getContract() {
+        return contract;
+    }
+
+    public void setContract(String contract) {
+        this.contract = contract;
+    }
+
+    /**
+     * @return The type of assessment (e.g., summative, interim)
+     */
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * @return String representing the assessment's academic year
+     */
+    public String getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
+    }
+
+    /**
+     * @return The version of the assessment when first loaded
+     */
+    public Long getLoadVersion() {
+        return loadVersion;
+    }
+
+    public void setLoadVersion(Long loadVersion) {
+        this.loadVersion = loadVersion;
+    }
+
+    /**
+     * @return The version of the assessment last updated
+     */
+    public Long getUpdateVersion() {
+        return updateVersion;
+    }
+
+    public void setUpdateVersion(Long updateVersion) {
+        this.updateVersion = updateVersion;
+    }
 }

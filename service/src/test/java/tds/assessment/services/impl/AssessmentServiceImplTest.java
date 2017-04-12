@@ -16,6 +16,7 @@ import tds.assessment.Segment;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
+import tds.assessment.repositories.GradesQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
@@ -42,13 +43,16 @@ public class AssessmentServiceImplTest {
 
     @Mock
     private StrandQueryRepository mockStrandQueryRepository;
+
+    @Mock
+    private GradesQueryRepository mockGradesQueryRepository;
     
     private AssessmentService service;
 
     @Before
     public void setUp() {
         service = new AssessmentServiceImpl(mockAssessmentQueryRepository, mockItemQueryRepository, mockFormQueryRepository,
-            mockStrandQueryRepository, mockAccommodationsQueryRepository);
+            mockStrandQueryRepository, mockAccommodationsQueryRepository, mockGradesQueryRepository);
     }
 
     @Test
@@ -65,6 +69,7 @@ public class AssessmentServiceImplTest {
         when(mockItemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(mockItemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(mockStrandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
+        when(mockGradesQueryRepository.findGrades("theKey")).thenReturn(new ArrayList<>());
 
         Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
 
@@ -73,6 +78,7 @@ public class AssessmentServiceImplTest {
         verify(mockItemQueryRepository).findActiveItemsProperties("theKey");
         verify(mockItemQueryRepository).findItemsForAssessment("theKey");
         verify(mockStrandQueryRepository).findStrands("theKey");
+        verify(mockGradesQueryRepository).findGrades("theKey");
 
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
     }
@@ -91,6 +97,7 @@ public class AssessmentServiceImplTest {
         when(mockItemQueryRepository.findActiveItemsProperties("theKey")).thenReturn(new ArrayList<>());
         when(mockItemQueryRepository.findItemsForAssessment("theKey")).thenReturn(new ArrayList<>());
         when(mockStrandQueryRepository.findStrands("theKey")).thenReturn(new HashSet<>());
+        when(mockGradesQueryRepository.findGrades("theKey")).thenReturn(new ArrayList<>());
 
         Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
 
@@ -99,6 +106,7 @@ public class AssessmentServiceImplTest {
         verify(mockItemQueryRepository).findActiveItemsProperties("theKey");
         verify(mockItemQueryRepository).findItemsForAssessment("theKey");
         verify(mockStrandQueryRepository).findStrands("theKey");
+        verify(mockGradesQueryRepository).findGrades("theKey");
 
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
     }

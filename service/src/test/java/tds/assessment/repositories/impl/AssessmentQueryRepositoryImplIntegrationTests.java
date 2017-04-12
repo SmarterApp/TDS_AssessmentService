@@ -47,7 +47,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         // Non-segmented, test
         String tblSetOfAdminSubjectsInsertSQL1 =
             "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016','SBAC_PT', 'SBAC_PT-ELA','IRP-Perf-ELA-11'," +
-                "0,1,4,4,1,1,3,7,1,4,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
+                "0,1,4,4,1,1,3,7,1,4,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,2112,1184,5,0,'Oregon',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
                 "0,'bp1',NULL,NULL,'summative');";
         // Segmented test assessment
         String tblSetOfAdminSubjectsInsertSQL2 = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015','SBAC_PT', 'SBAC_PT-ELA','SBAC-Mathematics-8'," +
@@ -81,9 +81,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "   ('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ftstartDate", ResultSetMapperUtility.mapJodaInstantToTimestamp(Instant.now()));
-        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label, msb) VALUES " +
-            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf', 1), \n" +
-            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math', 0);\n";
+        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label, msb, handscoreproject) VALUES " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf', 1, 1234), \n" +
+            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math', 0, 4321);\n";
 
         SqlParameterSource segPropsParams = new MapSqlParameterSource("ftstartdate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtStartDate))
             .addValue("ftenddate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtEndDate));
@@ -91,6 +91,10 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
             "INSERT INTO configs.client_segmentproperties (ispermeable, clientname, entryapproval, exitapproval, itemreview, segmentid, segmentposition, parenttest, ftstartdate, ftenddate, label, modekey) VALUES " +
                 "(1, 'SBAC_PT', 0, 0, 0, 'SBAC-SEG1-MATH-8', 1, 'SBAC-Mathematics-8', :ftstartdate, :ftenddate, 'Grade 8 MATH segment', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015'), \n" +
                 "(1, 'SBAC_PT', 0, 0, 0, 'SBAC-SEG2-MATH-8', 2, 'SBAC-Mathematics-8', :ftstartdate, :ftenddate, 'Grade 8 MATH segment', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015')";
+
+        final String tblTestAdminInsertSQL =
+            "INSERT INTO itembank.tbltestadmin (schoolyear, season, _key, _fk_client) " +
+                "VALUES ('2112-2113', 'winter', 'SBAC_PT', 1)";
 
         jdbcTemplate.update(itemConstraintsInsertSql, new MapSqlParameterSource());
         jdbcTemplate.update(tblClientInsertSQL, new MapSqlParameterSource());
@@ -102,6 +106,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         jdbcTemplate.update(tblSetOfAdminSubjectsSBACInsertSQL, new MapSqlParameterSource());
         jdbcTemplate.update(clientTestPropertiesInsertSQL, parameters);
         jdbcTemplate.update(clientSegmentPropertiesInsertSQL, segPropsParams);
+        jdbcTemplate.update(tblTestAdminInsertSQL, new MapSqlParameterSource());
     }
 
     @Test
@@ -127,6 +132,12 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.getAbilityIntercept()).isEqualTo(2.3f);
         assertThat(assessment.isInitialAbilityBySubject()).isTrue();
         assertThat(assessment.isMultiStageBraille()).isTrue();
+        assertThat(assessment.getAcademicYear()).isEqualTo("2112-2113");
+        assertThat(assessment.getHandScoreProjectId()).isEqualTo(1234);
+        assertThat(assessment.getLoadVersion()).isEqualTo(2112L);
+        assertThat(assessment.getUpdateVersion()).isEqualTo(1184L);
+        assertThat(assessment.getContract()).isEqualTo("Oregon");
+        assertThat(assessment.getType()).isEqualTo("summative");
 
         assertThat(assessment.getSegments().size()).isEqualTo(1);
         Segment seg = assessment.getSegments().get(0);
@@ -172,6 +183,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.shouldDeleteUnansweredItems()).isFalse();
         assertThat(assessment.isValidateCompleteness()).isTrue();
         assertThat(assessment.getLabel()).isEqualTo("Grade 8 Math");
+        assertThat(assessment.getAcademicYear()).isEqualTo("2112-2113");
 
         Segment segment1 = null;
         Segment segment2 = null;
