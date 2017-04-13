@@ -287,6 +287,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             item.setItemResponseTheoryBParameter(rs.getString("irtB"));
             item.setItemResponseTheoryCParameter((Float) rs.getObject("irtC"));
             item.setClaims(rs.getString("clString"));
+            item.setActive(rs.getBoolean("isActive"));
 
             return item;
         });

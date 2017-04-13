@@ -40,6 +40,7 @@ public class Item {
     private Float itemResponseTheoryCParameter;
     private String bVector;
     private String claims;
+    private boolean active;
 
     /**
      * Private empty constructor for frameworks
@@ -368,6 +369,17 @@ public class Item {
         this.claims = claims;
     }
 
+    /**
+     * @return {@code true} if the item is active
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(final boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -381,6 +393,7 @@ public class Item {
         if (isPrintable != item.isPrintable) return false;
         if (notForScoring != item.notForScoring) return false;
         if (maxScore != item.maxScore) return false;
+        if (active != item.active) return false;
         if (id != null ? !id.equals(item.id) : item.id != null) return false;
         if (itemType != null ? !itemType.equals(item.itemType) : item.itemType != null) return false;
         if (segmentKey != null ? !segmentKey.equals(item.segmentKey) : item.segmentKey != null) return false;
@@ -437,6 +450,7 @@ public class Item {
         result = 31 * result + (itemResponseTheoryCParameter != null ? itemResponseTheoryCParameter.hashCode() : 0);
         result = 31 * result + (bVector != null ? bVector.hashCode() : 0);
         result = 31 * result + (claims != null ? claims.hashCode() : 0);
+        result = 31 * result + (active ? 1 : 0);
         return result;
     }
 }

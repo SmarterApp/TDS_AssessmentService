@@ -204,6 +204,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1237/item-187-1237.xml");
         assertThat(item1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-7321/stim-187-7321.xml");
         assertThat(item1.isPrintable()).isFalse();
+        assertThat(item1.isActive()).isFalse();
     }
 
     @Test
@@ -344,5 +345,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item.getItemResponseTheoryCParameter()).isEqualTo(0f);
         assertThat(item.getbVector()).isEqualTo("1.21605");
         assertThat(item.getClaims()).isEqualTo("SBAC-2-W;SBAC-2-W|9-5");
+        assertThat(item.isActive()).isTrue();
     }
 }
