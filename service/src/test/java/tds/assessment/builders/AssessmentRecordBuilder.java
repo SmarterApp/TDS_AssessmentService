@@ -272,6 +272,7 @@ public class AssessmentRecordBuilder {
         segmentResult.put("segFieldTestEndDate", segmentFieldTestEndDate);
         segmentResult.put("blueprintWeight", 99.9f);
         segmentResult.put("itemweight", 99.8f);
+        segmentResult.put("startInfo", 1.6f);
         segmentResult.put("abilityOffset", 99.7f);
         segmentResult.put("cset1size", 201);
         segmentResult.put("cset1order", "ability");

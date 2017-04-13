@@ -54,10 +54,10 @@ public class Segment {
     private boolean terminationFlagsAnd;
     private float slope;
     private float intercept;
+    private float startInfo;
 
     // Fixed-form specific fields
     private List<Form> forms = new ArrayList<>();
-
     // Adaptive-specific fields
     private Set<Strand> strands = new HashSet<>();
     private List<Item> items = new ArrayList<>();
@@ -68,6 +68,14 @@ public class Segment {
         this.selectionAlgorithm = algorithm;
     }
 
+    public float getStartInfo() {
+        return startInfo;
+    }
+
+    public void setStartInfo(final float startInfo) {
+        this.startInfo = startInfo;
+    }
+    
     /**
      * @return key to the segment
      */

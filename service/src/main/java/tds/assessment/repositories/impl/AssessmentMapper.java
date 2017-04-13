@@ -179,6 +179,7 @@ class AssessmentMapper {
         segment.setTerminationOverallInformation(row.getBoolean("terminationOverallInfo"));
         segment.setTerminationReportingCategoryInfo(row.getBoolean("terminationRCInfo"));
         segment.setTerminationTooClose(row.getBoolean("terminationTooClose"));
+        segment.setStartInfo(row.getFloat("startInfo"));
 
         return segment;
     }

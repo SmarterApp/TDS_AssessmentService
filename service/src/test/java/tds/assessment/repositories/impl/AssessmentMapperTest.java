@@ -263,6 +263,7 @@ public class AssessmentMapperTest {
         assertThat(firstSegment.getFieldTestEndPosition()).isEqualTo(20);
         assertThat(firstSegment.getPosition()).isEqualTo(1);
         assertThat(firstSegment.getStartAbility()).isEqualTo(1.5f);
+        assertThat(firstSegment.getStartInfo()).isEqualTo(1.6f);
         assertThat(firstSegment.getSubject()).isEqualTo("ELA");
         assertThat(firstSegment.getFieldTestStartDate().getMillis()).isEqualTo(segmentFieldTestStartDate.getTime());
         assertThat(firstSegment.getFieldTestEndDate().getMillis()).isEqualTo(segmentFieldTestEndDate.getTime());
