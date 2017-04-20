@@ -41,6 +41,8 @@ public class Item {
     private String bVector;
     private String claims;
     private boolean active;
+    private long itemKey;
+    private long bankKey;
 
     /**
      * Private empty constructor for frameworks
@@ -380,6 +382,28 @@ public class Item {
         this.active = active;
     }
 
+    /**
+     * @return the item key.  This is a fk to the item in the item hierarchy
+     */
+    public long getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(final long itemKey) {
+        this.itemKey = itemKey;
+    }
+
+    /**
+     * @return the item bank key which is a fk to the bank in the item hierarchy
+     */
+    public long getBankKey() {
+        return bankKey;
+    }
+
+    public void setBankKey(final long bankKey) {
+        this.bankKey = bankKey;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -394,6 +418,8 @@ public class Item {
         if (notForScoring != item.notForScoring) return false;
         if (maxScore != item.maxScore) return false;
         if (active != item.active) return false;
+        if (itemKey != item.itemKey) return false;
+        if (bankKey != item.bankKey) return false;
         if (id != null ? !id.equals(item.id) : item.id != null) return false;
         if (itemType != null ? !itemType.equals(item.itemType) : item.itemType != null) return false;
         if (segmentKey != null ? !segmentKey.equals(item.segmentKey) : item.segmentKey != null) return false;
@@ -451,6 +477,8 @@ public class Item {
         result = 31 * result + (bVector != null ? bVector.hashCode() : 0);
         result = 31 * result + (claims != null ? claims.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (int) (itemKey ^ (itemKey >>> 32));
+        result = 31 * result + (int) (bankKey ^ (bankKey >>> 32));
         return result;
     }
 }

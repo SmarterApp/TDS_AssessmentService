@@ -37,6 +37,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   item.itemtype,\n" +
                 "   item.scorepoint AS maxScore, \n" +
                 "   item.itemid AS clientId, \n" +
+                "   item._efk_item as itemKey, \n" +
+                "   item._efk_itembank as bankKey, \n" +
                 "   adminItems._fk_adminsubject AS segmentKey,\n" +
                 "   formItem._fk_testform AS formKey,\n" +
                 "   strands.name AS contentLevel, \n" +
@@ -128,6 +130,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 item.setItemResponseTheoryBParameter(resultExtractor.getString("irtB"));
                 item.setItemResponseTheoryCParameter((Float) resultExtractor.getObject("irtC"));
                 item.setClaims(resultExtractor.getString("clString"));
+                item.setItemKey(resultExtractor.getLong("itemKey"));
+                item.setBankKey(resultExtractor.getLong("bankKey"));
             }
 
             return itemsMap.entrySet().stream()
@@ -240,6 +244,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "   item.itemtype,\n" +
             "   item.scorepoint AS maxScore, \n" +
             "   item.itemid AS clientId, \n" +
+            "   item._efk_item as itemKey, \n" +
+            "   item._efk_itembank as bankKey, \n" +
             "   adminItems.groupid,\n" +
             "   adminItems.groupkey,\n" +
             "   adminItems.blockid, \n" +
@@ -288,6 +294,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             item.setItemResponseTheoryCParameter((Float) rs.getObject("irtC"));
             item.setClaims(rs.getString("clString"));
             item.setActive(rs.getBoolean("isActive"));
+            item.setItemKey(rs.getLong("itemKey"));
+            item.setBankKey(rs.getLong("bankKey"));
 
             return item;
         });

@@ -246,6 +246,8 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg1.getContentLevel()).isEqualTo("contentLevel");
         assertThat(item1Seg1.getMaxScore()).isEqualTo(1);
         assertThat(item1Seg1.getMimeType()).isEqualTo("text/plain");
+        assertThat(item1Seg1.getItemKey()).isEqualTo(1234);
+        assertThat(item1Seg1.getBankKey()).isEqualTo(187);
 
         assertThat(item2Seg1.getGroupId()).isEqualTo("G-2");
         assertThat(item2Seg1.getGroupKey()).isEqualTo("GK-2");
