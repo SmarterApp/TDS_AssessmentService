@@ -292,4 +292,13 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(segment1.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
         assertThat(segment2.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
     }
+
+    @Test
+    public void shouldFindSingleSegmentedAssessmentBySegmentKey() {
+        Optional<Assessment> maybeAssessment = repository.findAssessmentBySegmentKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+
+        assertThat(maybeAssessment).isPresent();
+
+        assertThat(maybeAssessment.get().getKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+    }
 }

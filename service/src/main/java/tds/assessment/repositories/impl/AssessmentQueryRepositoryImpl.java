@@ -211,7 +211,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "   itembank.tbltestadmin TA \n" +
                 "   ON TA._fk_client = CL._key \n" +
                 "WHERE \n" +
-                "   B._key = :segmentKey \n" +
+                "   B._key = :segmentKey \n OR A._key = :segmentKey \n" +
                 "ORDER BY  \n" +
                 "   assessmentKey DESC, \n" +
                 "   A.testPosition";
