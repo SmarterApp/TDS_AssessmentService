@@ -33,6 +33,14 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
 
     @Override
     @Cacheable(CacheType.MEDIUM_TERM)
+    public Map<String, List<AssessmentWindow>> findAssessmentWindowsForAssessmentIds(final String clientName, final String... assessmentIds) {
+        List<AssessmentWindow> assessmentWindows = assessmentWindowQueryRepository.findAssessmentWindowsForAssessmentIds(clientName, assessmentIds);
+        return assessmentWindows.stream()
+            .collect(Collectors.groupingBy(AssessmentWindow::getAssessmentKey));
+    }
+
+    @Override
+    @Cacheable(CacheType.MEDIUM_TERM)
     public List<AssessmentWindow> findAssessmentWindows(final AssessmentWindowParameters assessmentWindowParameters) {
         long studentId = assessmentWindowParameters.getStudentId();
         String clientName = assessmentWindowParameters.getClientName();
@@ -55,7 +63,6 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
 
         //Lines 5871-5880 StudentDLL._GetTestteeTestWindows_SP()
         List<AssessmentWindow> assessmentWindows = assessmentWindowQueryRepository.findCurrentAssessmentWindows(clientName,
-            assessmentId,
             assessmentWindowParameters.getShiftWindowStart(),
             assessmentWindowParameters.getShiftWindowEnd());
 

@@ -8,10 +8,12 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import tds.assessment.Assessment;
 import tds.assessment.AssessmentWindow;
 import tds.assessment.model.AssessmentFormWindowProperties;
 import tds.assessment.repositories.AssessmentWindowQueryRepository;
@@ -31,9 +33,15 @@ class AssessmentWindowQueryRepositoryImpl implements AssessmentWindowQueryReposi
     }
 
     @Override
-    public List<AssessmentWindow> findCurrentAssessmentWindows(final String clientName, final String assessmentId, int shiftWindowStart, int shiftWindowEnd) {
+    public List<AssessmentWindow> findAssessmentWindowsForAssessmentIds(final String clientName, final String... assessmentIds) {
+        return findCurrentAssessmentWindows(clientName, 0, 0, assessmentIds);
+    }
+
+    @Override
+    public List<AssessmentWindow> findCurrentAssessmentWindows(final String clientName, int shiftWindowStart, int shiftWindowEnd,
+                                                               final String... assessmentIds) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource("clientName", clientName)
-            .addValue("assessmentId", assessmentId)
+            .addValue("assessmentIds", Arrays.asList(assessmentIds))
             .addValue("shiftWindowStart", shiftWindowStart)
             .addValue("shiftWindowEnd", shiftWindowEnd)
             .addValue("sessionType", ONLINE_SESSION_TYPE);
@@ -54,7 +62,7 @@ class AssessmentWindowQueryRepositoryImpl implements AssessmentWindowQueryReposi
             "JOIN configs.client_testmode M \n" +
             "ON M.clientname = W.clientname AND W.testID = M.testID\n" +
             "WHERE \n" +
-            "    W.clientname = :clientName AND W.testID = :assessmentId \n" +
+            "    W.clientname = :clientName AND W.testID IN (:assessmentIds) \n" +
             "AND \n" +
             "    UTC_TIMESTAMP() BETWEEN\n" +
             "    CASE\n" +
