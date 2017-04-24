@@ -29,9 +29,9 @@ public class AssessmentInfoServiceImpl implements AssessmentInfoService {
     @Override
     public List<AssessmentInfo> findAssessmentInfo(final String clientName, final String... assessmentKeys) {
         List<AssessmentInfo> assessments = assessmentQueryRepository.findAssessmentInfoByKeys(clientName, assessmentKeys);
-        Set<String> assessmentIds = assessments.stream().map(AssessmentInfo::getId).collect(Collectors.toSet());
+        String[] assessmentIds = assessments.stream().map(AssessmentInfo::getId).toArray(size -> new String[size]);
         Map<String, List<AssessmentWindow>> assessmentWindows = assessmentWindowService.findAssessmentWindowsForAssessmentIds(
-            clientName, assessmentIds.toArray(new String[assessmentIds.size()]));
+            clientName, assessmentIds);
 
         return assessments.stream()
             .map(assessmentInfo ->

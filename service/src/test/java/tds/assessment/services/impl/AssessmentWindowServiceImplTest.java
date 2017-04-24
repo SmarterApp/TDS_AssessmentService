@@ -1,5 +1,6 @@
 package tds.assessment.services.impl;
 
+import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -86,10 +87,10 @@ public class AssessmentWindowServiceImplTest {
 
     @Test
     public void shouldReturnDistinctWindowsWhenWindowIsNotRequired() {
-        AssessmentWindow window = new AssessmentWindow.Builder().withWindowId("id").withAssessmentKey("SBAC-Mathematics-8").build();
-        AssessmentWindow window2 = new AssessmentWindow.Builder().withWindowId("id").withAssessmentKey("SBAC-Mathematics-8-2018").build();
-        AssessmentWindow window3 = new AssessmentWindow.Builder().withWindowId("id3").withAssessmentKey("SBAC-Mathematics-8-2018").build();
-        AssessmentWindow window4 = new AssessmentWindow.Builder().withWindowId("id4").withAssessmentKey("SBAC-Mathematics-3").build();
+        AssessmentWindow window = new AssessmentWindow.Builder().withWindowId("id").withAssessmentKey("SBAC-Mathematics-8").withEndTime(Instant.now()).withFormKey("formKey").build();
+        AssessmentWindow window2 = new AssessmentWindow.Builder().withWindowId("id").withAssessmentKey("SBAC-Mathematics-8-2018").withEndTime(Instant.now()).withFormKey("formKey").build();
+        AssessmentWindow window3 = new AssessmentWindow.Builder().withWindowId("id3").withAssessmentKey("SBAC-Mathematics-8-2018").withEndTime(Instant.now()).withFormKey("formKey").build();
+        AssessmentWindow window4 = new AssessmentWindow.Builder().withWindowId("id4").withAssessmentKey("SBAC-Mathematics-3").withEndTime(Instant.now()).withFormKey("formKey").build();
         AssessmentWindowParameters properties = new AssessmentWindowParameters.Builder(23, "SBAC_PT", "SBAC-Mathematics-8").build();
 
         when(mockAssessmentWindowQueryRepository.findCurrentAssessmentWindows("SBAC_PT", 0, 0, "SBAC-Mathematics-8")).thenReturn(Arrays.asList(window, window2, window3, window4));

@@ -195,8 +195,8 @@ public class AssessmentWindow {
     public int hashCode() {
         int result = windowId.hashCode();
         result = 31 * result + windowMaxAttempts;
-        result = 31 * result + mode.hashCode();
         result = 31 * result + modeMaxAttempts;
+        result = 31 * result + Objects.hashCode(mode);
         result = 31 * result + Objects.hashCode(startTime);
         result = 31 * result + Objects.hashCode(endTime.hashCode());
         result = 31 * result + Objects.hashCode(windowSessionType);

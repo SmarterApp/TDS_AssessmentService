@@ -64,7 +64,8 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
         //Lines 5871-5880 StudentDLL._GetTestteeTestWindows_SP()
         List<AssessmentWindow> assessmentWindows = assessmentWindowQueryRepository.findCurrentAssessmentWindows(clientName,
             assessmentWindowParameters.getShiftWindowStart(),
-            assessmentWindowParameters.getShiftWindowEnd());
+            assessmentWindowParameters.getShiftWindowEnd(),
+            assessmentId);
 
         if (studentId < 0) {
             return assessmentWindows;

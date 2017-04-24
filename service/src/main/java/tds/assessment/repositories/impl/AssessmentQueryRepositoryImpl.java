@@ -1,5 +1,6 @@
 package tds.assessment.repositories.impl;
 
+import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import tds.assessment.repositories.AssessmentQueryRepository;
 @Repository
 class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     private static final Logger logger = LoggerFactory.getLogger(AssessmentQueryRepositoryImpl.class);
+    private static final Splitter COMMA_SPLITTER = Splitter.on(",");
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final AssessmentMapper assessmentMapper = new AssessmentMapper();
 
@@ -188,7 +190,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 .withSubject(rs.getString("subject"))
                 .withMaxAttempts(rs.getInt("maxAttempts"))
                 .withLanguages(Arrays.asList(rs.getString("languages").split(",")))
-                .withGrades(Arrays.asList(rs.getString("grades").split(",")))
+                .withGrades(COMMA_SPLITTER.splitToList(rs.getString("grades")))
                 .build()
         );
     }

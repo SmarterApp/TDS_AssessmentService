@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,9 +12,9 @@ public class AssessmentInfo {
     private String subject;
     private String label;
     private int maxAttempts;
-    private List<String> grades;
-    private List<String> languages;
-    private List<AssessmentWindow> assessmentWindows;
+    private List<String> grades = new ArrayList<>();
+    private List<String> languages = new ArrayList<>();
+    private List<AssessmentWindow> assessmentWindows = new ArrayList<>();
 
     /**
      * Empty constructor for frameworks
@@ -81,16 +82,16 @@ public class AssessmentInfo {
             return this;
         }
 
-        public Builder fromAssessmentInfo(AssessmentInfo assessmentInfo) {
-            this.maxAttempts = assessmentInfo.maxAttempts;
-            this.assessmentWindows = assessmentInfo.assessmentWindows;
-            this.id = assessmentInfo.id;
-            this.label = assessmentInfo.label;
-            this.subject = assessmentInfo.subject;
-            this.grades = assessmentInfo.grades;
-            this.languages = assessmentInfo.languages;
-            this.key = assessmentInfo.key;
-            return this;
+        public static Builder fromAssessmentInfo(AssessmentInfo assessmentInfo) {
+            return new AssessmentInfo.Builder()
+                .withMaxAttempts(assessmentInfo.maxAttempts)
+                .withId(assessmentInfo.id)
+                .withKey(assessmentInfo.key)
+                .withSubject(assessmentInfo.subject)
+                .withLabel(assessmentInfo.label)
+                .withAssessmentWindows(assessmentInfo.assessmentWindows)
+                .withLanguages(assessmentInfo.languages)
+                .withGrades(assessmentInfo.grades);
         }
 
         public AssessmentInfo build() {
