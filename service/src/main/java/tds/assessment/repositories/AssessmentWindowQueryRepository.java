@@ -11,15 +11,24 @@ import tds.assessment.model.AssessmentFormWindowProperties;
  */
 public interface AssessmentWindowQueryRepository {
     /**
+     * Finds the assessment windows for the specified assessmentIds
+     *
+     * @param clientName the client name of the TDS environment
+     * @param assessmentIds a collection of assessment ids to find assessment windows for
+     * @return A list of assessment windows for all the ids
+     */
+    List<AssessmentWindow> findAssessmentWindowsForAssessmentIds(final String clientName, final String... assessmentIds);
+
+    /**
      * Find the current active assessment windows
      *
      * @param clientName       the client name for the installation
-     * @param assessmentId     assessment id
+     * @param assessmentIds    the assessment ids to fetch windows for
      * @param shiftWindowStart the days to prepend for the window
      * @param shiftWindowEnd   the days to append for the window
      * @return {@link tds.assessment.AssessmentWindow}
      */
-    List<AssessmentWindow> findCurrentAssessmentWindows(final String clientName, final String assessmentId, final int shiftWindowStart, final int shiftWindowEnd);
+    List<AssessmentWindow> findCurrentAssessmentWindows(final String clientName, final int shiftWindowStart, final int shiftWindowEnd, final String... assessmentIds);
 
     /**
      * Finds the current active assessment form windows

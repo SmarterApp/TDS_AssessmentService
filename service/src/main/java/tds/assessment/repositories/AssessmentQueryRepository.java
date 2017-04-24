@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.assessment.AssessmentInfo;
 import tds.assessment.ItemConstraint;
 
 /**
@@ -19,6 +20,16 @@ public interface AssessmentQueryRepository {
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
     Optional<Assessment> findAssessmentByKey(final String clientName, final String assessmentKey);
+
+    /**
+     * Finds all {@link tds.assessment.Assessment}s by their keys The assessment contains a collection of
+     * {@link tds.assessment.Segment} objects, which is non-empty if the assessment is segmented.
+     *
+     * @param clientName    the client name associated with the assessment
+     * @param assessmentKeys the unique keys for the assessments/admin subjects
+     * @return {@link tds.assessment.Assessment} if found otherwise empty
+     */
+    List<AssessmentInfo> findAssessmentInfoByKeys(final String clientName, final String... assessmentKeys);
 
     /**
      * Finds a list of {@link tds.assessment.ItemConstraint}s for the assessment

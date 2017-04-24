@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.assessment.AssessmentInfo;
 import tds.assessment.ItemConstraint;
 import tds.assessment.Segment;
 import tds.assessment.repositories.AssessmentQueryRepository;
@@ -81,9 +82,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "   ('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ftstartDate", ResultSetMapperUtility.mapJodaInstantToTimestamp(Instant.now()));
-        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label, msb, handscoreproject) VALUES " +
-            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf', 1, 1234), \n" +
-            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math', 0, 4321);\n";
+        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label, msb, handscoreproject, subjectname) VALUES " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf', 1, 1234, 'ELA'), \n" +
+            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math', 0, 4321, 'MATH');\n";
 
         SqlParameterSource segPropsParams = new MapSqlParameterSource("ftstartdate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtStartDate))
             .addValue("ftenddate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtEndDate));
@@ -96,6 +97,19 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
             "INSERT INTO itembank.tbltestadmin (schoolyear, season, _key, _fk_client) " +
                 "VALUES ('2112-2113', 'winter', 'SBAC_PT', 1)";
 
+        final String testToolTypeInsertSQL = "INSERT INTO configs.client_testtooltype (clientname, context, contexttype, toolname, allowchange, rtsfieldname, isrequired, isselectable, dateentered, testmode) " +
+            "VALUES ('SBAC_PT', 'IRP-Perf-ELA-11', 'TEST', 'Language', 0, 'rts', 1, 0, now(), 'ALL'), " +
+            "('SBAC_PT', 'SBAC-Mathematics-8', 'TEST', 'Language', 0, 'rts', 1, 0, now(), 'ALL');";
+        final String testToolInsertSQL = "INSERT INTO configs.client_testtool (clientname, context, contexttype, type, code, value, isdefault, allowcombine, testmode) " +
+            "VALUES ('SBAC_PT', 'IRP-Perf-ELA-11', 'TEST', 'Language', 'ENU', 'ENU', 1, 0, 'ALL'), " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', 'TEST', 'Language', 'FRN', 'FRN', 1, 0, 'ALL'), " +
+            "('SBAC_PT', 'SBAC-Mathematics-8', 'TEST', 'Language', 'ENU', 'ENU', 1, 0, 'ALL');";
+        final String setOfTestGradesInsertSql =
+            "INSERT INTO itembank.setoftestgrades (testid, grade, _fk_adminsubject, _key) " +
+                "VALUES ('IRP-Perf-ELA-11', '3', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 0x8ebc29966a52401b952e45b1a2d08e3f), " +
+                "('IRP-Perf-ELA-11', '11', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 0x8ebc29966a52401b952e45b1a2d08e3e)," +
+                "('SBAC-Mathematics-8', 'Kindergarden', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015', 0x8ebc29966a52401b952e45b1a2d08e3c)";
+
         jdbcTemplate.update(itemConstraintsInsertSql, new MapSqlParameterSource());
         jdbcTemplate.update(tblClientInsertSQL, new MapSqlParameterSource());
         jdbcTemplate.update(tblSubjectInsertSQL, new MapSqlParameterSource());
@@ -107,6 +121,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         jdbcTemplate.update(clientTestPropertiesInsertSQL, parameters);
         jdbcTemplate.update(clientSegmentPropertiesInsertSQL, segPropsParams);
         jdbcTemplate.update(tblTestAdminInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(testToolTypeInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(testToolInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(setOfTestGradesInsertSql, new MapSqlParameterSource());
     }
 
     @Test
@@ -260,6 +277,38 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(erConstraint.getToolType()).isEqualTo("Item Types Exclusion");
         assertThat(erConstraint.getToolValue()).isEqualTo("TDS_ItemTypeExcl_ER");
         assertThat(erConstraint.isInclusive()).isFalse();
+    }
+
+    @Test
+    public void shouldRetrieveMultipleAssessments() {
+        List<AssessmentInfo> assessments = repository.findAssessmentInfoByKeys("SBAC_PT",
+            "(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        assertThat(assessments).hasSize(2);
+
+        AssessmentInfo assessmentInfo1 = null;
+        AssessmentInfo assessmentInfo2 = null;
+
+        for (AssessmentInfo assessmentInfo : assessments) {
+            if (assessmentInfo.getKey().equals("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015")) {
+                assessmentInfo1 = assessmentInfo;
+            } else if (assessmentInfo.getKey().equals("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")) {
+                assessmentInfo2 = assessmentInfo;
+            }
+        }
+
+        assertThat(assessmentInfo1.getId()).isEqualTo("SBAC-Mathematics-8");
+        assertThat(assessmentInfo1.getMaxAttempts()).isEqualTo(95);
+        assertThat(assessmentInfo1.getLabel()).isEqualTo("Grade 8 Math");
+        assertThat(assessmentInfo1.getSubject()).isEqualTo("MATH");
+        assertThat(assessmentInfo1.getLanguages()).containsExactly("ENU");
+        assertThat(assessmentInfo1.getGrades()).containsExactly("Kindergarden");
+
+        assertThat(assessmentInfo2.getId()).isEqualTo("IRP-Perf-ELA-11");
+        assertThat(assessmentInfo2.getMaxAttempts()).isEqualTo(99);
+        assertThat(assessmentInfo2.getLabel()).isEqualTo("Grade 11 ELA Perf");
+        assertThat(assessmentInfo2.getSubject()).isEqualTo("ELA");
+        assertThat(assessmentInfo2.getLanguages()).containsExactlyInAnyOrder("ENU", "FRN");
+        assertThat(assessmentInfo2.getGrades()).containsExactlyInAnyOrder("11", "3");
     }
 
     @Test
