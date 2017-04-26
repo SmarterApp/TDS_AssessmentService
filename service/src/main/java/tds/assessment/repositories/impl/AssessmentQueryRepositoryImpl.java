@@ -4,11 +4,15 @@ import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +30,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     private static final Splitter COMMA_SPLITTER = Splitter.on(",");
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final AssessmentMapper assessmentMapper = new AssessmentMapper();
-
+    private static final RowMapper<AssessmentInfo> assessmentInfoRowMapper = new AssessmentInfoRowMapper();
     private static final String ASSESSMENT_SELECT_SQL = "SELECT \n" +
         "   A._key AS assessmentSegmentKey, \n" +
         "   A.testid AS assessmentSegmentId, \n" +
@@ -182,17 +186,42 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "GROUP BY \n" +
                 "   assessmentKey, assessmentId, subject, assessmentLabel, maxAttempts";
 
-        return jdbcTemplate.query(SQL, parameters, (rs, row) ->
-            new AssessmentInfo.Builder()
-                .withKey(rs.getString("assessmentKey"))
-                .withId(rs.getString("assessmentId"))
-                .withLabel(rs.getString("assessmentLabel"))
-                .withSubject(rs.getString("subject"))
-                .withMaxAttempts(rs.getInt("maxAttempts"))
-                .withLanguages(Arrays.asList(rs.getString("languages").split(",")))
-                .withGrades(COMMA_SPLITTER.splitToList(rs.getString("grades")))
-                .build()
-        );
+        return jdbcTemplate.query(SQL, parameters, new AssessmentInfoRowMapper());
+    }
+
+    @Override
+    public List<AssessmentInfo> findAssessmentInfoForGrade(final String clientName, final String grade) {
+        final SqlParameterSource parameters = new MapSqlParameterSource("grade", grade)
+            .addValue("clientName", clientName);
+
+        final String SQL =
+            "SELECT \n" +
+                "   a._key AS assessmentKey, \n" +
+                "   a.testid AS assessmentId, \n" +
+                "   tp.subjectname AS subject, \n" +
+                "   tp.label AS assessmentLabel, \n" +
+                "   GROUP_CONCAT(DISTINCT tool.code) languages, \n" +
+                "   GROUP_CONCAT(DISTINCT g.grade) grades, \n" +
+                "   tp.maxopportunities AS maxAttempts \n" +
+                "FROM \n" +
+                "   itembank.tblsetofadminsubjects a \n" +
+                "JOIN configs.client_testproperties tp \n" +
+                "   ON a.testid = tp.testid \n" +
+                "LEFT JOIN configs.client_testtool tool \n" +
+                "   ON tool.context = tp.testid \n" +
+                "LEFT JOIN itembank.setoftestgrades g \n" +
+                "   ON g.testid = tp.testid \n" +
+                "WHERE \n" +
+                "   tp.isselectable = 1 \n" +
+                "   AND tp.clientname = :clientName \n" +
+                "   AND tool.clientname = :clientName \n" +
+                "   AND tool.type = 'Language' \n" +
+                "   AND tool.contexttype = 'TEST' \n" +
+                "   AND g.grade = :grade \n" +
+                "GROUP BY \n" +
+                "   assessmentKey, assessmentId, subject, assessmentLabel, maxAttempts";
+
+        return jdbcTemplate.query(SQL, parameters, new AssessmentInfoRowMapper());
     }
 
     @Override
@@ -275,5 +304,22 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         }
 
         return maybeAssessment;
+    }
+
+    private static class AssessmentInfoRowMapper implements RowMapper<AssessmentInfo> {
+        @Override
+        public AssessmentInfo mapRow(final ResultSet rs, final int i) throws SQLException {
+            return new AssessmentInfo.Builder()
+                .withKey(rs.getString("assessmentKey"))
+                .withId(rs.getString("assessmentId"))
+                .withLabel(rs.getString("assessmentLabel"))
+                .withSubject(rs.getString("subject"))
+                .withMaxAttempts(rs.getInt("maxAttempts"))
+                .withLanguages(Arrays.asList(rs.getString("languages").split(",")))
+                .withGrades(rs.getString("grades") != null
+                    ? COMMA_SPLITTER.splitToList(rs.getString("grades"))
+                    : new ArrayList<>())
+                .build();
+        }
     }
 }

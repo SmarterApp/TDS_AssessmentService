@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import tds.assessment.AssessmentInfo;
@@ -29,6 +28,22 @@ public class AssessmentInfoServiceImpl implements AssessmentInfoService {
     @Override
     public List<AssessmentInfo> findAssessmentInfo(final String clientName, final String... assessmentKeys) {
         List<AssessmentInfo> assessments = assessmentQueryRepository.findAssessmentInfoByKeys(clientName, assessmentKeys);
+        String[] assessmentIds = assessments.stream().map(AssessmentInfo::getId).toArray(size -> new String[size]);
+        Map<String, List<AssessmentWindow>> assessmentWindows = assessmentWindowService.findAssessmentWindowsForAssessmentIds(
+            clientName, assessmentIds);
+
+        return assessments.stream()
+            .map(assessmentInfo ->
+                new AssessmentInfo.Builder()
+                    .fromAssessmentInfo(assessmentInfo)
+                    .withAssessmentWindows(assessmentWindows.get(assessmentInfo.getKey()))
+                    .build())
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AssessmentInfo> findAssessmentInfoForGrade(final String clientName, final String grade) {
+        List<AssessmentInfo> assessments =  assessmentQueryRepository.findAssessmentInfoForGrade(clientName, grade);
         String[] assessmentIds = assessments.stream().map(AssessmentInfo::getId).toArray(size -> new String[size]);
         Map<String, List<AssessmentWindow>> assessmentWindows = assessmentWindowService.findAssessmentWindowsForAssessmentIds(
             clientName, assessmentIds);

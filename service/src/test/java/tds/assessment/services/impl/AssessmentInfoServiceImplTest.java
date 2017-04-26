@@ -77,6 +77,44 @@ public class AssessmentInfoServiceImplTest {
     }
 
     @Test
+    public void shouldReturnAssessmentInfosForGrade() {
+        List<AssessmentInfo> assessmentInfoList = randomListOf(2, AssessmentInfo.class);
+        List<AssessmentWindow> assessmentWindows1 = randomListOf(2, AssessmentWindow.class);
+        List<AssessmentWindow> assessmentWindows2 = randomListOf(2, AssessmentWindow.class);
+        final String grade = "3";
+        Map<String, List<AssessmentWindow>> assessmentWindowsMap = ImmutableMap.of(
+            assessmentInfoList.get(0).getKey(), assessmentWindows1,
+            assessmentInfoList.get(1).getKey(), assessmentWindows2
+        );
+
+        when(mockAssessmentQueryRepository.findAssessmentInfoForGrade("SBAC_PT", grade))
+            .thenReturn(assessmentInfoList);
+        when(mockAssessmentWindowService.findAssessmentWindowsForAssessmentIds(any(), Matchers.<String>anyVararg()))
+            .thenReturn(assessmentWindowsMap);
+        List<AssessmentInfo> assessmentInfos = assessmentInfoService.findAssessmentInfoForGrade("SBAC_PT", grade);
+
+        assertThat(assessmentInfos).hasSize(2);
+        AssessmentInfo retInfo1 = assessmentInfos.get(0);
+        AssessmentInfo retInfo2 = assessmentInfos.get(1);
+
+        assertThat(retInfo1.getId()).isEqualTo(assessmentInfoList.get(0).getId());
+        assertThat(retInfo1.getKey()).isEqualTo(assessmentInfoList.get(0).getKey());
+        assertThat(retInfo1.getSubject()).isEqualTo(assessmentInfoList.get(0).getSubject());
+        assertThat(retInfo1.getAssessmentWindows()).isEqualTo(assessmentWindows1);
+        assertThat(retInfo1.getLanguages()).isEqualTo(assessmentInfoList.get(0).getLanguages());
+        assertThat(retInfo1.getMaxAttempts()).isEqualTo(assessmentInfoList.get(0).getMaxAttempts());
+        assertThat(retInfo1.getGrades()).isEqualTo(assessmentInfoList.get(0).getGrades());
+
+        assertThat(retInfo2.getId()).isEqualTo(assessmentInfoList.get(1).getId());
+        assertThat(retInfo2.getKey()).isEqualTo(assessmentInfoList.get(1).getKey());
+        assertThat(retInfo2.getSubject()).isEqualTo(assessmentInfoList.get(1).getSubject());
+        assertThat(retInfo2.getAssessmentWindows()).isEqualTo(assessmentWindows2);
+        assertThat(retInfo2.getLanguages()).isEqualTo(assessmentInfoList.get(1).getLanguages());
+        assertThat(retInfo2.getMaxAttempts()).isEqualTo(assessmentInfoList.get(1).getMaxAttempts());
+        assertThat(retInfo2.getGrades()).isEqualTo(assessmentInfoList.get(1).getGrades());
+    }
+
+    @Test
     public void shouldReturnEmptyList() {
         List<AssessmentInfo> assessmentInfoList = randomListOf(2, AssessmentInfo.class);
         when(mockAssessmentQueryRepository.findAssessmentInfoByKeys("SBAC_PT", assessmentInfoList.get(0).getKey(), assessmentInfoList.get(1).getKey()))

@@ -22,14 +22,22 @@ public interface AssessmentQueryRepository {
     Optional<Assessment> findAssessmentByKey(final String clientName, final String assessmentKey);
 
     /**
-     * Finds all {@link tds.assessment.Assessment}s by their keys The assessment contains a collection of
-     * {@link tds.assessment.Segment} objects, which is non-empty if the assessment is segmented.
+     * Finds all {@link tds.assessment.AssessmentInfo}s by their keys.
      *
-     * @param clientName    the client name associated with the assessment
+     * @param clientName     the client name associated with the assessment
      * @param assessmentKeys the unique keys for the assessments/admin subjects
      * @return {@link tds.assessment.Assessment} if found otherwise empty
      */
     List<AssessmentInfo> findAssessmentInfoByKeys(final String clientName, final String... assessmentKeys);
+
+    /**
+     * Finds all {@link tds.assessment.AssessmentInfo}s for the specified grade
+     *
+     * @param clientName the client name associated with the assessment
+     * @param grade      the grade to fetch all {@link tds.assessment.AssessmentInfo} for
+     * @return {@link tds.assessment.AssessmentInfo} if found otherwise empty
+     */
+    List<AssessmentInfo> findAssessmentInfoForGrade(final String clientName, final String grade);
 
     /**
      * Finds a list of {@link tds.assessment.ItemConstraint}s for the assessment

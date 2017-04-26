@@ -26,9 +26,15 @@ public class AssessmentInfoController {
         this.assessmentInfoService = assessmentInfoService;
     }
 
-    @GetMapping(value = "/{clientName}/assessments/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{clientName}/assessments", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<List<AssessmentInfo>> findAssessment(@PathVariable final String clientName, @RequestParam final String... assessmentKeys) {
+    ResponseEntity<List<AssessmentInfo>> findAssessmentInfos(@PathVariable final String clientName, @RequestParam final String... assessmentKeys) {
         return ResponseEntity.ok(assessmentInfoService.findAssessmentInfo(clientName, assessmentKeys));
+    }
+
+    @GetMapping(value = "/{clientName}/assessments/grade/{grade}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    ResponseEntity<List<AssessmentInfo>> findAssessmentsInfosForGrade(@PathVariable final String clientName, @PathVariable final String grade) {
+        return ResponseEntity.ok(assessmentInfoService.findAssessmentInfoForGrade(clientName, grade));
     }
 }
