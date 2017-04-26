@@ -16,4 +16,13 @@ public interface AssessmentInfoService {
      * @return A list of {@link tds.assessment.AssessmentInfo}
      */
     List<AssessmentInfo> findAssessmentInfo(final String clientName, final String... assessmentKeys);
+
+    /**
+     * Finds all {@link tds.assessment.AssessmentInfo}s for the specified grade
+     *
+     * @param clientName the client name associated with the assessment
+     * @param grade      the grade to fetch all {@link tds.assessment.AssessmentInfo} for
+     * @return {@link tds.assessment.AssessmentInfo} if found otherwise empty
+     */
+    List<AssessmentInfo> findAssessmentInfoForGrade(final String clientName, final String grade);
 }

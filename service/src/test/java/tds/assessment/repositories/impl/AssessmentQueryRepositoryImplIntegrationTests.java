@@ -280,6 +280,19 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
     }
 
     @Test
+    public void shouldRetrieveAssessmentsForGrade() {
+        List<AssessmentInfo> assessments = repository.findAssessmentInfoForGrade("SBAC_PT", "11");
+        assertThat(assessments).hasSize(1);
+        AssessmentInfo assessmentInfo = assessments.get(0);
+        assertThat(assessmentInfo.getId()).isEqualTo("IRP-Perf-ELA-11");
+        assertThat(assessmentInfo.getMaxAttempts()).isEqualTo(99);
+        assertThat(assessmentInfo.getLabel()).isEqualTo("Grade 11 ELA Perf");
+        assertThat(assessmentInfo.getSubject()).isEqualTo("ELA");
+        assertThat(assessmentInfo.getLanguages()).containsExactlyInAnyOrder("ENU", "FRN");
+        assertThat(assessmentInfo.getGrades()).containsExactlyInAnyOrder("11");
+    }
+
+    @Test
     public void shouldRetrieveMultipleAssessments() {
         List<AssessmentInfo> assessments = repository.findAssessmentInfoByKeys("SBAC_PT",
             "(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import tds.assessment.Assessment;
 import tds.assessment.AssessmentInfo;
 import tds.assessment.services.AssessmentInfoService;
 
@@ -26,9 +27,21 @@ public class AssessmentInfoController {
         this.assessmentInfoService = assessmentInfoService;
     }
 
-    @GetMapping(value = "/{clientName}/assessments/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{clientName}/assessments", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<List<AssessmentInfo>> findAssessment(@PathVariable final String clientName, @RequestParam final String... assessmentKeys) {
-        return ResponseEntity.ok(assessmentInfoService.findAssessmentInfo(clientName, assessmentKeys));
+    ResponseEntity<List<AssessmentInfo>> findAssessmentInfos(@PathVariable final String clientName,
+                                                             @RequestParam(required = false) final String grade,
+                                                             @RequestParam(required = false) final String... assessmentKeys) {
+        List<AssessmentInfo> assessmentInfos;
+
+        if (grade == null && assessmentKeys.length == 0) {
+            throw new IllegalArgumentException("Either assessmentKeys or grades query params must be present.");
+        }
+
+        assessmentInfos = (grade == null)
+            ? assessmentInfoService.findAssessmentInfo(clientName, assessmentKeys)
+            : assessmentInfoService.findAssessmentInfoForGrade(clientName, grade);
+
+        return ResponseEntity.ok(assessmentInfos);
     }
 }

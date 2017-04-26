@@ -73,4 +73,37 @@ public class AssessmentInfoControllerIntegrationTests {
         assertThat(parsedAssessments.get(0)).isEqualTo(info1);
         assertThat(parsedAssessments.get(1)).isEqualTo(info2);
     }
+
+    @Test
+    public void shouldReturnAssessmentInfoForGrade() throws Exception {
+        final String clientName = "SBAC_PT";
+        AssessmentInfo info1 = random(AssessmentInfo.class);
+        AssessmentInfo info2 = random(AssessmentInfo.class);
+        final String grade = "3";
+        when(assessmentInfoService.findAssessmentInfoForGrade(clientName, grade)).thenReturn(Arrays.asList(info1, info2));
+
+        MvcResult result = http.perform(get(UriComponentsBuilder.fromUriString("/SBAC_PT/assessments").build().toUri())
+            .param("grade", grade)
+            .param("assessmentKeys", info1.getKey())
+            .param("assessmentKeys", info2.getKey())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("[0].key", is(info1.getKey())))
+            .andExpect(jsonPath("[0].id", is(info1.getId())))
+            .andExpect(jsonPath("[0].subject", is(info1.getSubject())))
+            .andExpect(jsonPath("[0].grades", is(info1.getGrades())))
+            .andExpect(jsonPath("[0].label", is(info1.getLabel())))
+            .andExpect(jsonPath("[0].languages", is(info1.getLanguages())))
+            .andExpect(jsonPath("[1].key", is(info2.getKey())))
+            .andExpect(jsonPath("[1].id", is(info2.getId())))
+            .andExpect(jsonPath("[1].subject", is(info2.getSubject())))
+            .andExpect(jsonPath("[1].grades", is(info2.getGrades())))
+            .andExpect(jsonPath("[1].label", is(info2.getLabel())))
+            .andExpect(jsonPath("[1].languages", is(info2.getLanguages())))
+            .andReturn();
+
+        List<AssessmentInfo> parsedAssessments = objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<AssessmentInfo>>() {});
+        assertThat(parsedAssessments.get(0)).isEqualTo(info1);
+        assertThat(parsedAssessments.get(1)).isEqualTo(info2);
+    }
 }
