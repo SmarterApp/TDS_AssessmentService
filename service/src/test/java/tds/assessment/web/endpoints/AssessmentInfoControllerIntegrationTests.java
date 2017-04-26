@@ -82,7 +82,8 @@ public class AssessmentInfoControllerIntegrationTests {
         final String grade = "3";
         when(assessmentInfoService.findAssessmentInfoForGrade(clientName, grade)).thenReturn(Arrays.asList(info1, info2));
 
-        MvcResult result = http.perform(get(UriComponentsBuilder.fromUriString("/SBAC_PT/assessments/grade/3").build().toUri())
+        MvcResult result = http.perform(get(UriComponentsBuilder.fromUriString("/SBAC_PT/assessments").build().toUri())
+            .param("grade", grade)
             .param("assessmentKeys", info1.getKey())
             .param("assessmentKeys", info2.getKey())
             .contentType(MediaType.APPLICATION_JSON))

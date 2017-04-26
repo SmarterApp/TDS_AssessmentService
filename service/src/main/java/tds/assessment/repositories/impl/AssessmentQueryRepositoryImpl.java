@@ -28,6 +28,7 @@ import tds.assessment.repositories.AssessmentQueryRepository;
 class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     private static final Logger logger = LoggerFactory.getLogger(AssessmentQueryRepositoryImpl.class);
     private static final Splitter COMMA_SPLITTER = Splitter.on(",");
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final AssessmentMapper assessmentMapper = new AssessmentMapper();
     private static final RowMapper<AssessmentInfo> assessmentInfoRowMapper = new AssessmentInfoRowMapper();
@@ -91,6 +92,22 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         "   A.terminationTooClose, \n " +
         "   A.terminationFlagsAnd \n ";
 
+    private static final String ASSESSMENT_INFO_SELECT = "SELECT \n" +
+        "   a._key AS assessmentKey, \n" +
+        "   a.testid AS assessmentId, \n" +
+        "   tp.subjectname AS subject, \n" +
+        "   tp.label AS assessmentLabel, \n" +
+        "   GROUP_CONCAT(DISTINCT tool.code) languages, \n" +
+        "   GROUP_CONCAT(DISTINCT g.grade) grades, \n" +
+        "   tp.maxopportunities AS maxAttempts \n" +
+        "FROM \n" +
+        "   itembank.tblsetofadminsubjects a \n" +
+        "JOIN configs.client_testproperties tp \n" +
+        "   ON a.testid = tp.testid \n" +
+        "LEFT JOIN configs.client_testtool tool \n" +
+        "   ON tool.context = tp.testid \n" +
+        "LEFT JOIN itembank.setoftestgrades g \n" +
+        "   ON g.testid = tp.testid \n";
     @Autowired
     public AssessmentQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -160,22 +177,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
             .addValue("clientName", clientName);
 
         final String SQL =
-            "SELECT \n" +
-                "   a._key AS assessmentKey, \n" +
-                "   a.testid AS assessmentId, \n" +
-                "   tp.subjectname AS subject, \n" +
-                "   tp.label AS assessmentLabel, \n" +
-                "   GROUP_CONCAT(DISTINCT tool.code) languages, \n" +
-                "   GROUP_CONCAT(DISTINCT g.grade) grades, \n" +
-                "   tp.maxopportunities AS maxAttempts \n" +
-                "FROM \n" +
-                "   itembank.tblsetofadminsubjects a \n" +
-                "JOIN configs.client_testproperties tp \n" +
-                "   ON a.testid = tp.testid \n" +
-                "LEFT JOIN configs.client_testtool tool \n" +
-                "   ON tool.context = tp.testid \n" +
-                "LEFT JOIN itembank.setoftestgrades g \n" +
-                "   ON g.testid = tp.testid \n" +
+            ASSESSMENT_INFO_SELECT +
                 "WHERE \n" +
                 "   tp.isselectable = 1 \n" +
                 "   AND tp.clientname = :clientName \n" +
@@ -195,22 +197,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
             .addValue("clientName", clientName);
 
         final String SQL =
-            "SELECT \n" +
-                "   a._key AS assessmentKey, \n" +
-                "   a.testid AS assessmentId, \n" +
-                "   tp.subjectname AS subject, \n" +
-                "   tp.label AS assessmentLabel, \n" +
-                "   GROUP_CONCAT(DISTINCT tool.code) languages, \n" +
-                "   GROUP_CONCAT(DISTINCT g.grade) grades, \n" +
-                "   tp.maxopportunities AS maxAttempts \n" +
-                "FROM \n" +
-                "   itembank.tblsetofadminsubjects a \n" +
-                "JOIN configs.client_testproperties tp \n" +
-                "   ON a.testid = tp.testid \n" +
-                "LEFT JOIN configs.client_testtool tool \n" +
-                "   ON tool.context = tp.testid \n" +
-                "LEFT JOIN itembank.setoftestgrades g \n" +
-                "   ON g.testid = tp.testid \n" +
+            ASSESSMENT_INFO_SELECT +
                 "WHERE \n" +
                 "   tp.isselectable = 1 \n" +
                 "   AND tp.clientname = :clientName \n" +
