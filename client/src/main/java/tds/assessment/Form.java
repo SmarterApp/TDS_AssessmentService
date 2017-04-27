@@ -8,7 +8,7 @@ import java.util.List;
  * A model representing a form for an {@link tds.assessment.Assessment} that uses the "fixed form" algorithm to select
  * the {@link tds.assessment.Item}s.
  */
-@JsonIgnoreProperties(value="length", allowGetters = true)
+@JsonIgnoreProperties(value = "length", allowGetters = true)
 public class Form {
     private String key;
     private String id;
@@ -22,7 +22,8 @@ public class Form {
     /**
      * Private constructor for framework
      */
-    private Form() {}
+    private Form() {
+    }
 
     private Form(Builder builder) {
         key = builder.key;
@@ -46,7 +47,7 @@ public class Form {
         private List<Item> items;
 
 
-        public Builder (String key) {
+        public Builder(String key) {
             this.key = key;
         }
 

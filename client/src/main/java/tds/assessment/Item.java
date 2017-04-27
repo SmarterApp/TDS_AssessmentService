@@ -21,6 +21,7 @@ public class Item {
     private String groupKey;
     private String blockId;
     private int position;
+    private int formPosition;
     private boolean fieldTest;
     private boolean required;
     private String strand;
@@ -137,6 +138,21 @@ public class Item {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    /**
+     * @return The position of this item in a {@link tds.assessment.Form} that is associated to a segment that uses the
+     * fixed-form selection algorithm.
+     * <p>
+     *     This field is only relevant for items that are displayed on a fixed-form test.
+     * </p>
+     */
+    public int getFormPosition() {
+        return formPosition;
+    }
+
+    public void setFormPosition(final int formPosition) {
+        this.formPosition = formPosition;
     }
 
     /**

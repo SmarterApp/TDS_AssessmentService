@@ -1,5 +1,6 @@
 package tds.assessment.services.impl;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -63,13 +64,16 @@ class AssessmentAssembler {
         }
         
         // FIXED FORM SEGMENTS - If forms were supplied, wire up the items to their appropriate form
+        // RULE:  The items in the form should be sorted by their formPosition in ascending order
         if (forms.size() > 0) {
             for (Form form : forms) {
                 List<Item> itemsForThisForm = items.stream()
                     .filter(i -> i.getFormKeys() != null
                         && i.getFormKeys().contains(form.getKey())
                         && i.getSegmentKey().equals(form.getSegmentKey()))
+                    .sorted(Comparator.comparingInt(Item::getFormPosition))
                     .collect(Collectors.toList());
+
                 form.setItems(itemsForThisForm);
                 
                 // Add the form to its parent fixed-form segment

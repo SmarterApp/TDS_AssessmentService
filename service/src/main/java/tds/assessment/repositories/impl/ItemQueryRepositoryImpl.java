@@ -41,6 +41,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   item._efk_itembank as bankKey, \n" +
                 "   adminItems._fk_adminsubject AS segmentKey,\n" +
                 "   formItem._fk_testform AS formKey,\n" +
+                "   formItem.formposition AS formPosition, \n" +
                 "   strands.name AS contentLevel, \n" +
                 "   adminItems.groupid,\n" +
                 "   adminItems.groupkey,\n" +
@@ -112,6 +113,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 item.setGroupKey(resultExtractor.getString("groupkey"));
                 item.setBlockId((resultExtractor.getString("blockid")));
                 item.setPosition(resultExtractor.getInt("position"));
+                item.setFormPosition(resultExtractor.getInt("formPosition"));
                 item.setFieldTest(resultExtractor.getBoolean("isfieldtest"));
                 item.setRequired(resultExtractor.getBoolean("isrequired"));
                 item.setStrand(resultExtractor.getString("strandname"));
@@ -246,6 +248,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "   item.itemid AS clientId, \n" +
             "   item._efk_item as itemKey, \n" +
             "   item._efk_itembank as bankKey, \n" +
+            "   formitem.formposition AS formPosition, \n" +
             "   adminItems.groupid,\n" +
             "   adminItems.groupkey,\n" +
             "   adminItems.blockid, \n" +
@@ -269,8 +272,11 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "JOIN \n" +
             "   itembank.tblitem item \n" +
             "   ON item._key = adminItems._fk_item \n" +
+            "LEFT JOIN \n" +
+            "   itembank.testformitem formitem \n" +
+            "   ON formitem._fk_item = item._key \n" +
             "WHERE \n" +
-            "   _fk_AdminSubject = :segmentKey";
+            "   adminItems._fk_AdminSubject = :segmentKey";
 
         return jdbcTemplate.query(SQL, parameters, (rs, rowNum) -> {
             Item item = new Item(rs.getString("itemId"));
@@ -279,6 +285,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             item.setGroupKey(rs.getString("groupkey"));
             item.setBlockId((rs.getString("blockid")));
             item.setPosition(rs.getInt("position"));
+            item.setFormPosition(rs.getInt("formPosition"));
             item.setFieldTest(rs.getBoolean("isfieldtest"));
             item.setRequired(rs.getBoolean("isrequired"));
             item.setStrand(rs.getString("strandname"));

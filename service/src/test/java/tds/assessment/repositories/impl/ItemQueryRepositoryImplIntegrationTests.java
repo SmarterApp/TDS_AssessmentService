@@ -205,6 +205,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-7321/stim-187-7321.xml");
         assertThat(item1.isPrintable()).isFalse();
         assertThat(item1.isActive()).isFalse();
+        assertThat(item1.getFormPosition()).isEqualTo(1);
     }
 
     @Test
@@ -235,6 +236,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg1.getBlockId()).isEqualTo("A");
         assertThat(item1Seg1.getItemType()).isEqualTo("ER");
         assertThat(item1Seg1.getPosition()).isEqualTo(1);
+        assertThat(item1Seg1.getFormPosition()).isEqualTo(1);
         assertThat(item1Seg1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
         assertThat(item1Seg1.isFieldTest()).isFalse();
         assertThat(item1Seg1.isRequired()).isTrue();
@@ -253,6 +255,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item2Seg1.getGroupKey()).isEqualTo("GK-2");
         assertThat(item2Seg1.getItemType()).isEqualTo("MI");
         assertThat(item2Seg1.getPosition()).isEqualTo(2);
+        assertThat(item2Seg1.getFormPosition()).isEqualTo(2);
         assertThat(item2Seg1.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
         assertThat(item2Seg1.isFieldTest()).isFalse();
         assertThat(item2Seg1.isRequired()).isTrue();
@@ -268,6 +271,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg2.getGroupKey()).isEqualTo("GK-3");
         assertThat(item1Seg2.getItemType()).isEqualTo("WER");
         assertThat(item1Seg2.getPosition()).isEqualTo(1);
+        assertThat(item1Seg2.getFormPosition()).isEqualTo(1);
         assertThat(item1Seg2.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
         assertThat(item1Seg2.isFieldTest()).isFalse();
         assertThat(item1Seg2.isRequired()).isTrue();
@@ -330,7 +334,8 @@ public class ItemQueryRepositoryImplIntegrationTests {
     public void shouldFindItemsForSegmentKey() {
         List<Item> items = repository.findItemsForSegment("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
 
-        assertThat(items).hasSize(1);
+        assertThat(items.get(0)).isEqualToComparingFieldByField(items.get(1));
+        assertThat(items).hasSize(2);
 
         Item item = items.get(0);
 
@@ -348,5 +353,25 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item.getbVector()).isEqualTo("1.21605");
         assertThat(item.getClaims()).isEqualTo("SBAC-2-W;SBAC-2-W|9-5");
         assertThat(item.isActive()).isTrue();
+        assertThat(item.getFormPosition()).isEqualTo(1);
+
+        Item item2 = items.get(1);
+
+        assertThat(item2.getId()).isEqualTo("187-1236");
+        assertThat(item2.getItemType()).isEqualTo("WER");
+        assertThat(item2.getGroupId()).isEqualTo("G-3");
+        assertThat(item2.getGroupKey()).isEqualTo("GK-3");
+        assertThat(item2.getBlockId()).isEqualTo("A");
+        assertThat(item2.getPosition()).isEqualTo(1);
+        assertThat(item2.getStrand()).isEqualTo("strand3");
+        assertThat(item2.getItemResponseTheoryModel()).isEqualTo("IRT3PLN");
+        assertThat(item2.getItemResponseTheoryAParameter()).isEqualTo(0.54343f);
+        assertThat(item2.getItemResponseTheoryBParameter()).isEqualTo("1.2160500288009644");
+        assertThat(item2.getItemResponseTheoryCParameter()).isEqualTo(0f);
+        assertThat(item2.getbVector()).isEqualTo("1.21605");
+        assertThat(item2.getClaims()).isEqualTo("SBAC-2-W;SBAC-2-W|9-5");
+        assertThat(item2.isActive()).isTrue();
+        assertThat(item2.getFormKeys()).isEmpty();
+        assertThat(item2.getFormPosition()).isEqualTo(1);
     }
 }
