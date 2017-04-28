@@ -55,6 +55,7 @@ public class Segment {
     private float slope;
     private float intercept;
     private float startInfo;
+    private List<ItemGroup> itemGroups = new ArrayList<>();
 
     // Fixed-form specific fields
     private List<Form> forms = new ArrayList<>();
@@ -75,7 +76,7 @@ public class Segment {
     public void setStartInfo(final float startInfo) {
         this.startInfo = startInfo;
     }
-    
+
     /**
      * @return key to the segment
      */
@@ -93,18 +94,18 @@ public class Segment {
     public void setAssessmentKey(String assessmentKey) {
         this.assessmentKey = assessmentKey;
     }
-    
+
     /**
      * @return The human-readable label of the segment
      */
     public String getLabel() {
         return label;
     }
-    
+
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
     /**
      * @return the associated segment id
      */
@@ -248,9 +249,9 @@ public class Segment {
     /**
      * @return All the {@link tds.assessment.Form}s associated with this segment.
      * <p>
-     *     This getter/setter is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.common.Algorithm}.  Segments configured for the "adaptive2" algorithm do not have forms, in which case an empty
-     *     {@code ArrayList} is returned
+     * This getter/setter is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
+     * {@link tds.common.Algorithm}.  Segments configured for the "adaptive2" algorithm do not have forms, in which case an empty
+     * {@code ArrayList} is returned
      * </p>
      */
     public List<Form> getForms() {
@@ -270,8 +271,8 @@ public class Segment {
     /**
      * Choose the {@link tds.assessment.Form}s for the specified language.
      * <p>
-     *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
+     * This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
+     * {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
      * </p>
      *
      * @param languageCode The student's specified language
@@ -296,12 +297,12 @@ public class Segment {
     /**
      * Choose the {@link tds.assessment.Form} for the specified language and form cohort.
      * <p>
-     *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
+     * This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
+     * {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
      * </p>
      *
      * @param languageCode The student's specified language
-     * @param cohort The form cohort to filter by
+     * @param cohort       The form cohort to filter by
      * @return The {@link tds.assessment.Form} for the specified language
      */
     public Optional<Form> getForm(final String languageCode, final String cohort) {
@@ -321,9 +322,9 @@ public class Segment {
      * @return the collection of {@link tds.assessment.Strand}s containing adaptive algorithm metadata for the
      * {@link tds.assessment.Segment}
      * <p>
-     *     This method is only used by {@link tds.assessment.Segment}s that are configured for the adaptive
-     *     {@link tds.common.Algorithm}.  Segments configured for the fixed form algorithm do not have strands, in
-     *     which case this method will return an empty {@code HashSet}.
+     * This method is only used by {@link tds.assessment.Segment}s that are configured for the adaptive
+     * {@link tds.common.Algorithm}.  Segments configured for the fixed form algorithm do not have strands, in
+     * which case this method will return an empty {@code HashSet}.
      * </p>
      */
     public Set<Strand> getStrands() {
@@ -333,7 +334,7 @@ public class Segment {
     public void setStrands(Set<Strand> strands) {
         this.strands = strands;
     }
-    
+
     public List<Item> getItems() {
         return items;
     }
@@ -550,12 +551,27 @@ public class Segment {
         this.slope = slope;
     }
 
+    /**
+     * @return leveraged when choosing items during an adaptive selection algorithm
+     */
     public float getIntercept() {
         return intercept;
     }
 
     public void setIntercept(final float intercept) {
         this.intercept = intercept;
+    }
+
+    /**
+     * @return The item groups that are associated with this segment.  This can be empty if there are not groups.  In
+     * those instances the item will be given a hard coded group in the selection code.
+     */
+    public List<ItemGroup> getItemGroups() {
+        return itemGroups;
+    }
+
+    public void setItemGroups(final List<ItemGroup> itemGroups) {
+        this.itemGroups = itemGroups;
     }
 
     @Override

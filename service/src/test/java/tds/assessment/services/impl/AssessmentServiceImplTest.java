@@ -17,6 +17,7 @@ import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.GradesQueryRepository;
+import tds.assessment.repositories.ItemGroupQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
@@ -46,13 +47,16 @@ public class AssessmentServiceImplTest {
 
     @Mock
     private GradesQueryRepository mockGradesQueryRepository;
-    
+
+    @Mock
+    private ItemGroupQueryRepository mockItemGroupQueryRepository;
+
     private AssessmentService service;
 
     @Before
     public void setUp() {
         service = new AssessmentServiceImpl(mockAssessmentQueryRepository, mockItemQueryRepository, mockFormQueryRepository,
-            mockStrandQueryRepository, mockAccommodationsQueryRepository, mockGradesQueryRepository);
+            mockStrandQueryRepository, mockAccommodationsQueryRepository, mockGradesQueryRepository, mockItemGroupQueryRepository);
     }
 
     @Test
@@ -79,6 +83,7 @@ public class AssessmentServiceImplTest {
         verify(mockItemQueryRepository).findItemsForAssessment("theKey");
         verify(mockStrandQueryRepository).findStrands("theKey");
         verify(mockGradesQueryRepository).findGrades("theKey");
+        verify(mockItemGroupQueryRepository).findItemGroupsBySegment("theKey");
 
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
     }
@@ -87,10 +92,12 @@ public class AssessmentServiceImplTest {
     public void shouldReturnAssessmentWithAdaptiveSegment() {
         Assessment assessment = new Assessment();
         assessment.setKey("theKey");
-        Segment fixedFormSegment = new Segment(assessment.getKey(), Algorithm.ADAPTIVE_2);
-        List<Segment> fixedFormSegments = new ArrayList<>();
-        fixedFormSegments.add(fixedFormSegment);
-        assessment.setSegments(fixedFormSegments);
+        Segment adaptiveSegment = new Segment("theKey", Algorithm.ADAPTIVE_2);
+        Segment adaptiveSegment2 = new Segment("segmentKey", Algorithm.ADAPTIVE_2);
+        List<Segment> segments = new ArrayList<>();
+        segments.add(adaptiveSegment);
+        segments.add(adaptiveSegment2);
+        assessment.setSegments(segments);
 
         when(mockAssessmentQueryRepository.findAssessmentByKey("SBAC_PT", "theKey")).thenReturn(Optional.of(assessment));
         when(mockFormQueryRepository.findFormsForAssessment("theKey")).thenReturn(new ArrayList<>());
@@ -107,6 +114,9 @@ public class AssessmentServiceImplTest {
         verify(mockItemQueryRepository).findItemsForAssessment("theKey");
         verify(mockStrandQueryRepository).findStrands("theKey");
         verify(mockGradesQueryRepository).findGrades("theKey");
+        verify(mockItemGroupQueryRepository).findItemGroupsBySegment("theKey");
+
+        verify(mockItemGroupQueryRepository).findItemGroupsBySegment("segmentKey");
 
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
     }

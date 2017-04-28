@@ -20,6 +20,7 @@ import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.GradesQueryRepository;
+import tds.assessment.repositories.ItemGroupQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
@@ -34,6 +35,7 @@ class AssessmentServiceImpl implements AssessmentService {
     private final StrandQueryRepository strandQueryRepository;
     private final AccommodationsQueryRepository accommodationsQueryRepository;
     private final GradesQueryRepository gradesQueryRepository;
+    private final ItemGroupQueryRepository itemGroupQueryRepository;
 
     @Autowired
     public AssessmentServiceImpl(final AssessmentQueryRepository assessmentQueryRepository,
@@ -41,13 +43,15 @@ class AssessmentServiceImpl implements AssessmentService {
                                  final FormQueryRepository formQueryRepository,
                                  final StrandQueryRepository strandQueryRepository,
                                  final AccommodationsQueryRepository accommodationsQueryRepository,
-                                 final GradesQueryRepository gradesQueryRepository) {
+                                 final GradesQueryRepository gradesQueryRepository,
+                                 final ItemGroupQueryRepository itemGroupQueryRepository) {
         this.assessmentQueryRepository = assessmentQueryRepository;
         this.itemQueryRepository = itemQueryRepository;
         this.formQueryRepository = formQueryRepository;
         this.strandQueryRepository = strandQueryRepository;
         this.accommodationsQueryRepository = accommodationsQueryRepository;
         this.gradesQueryRepository = gradesQueryRepository;
+        this.itemGroupQueryRepository = itemGroupQueryRepository;
     }
 
     @Override
@@ -70,6 +74,10 @@ class AssessmentServiceImpl implements AssessmentService {
             if (assessment.getSegments().stream().anyMatch(s -> s.getSelectionAlgorithm().equals(Algorithm.FIXED_FORM))) {
                 forms = formQueryRepository.findFormsForAssessment(assessmentKey);
             }
+
+            assessment.getSegments().forEach(
+                segment -> segment.setItemGroups(itemGroupQueryRepository.findItemGroupsBySegment(segment.getKey()))
+            );
 
             AssessmentAssembler.assemble(assessment, strands, itemConstraints, itemProperties, items, forms,
                 accommodationDependencies, grades);
