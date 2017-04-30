@@ -235,7 +235,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "   item.itemid AS clientId, \n" +
             "   item._efk_item AS itemKey, \n" +
             "   item._efk_itembank AS bankKey, \n" +
-            "   formitem.formposition AS formPosition, \n" +
+            "   formItem.formposition AS formPosition, \n" +
             "   adminItems.groupid,\n" +
             "   adminItems.groupkey,\n" +
             "   adminItems.blockid, \n" +
