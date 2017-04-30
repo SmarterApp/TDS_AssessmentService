@@ -85,7 +85,7 @@ public class SegmentControllerIntegrationTests {
         Item parentItem = new Item("parent");
         Item segmentItem = new Item("segment");
 
-        ItemProperty relevantProperty = new ItemProperty("propType", "propValue");
+        ItemProperty relevantProperty = new ItemProperty("propType", "propValue", "desc", "itemKey");
 
         SegmentItemInformation info = new SegmentItemInformation.Builder()
             .withContentLevelSpecifications(Collections.singletonList(spec))

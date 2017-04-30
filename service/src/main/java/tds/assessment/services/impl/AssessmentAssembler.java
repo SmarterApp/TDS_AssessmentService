@@ -44,7 +44,7 @@ class AssessmentAssembler {
             .filter(strand -> strand.getSegmentKey().equals(assessment.getKey()))
             .collect(Collectors.toSet()));
         assessment.setGrades(grades);
-        
+
         // To determine which language(s) are available to an assessment, we need to look at the item properties for
         // each item.  Each item should have a property with a name equal to "Language" (case-insensitive).  While
         // iterating through the item properties, we look for the language item property and collect its value.
@@ -53,29 +53,29 @@ class AssessmentAssembler {
             .map(ItemProperty::getValue)
             .collect(Collectors.toSet());
         assessment.setLanguageCodes(languages);
-        
+
         // Update items with their appropriate item properties
         for (Item item : items) {
             List<ItemProperty> properties = itemProperties.stream()
                 .filter(ip -> ip.getItemId().equals(item.getId()))
                 .collect(Collectors.toList());
-            
+
             item.setItemProperties(properties);
         }
-        
+
         // FIXED FORM SEGMENTS - If forms were supplied, wire up the items to their appropriate form
         // RULE:  The items in the form should be sorted by their formPosition in ascending order
         if (forms.size() > 0) {
             for (Form form : forms) {
                 List<Item> itemsForThisForm = items.stream()
-                    .filter(i -> i.getFormKeys() != null
-                        && i.getFormKeys().contains(form.getKey())
+                    .filter(i -> i.getFormKey() != null
+                        && i.getFormKey().equals(form.getKey())
                         && i.getSegmentKey().equals(form.getSegmentKey()))
                     .sorted(Comparator.comparingInt(Item::getFormPosition))
                     .collect(Collectors.toList());
 
                 form.setItems(itemsForThisForm);
-                
+
                 // Add the form to its parent fixed-form segment
                 assessment.getSegments().stream()
                     .filter(s -> s.getKey().equals(form.getSegmentKey())
@@ -84,12 +84,13 @@ class AssessmentAssembler {
                     .ifPresent(s -> s.getForms().add(form));
             }
         }
-        
+
         // ADAPTIVE SEGMENTS - Update the segment with data based on its selection algorithm
         for (Segment segment : assessment.getSegments()) {
             segment.setStrands(strands.stream()
                 .filter(strand -> strand.getSegmentKey().equals(segment.getKey()))
                 .collect(Collectors.toSet()));
+
             segment.setItems(items.stream()
                 .filter(item -> item.getSegmentKey().equals(segment.getKey()))
                 .collect(Collectors.toList()));

@@ -93,9 +93,9 @@ public class SegmentServiceImplTest {
         Item parentItem = new Item("parent");
         Item segmentItem = new Item("segment");
 
-        ItemProperty ignoreProperty = new ItemProperty(PROP_NAME_TYPE, "Bogus");
-        ItemProperty ignoreProperty2 = new ItemProperty("bogus", OFFGADE_PROP_VALUE_PREFIX + "_Something");
-        ItemProperty relevantProperty = new ItemProperty(PROP_NAME_TYPE, OFFGADE_PROP_VALUE_PREFIX + "_Something");
+        ItemProperty ignoreProperty = new ItemProperty(PROP_NAME_TYPE, "Bogus", "desc", "segmentItem");
+        ItemProperty ignoreProperty2 = new ItemProperty("bogus", OFFGADE_PROP_VALUE_PREFIX + "_Something", "desc", "segmentItem");
+        ItemProperty relevantProperty = new ItemProperty(PROP_NAME_TYPE, OFFGADE_PROP_VALUE_PREFIX + "_Something", "desc", "segmentItem");
 
         when(mockAssessmentService.findAssessmentBySegmentKey("segmentKey")).thenReturn(Optional.of(assessment));
         when(mockStrandQueryRepository.findContentLevelSpecificationsBySegmentKey("segmentKey")).thenReturn(Collections.singletonList(spec));

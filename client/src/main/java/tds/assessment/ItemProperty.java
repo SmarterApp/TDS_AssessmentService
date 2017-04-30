@@ -10,18 +10,10 @@ public class ItemProperty {
     private String description;
 
     public ItemProperty(String name, String value, String description, String itemId) {
-        this(name, value, description);
-        this.itemId = itemId;
-    }
-
-    public ItemProperty(String name, String value, String description) {
-        this(name, value);
-        this.description = description;
-    }
-
-    public ItemProperty(String name, String value) {
         this.name = name;
         this.value = value;
+        this.description = description;
+        this.itemId = itemId;
     }
 
     /**

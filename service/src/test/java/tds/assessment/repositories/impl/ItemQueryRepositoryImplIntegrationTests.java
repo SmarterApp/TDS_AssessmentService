@@ -96,7 +96,8 @@ public class ItemQueryRepositoryImplIntegrationTests {
                 "('187-1236', 532, 1, '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', '187-532', 1),\n" +
                 "('187-1236', 534, 1, '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', '187-534', 1),\n" +
                 "('187-1237', 535, 1, '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', '187-535', 1),\n" +
-                "('187-1237', 536, 1, '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', '187-536', 1)\n";
+                "('187-1237', 536, 1, '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', '187-536', 1), \n" +
+                "('187-1234', 536, 2, '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', '187-535', 1)\n";
 
         final String tblClientInsertFromSQL =
             "INSERT INTO itembank.tblclient (_key, name, description, homepath) \n" +
@@ -188,8 +189,22 @@ public class ItemQueryRepositoryImplIntegrationTests {
     @Test
     public void shouldRetrieveSingleItemNonSegmentedTest() {
         List<Item> items = repository.findItemsForAssessment("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(items).hasSize(1);
-        Item item1 = items.get(0);
+        assertThat(items).hasSize(2);
+
+        Item item1 = null;
+        Item item2 = null;
+
+        for (Item item : items) {
+            if(item.getFormKey().equals("187-535")) {
+                item1 = item;
+            } else if (item.getFormKey().equals("187-536")) {
+                item2 = item;
+            }
+        }
+
+        assertThat(item1).isNotNull();
+        assertThat(item2).isNotNull();
+
         assertThat(item1.getId()).isEqualTo("187-1237");
         assertThat(item1.getGroupId()).isEqualTo("G-4");
         assertThat(item1.getGroupKey()).isEqualTo("GK-4");
@@ -200,12 +215,30 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.getStrand()).isEqualTo("silver strand");
         assertThat(item1.isFieldTest()).isTrue();
         assertThat(item1.isRequired()).isTrue();
-        assertThat(item1.getFormKeys()).containsExactlyInAnyOrder("187-535", "187-536");
+        assertThat(item1.getFormKey()).isEqualTo("187-535");
         assertThat(item1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1237/item-187-1237.xml");
         assertThat(item1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-7321/stim-187-7321.xml");
         assertThat(item1.isPrintable()).isFalse();
         assertThat(item1.isActive()).isFalse();
         assertThat(item1.getFormPosition()).isEqualTo(1);
+
+
+        assertThat(item2.getId()).isEqualTo("187-1237");
+        assertThat(item2.getGroupId()).isEqualTo("G-4");
+        assertThat(item2.getGroupKey()).isEqualTo("GK-4");
+        assertThat(item2.getBlockId()).isEqualTo("A");
+        assertThat(item2.getItemType()).isEqualTo("MC");
+        assertThat(item2.getPosition()).isEqualTo(1);
+        assertThat(item2.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        assertThat(item2.getStrand()).isEqualTo("silver strand");
+        assertThat(item2.isFieldTest()).isTrue();
+        assertThat(item2.isRequired()).isTrue();
+        assertThat(item2.getFormKey()).isEqualTo("187-536");
+        assertThat(item2.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1237/item-187-1237.xml");
+        assertThat(item2.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-7321/stim-187-7321.xml");
+        assertThat(item2.isPrintable()).isFalse();
+        assertThat(item2.isActive()).isFalse();
+        assertThat(item2.getFormPosition()).isEqualTo(1);
     }
 
     @Test
@@ -213,7 +246,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         List<Item> items = repository.findItemsForAssessment("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015");
 
         // Validate items in each segment
-        assertThat(items).hasSize(3);
+        assertThat(items).hasSize(6);
         Item item1Seg1 = null;
         Item item2Seg1 = null;
         Item item1Seg2 = null;
@@ -241,7 +274,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg1.isFieldTest()).isFalse();
         assertThat(item1Seg1.isRequired()).isTrue();
         assertThat(item1Seg1.getStrand()).isEqualTo("strand1");
-        assertThat(item1Seg1.getFormKeys()).containsExactlyInAnyOrder("187-528", "187-529");
         assertThat(item1Seg1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1234/item-187-1234.xml");
         assertThat(item1Seg1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-4321/stim-187-4321.xml");
         assertThat(item1Seg1.isPrintable()).isFalse();
@@ -260,7 +292,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item2Seg1.isFieldTest()).isFalse();
         assertThat(item2Seg1.isRequired()).isTrue();
         assertThat(item2Seg1.getStrand()).isEqualTo("strand2");
-        assertThat(item2Seg1.getFormKeys()).containsExactlyInAnyOrder("187-528", "187-529");
         assertThat(item2Seg1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1235/item-187-1235.xml");
         assertThat(item2Seg1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-5321/stim-187-5321.xml");
         assertThat(item2Seg1.isPrintable()).isFalse();
@@ -276,7 +307,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1Seg2.isFieldTest()).isFalse();
         assertThat(item1Seg2.isRequired()).isTrue();
         assertThat(item1Seg2.getStrand()).isEqualTo("strand3");
-        assertThat(item1Seg2.getFormKeys()).containsExactlyInAnyOrder("187-532", "187-534");
         assertThat(item1Seg2.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1236/item-187-1236.xml");
         assertThat(item1Seg2.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-6321/stim-187-6321.xml");
         assertThat(item1Seg2.isPrintable()).isTrue();
@@ -371,7 +401,6 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item2.getbVector()).isEqualTo("1.21605");
         assertThat(item2.getClaims()).isEqualTo("SBAC-2-W;SBAC-2-W|9-5");
         assertThat(item2.isActive()).isTrue();
-        assertThat(item2.getFormKeys()).isEmpty();
         assertThat(item2.getFormPosition()).isEqualTo(1);
     }
 }

@@ -7,11 +7,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import tds.assessment.Item;
 import tds.assessment.ItemFileMetadata;
@@ -37,8 +34,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   item.itemtype,\n" +
                 "   item.scorepoint AS maxScore, \n" +
                 "   item.itemid AS clientId, \n" +
-                "   item._efk_item as itemKey, \n" +
-                "   item._efk_itembank as bankKey, \n" +
+                "   item._efk_item AS itemKey, \n" +
+                "   item._efk_itembank AS bankKey, \n" +
                 "   adminItems._fk_adminsubject AS segmentKey,\n" +
                 "   formItem._fk_testform AS formKey,\n" +
                 "   formItem.formposition AS formPosition, \n" +
@@ -69,6 +66,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "JOIN \n" +
                 "   itembank.testformitem formItem \n" +
                 "   ON formItem._fk_item = item._key \n" +
+                "   AND formItem._fk_adminsubject = adminItems._fk_adminsubject \n" +
                 "JOIN \n" +
                 "   itembank.tblsetofadminsubjects segments \n" +
                 "   ON segments._key = adminItems._fk_adminsubject \n" +
@@ -97,48 +95,37 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "AND \n" +
                 "   formItem.isactive = 1";
 
-        return jdbcTemplate.query(itemsSQL, parameters, resultExtractor -> {
-            Map<String, Item> itemsMap = new HashMap<>();
+        return jdbcTemplate.query(itemsSQL, parameters, (rs, rowNum) -> {
+            Item item = new Item(rs.getString("id"));
+            item.setSegmentKey(rs.getString("segmentKey"));
+            item.setItemType(rs.getString("itemtype"));
+            item.setGroupId(rs.getString("groupid"));
+            item.setGroupKey(rs.getString("groupkey"));
+            item.setBlockId((rs.getString("blockid")));
+            item.setPosition(rs.getInt("position"));
+            item.setFormPosition(rs.getInt("formPosition"));
+            item.setFieldTest(rs.getBoolean("isfieldtest"));
+            item.setRequired(rs.getBoolean("isrequired"));
+            item.setStrand(rs.getString("strandname"));
+            item.setFormKey(rs.getString("formKey"));
+            item.setItemFilePath(rs.getString("itemFilePath"));
+            item.setStimulusFilePath(rs.getString("stimulusFilePath"));
+            item.setPrintable(rs.getBoolean("isprintable"));
+            item.setMimeType(rs.getString("responseMimeType"));
+            item.setMaxScore(rs.getInt("maxScore"));
+            item.setContentLevel(rs.getString("contentLevel"));
+            item.setClientId(rs.getString("clientId"));
+            item.setNotForScoring(rs.getBoolean("notForScoring"));
+            item.setbVector(rs.getString("bVector"));
+            item.setItemResponseTheoryModel(rs.getString("irtModel"));
+            item.setItemResponseTheoryAParameter((Float) rs.getObject("irtA"));
+            item.setItemResponseTheoryBParameter(rs.getString("irtB"));
+            item.setItemResponseTheoryCParameter((Float) rs.getObject("irtC"));
+            item.setClaims(rs.getString("clString"));
+            item.setItemKey(rs.getLong("itemKey"));
+            item.setBankKey(rs.getLong("bankKey"));
 
-            while (resultExtractor.next()) {
-                Item item = itemsMap.get(resultExtractor.getString("id"));
-                if (item == null) {
-                    item = new Item(resultExtractor.getString("id"));
-                    itemsMap.put(item.getId(), item);
-                }
-
-                item.setSegmentKey(resultExtractor.getString("segmentKey"));
-                item.setItemType(resultExtractor.getString("itemtype"));
-                item.setGroupId(resultExtractor.getString("groupid"));
-                item.setGroupKey(resultExtractor.getString("groupkey"));
-                item.setBlockId((resultExtractor.getString("blockid")));
-                item.setPosition(resultExtractor.getInt("position"));
-                item.setFormPosition(resultExtractor.getInt("formPosition"));
-                item.setFieldTest(resultExtractor.getBoolean("isfieldtest"));
-                item.setRequired(resultExtractor.getBoolean("isrequired"));
-                item.setStrand(resultExtractor.getString("strandname"));
-                item.getFormKeys().add(resultExtractor.getString("formKey"));
-                item.setItemFilePath(resultExtractor.getString("itemFilePath"));
-                item.setStimulusFilePath(resultExtractor.getString("stimulusFilePath"));
-                item.setPrintable(resultExtractor.getBoolean("isprintable"));
-                item.setMimeType(resultExtractor.getString("responseMimeType"));
-                item.setMaxScore(resultExtractor.getInt("maxScore"));
-                item.setContentLevel(resultExtractor.getString("contentLevel"));
-                item.setClientId(resultExtractor.getString("clientId"));
-                item.setNotForScoring(resultExtractor.getBoolean("notForScoring"));
-                item.setbVector(resultExtractor.getString("bVector"));
-                item.setItemResponseTheoryModel(resultExtractor.getString("irtModel"));
-                item.setItemResponseTheoryAParameter((Float) resultExtractor.getObject("irtA"));
-                item.setItemResponseTheoryBParameter(resultExtractor.getString("irtB"));
-                item.setItemResponseTheoryCParameter((Float) resultExtractor.getObject("irtC"));
-                item.setClaims(resultExtractor.getString("clString"));
-                item.setItemKey(resultExtractor.getLong("itemKey"));
-                item.setBankKey(resultExtractor.getLong("bankKey"));
-            }
-
-            return itemsMap.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+            return item;
         });
     }
 
@@ -246,8 +233,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "   item.itemtype,\n" +
             "   item.scorepoint AS maxScore, \n" +
             "   item.itemid AS clientId, \n" +
-            "   item._efk_item as itemKey, \n" +
-            "   item._efk_itembank as bankKey, \n" +
+            "   item._efk_item AS itemKey, \n" +
+            "   item._efk_itembank AS bankKey, \n" +
             "   formitem.formposition AS formPosition, \n" +
             "   adminItems.groupid,\n" +
             "   adminItems.groupkey,\n" +
@@ -275,6 +262,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "LEFT JOIN \n" +
             "   itembank.testformitem formitem \n" +
             "   ON formitem._fk_item = item._key \n" +
+            "   AND formItem._fk_adminsubject = adminItems._fk_adminsubject \n" +
             "WHERE \n" +
             "   adminItems._fk_AdminSubject = :segmentKey";
 

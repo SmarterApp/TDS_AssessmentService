@@ -3,9 +3,7 @@ package tds.assessment;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import tds.accommodation.Accommodation;
 
@@ -26,7 +24,6 @@ public class Item {
     private boolean required;
     private String strand;
     private List<ItemProperty> itemProperties = new ArrayList<>();
-    private Set<String> formKeys;
     private String itemFilePath;
     private String stimulusFilePath;
     private boolean isPrintable;
@@ -44,6 +41,7 @@ public class Item {
     private boolean active;
     private long itemKey;
     private long bankKey;
+    private String formKey;
 
     /**
      * Private empty constructor for frameworks
@@ -230,24 +228,6 @@ public class Item {
     }
 
     /**
-     * @return A collection of keys that identify the {@link tds.assessment.Form}s that this item is assigned to
-     * <p>
-     * This collection is only used for assigning Items to the correct {@link tds.assessment.Form} in a fixed-form
-     * {@link tds.assessment.Segment}.
-     * </p>
-     */
-    public Set<String> getFormKeys() {
-        if (formKeys == null) {
-            formKeys = new HashSet<>();
-        }
-        return formKeys;
-    }
-
-    public void setFormKeys(Set<String> formKeys) {
-        this.formKeys = formKeys;
-    }
-
-    /**
      * Finds the language code of the item based on its item properties.
      *
      * @return The language code of the item if one exists in its properties - otherwise null
@@ -420,6 +400,17 @@ public class Item {
         this.bankKey = bankKey;
     }
 
+    /**
+     * @return the form key if the item is part of a form
+     */
+    public String getFormKey() {
+        return formKey;
+    }
+
+    public void setFormKey(final String formKey) {
+        this.formKey = formKey;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -428,6 +419,7 @@ public class Item {
         final Item item = (Item) o;
 
         if (position != item.position) return false;
+        if (formPosition != item.formPosition) return false;
         if (fieldTest != item.fieldTest) return false;
         if (required != item.required) return false;
         if (isPrintable != item.isPrintable) return false;
@@ -445,7 +437,6 @@ public class Item {
         if (strand != null ? !strand.equals(item.strand) : item.strand != null) return false;
         if (itemProperties != null ? !itemProperties.equals(item.itemProperties) : item.itemProperties != null)
             return false;
-        if (formKeys != null ? !formKeys.equals(item.formKeys) : item.formKeys != null) return false;
         if (itemFilePath != null ? !itemFilePath.equals(item.itemFilePath) : item.itemFilePath != null) return false;
         if (stimulusFilePath != null ? !stimulusFilePath.equals(item.stimulusFilePath) : item.stimulusFilePath != null)
             return false;
@@ -461,7 +452,8 @@ public class Item {
         if (itemResponseTheoryCParameter != null ? !itemResponseTheoryCParameter.equals(item.itemResponseTheoryCParameter) : item.itemResponseTheoryCParameter != null)
             return false;
         if (bVector != null ? !bVector.equals(item.bVector) : item.bVector != null) return false;
-        return claims != null ? claims.equals(item.claims) : item.claims == null;
+        if (claims != null ? !claims.equals(item.claims) : item.claims != null) return false;
+        return formKey != null ? formKey.equals(item.formKey) : item.formKey == null;
     }
 
     @Override
@@ -473,11 +465,11 @@ public class Item {
         result = 31 * result + (groupKey != null ? groupKey.hashCode() : 0);
         result = 31 * result + (blockId != null ? blockId.hashCode() : 0);
         result = 31 * result + position;
+        result = 31 * result + formPosition;
         result = 31 * result + (fieldTest ? 1 : 0);
         result = 31 * result + (required ? 1 : 0);
         result = 31 * result + (strand != null ? strand.hashCode() : 0);
         result = 31 * result + (itemProperties != null ? itemProperties.hashCode() : 0);
-        result = 31 * result + (formKeys != null ? formKeys.hashCode() : 0);
         result = 31 * result + (itemFilePath != null ? itemFilePath.hashCode() : 0);
         result = 31 * result + (stimulusFilePath != null ? stimulusFilePath.hashCode() : 0);
         result = 31 * result + (isPrintable ? 1 : 0);
@@ -495,6 +487,7 @@ public class Item {
         result = 31 * result + (active ? 1 : 0);
         result = 31 * result + (int) (itemKey ^ (itemKey >>> 32));
         result = 31 * result + (int) (bankKey ^ (bankKey >>> 32));
+        result = 31 * result + (formKey != null ? formKey.hashCode() : 0);
         return result;
     }
 }
