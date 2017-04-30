@@ -260,8 +260,8 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             "   itembank.tblitem item \n" +
             "   ON item._key = adminItems._fk_item \n" +
             "LEFT JOIN \n" +
-            "   itembank.testformitem formitem \n" +
-            "   ON formitem._fk_item = item._key \n" +
+            "   itembank.testformitem formItem \n" +
+            "   ON formItem._fk_item = item._key \n" +
             "   AND formItem._fk_adminsubject = adminItems._fk_adminsubject \n" +
             "WHERE \n" +
             "   adminItems._fk_AdminSubject = :segmentKey";
