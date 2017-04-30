@@ -65,7 +65,7 @@ public class AssessmentAssemblerTest {
         assertThat(assessment.getStrands()).containsExactly(strand);
         assertThat(assessment.getLanguageCodes()).containsExactly("ENU");
         assertThat(assessment.getGrades()).containsExactly("Third");
-        assertThat(segment.getItems()).isEmpty();
+        assertThat(segment.getItems()).containsExactly(item, item2);
         assertThat(form.getItems()).containsExactly(item2, item);
     }
 
