@@ -7,6 +7,8 @@ import java.util.List;
 
 import tds.accommodation.Accommodation;
 
+import static tds.common.util.Preconditions.checkNotNull;
+
 /**
  * A model representing an item for an {@link tds.assessment.Assessment}
  */
@@ -194,11 +196,7 @@ public class Item {
     }
 
     public void setItemFilePath(String itemFilePath) {
-        if (itemFilePath == null) {
-            throw new IllegalArgumentException("Item file path cannot be null");
-        }
-
-        this.itemFilePath = itemFilePath;
+        this.itemFilePath = checkNotNull(itemFilePath);
     }
 
     /**
