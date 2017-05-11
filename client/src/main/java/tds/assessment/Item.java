@@ -195,7 +195,7 @@ public class Item {
 
     public void setItemFilePath(String itemFilePath) {
         if (itemFilePath == null) {
-            itemFilePath = "";
+            throw new IllegalArgumentException("Item file path cannot be null");
         }
 
         this.itemFilePath = itemFilePath;
@@ -209,10 +209,6 @@ public class Item {
     }
 
     public void setStimulusFilePath(String stimulusFilePath) {
-        if (stimulusFilePath == null) {
-            stimulusFilePath = "";
-        }
-
         this.stimulusFilePath = stimulusFilePath;
     }
 
