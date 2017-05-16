@@ -24,11 +24,11 @@ public class AssessmentWindowController {
         this.assessmentWindowService = assessmentWindowService;
     }
 
-    @GetMapping(value = "{clientName}/assessments/{assessmentId}/windows/student/{studentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{clientName}/assessments/{assessmentId}/windows", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<List<AssessmentWindow>> findAssessmentWindows(@PathVariable final String clientName,
                                                                  @PathVariable final String assessmentId,
-                                                                 @PathVariable final long studentId,
+                                                                 @RequestParam final boolean guestStudent,
                                                                  @RequestParam(required = false) final Integer shiftWindowStart,
                                                                  @RequestParam(required = false) final Integer shiftWindowEnd,
                                                                  @RequestParam(required = false) final Integer shiftFormStart,
@@ -36,7 +36,7 @@ public class AssessmentWindowController {
                                                                  @RequestParam(required = false) final String formList
     ) {
         AssessmentWindowParameters assessmentWindowParameters = new AssessmentWindowParameters
-            .Builder(studentId, clientName, assessmentId)
+            .Builder(guestStudent, clientName, assessmentId)
             .withShiftWindowStart(shiftWindowStart == null ? 0 : shiftWindowStart)
             .withShiftWindowEnd(shiftWindowEnd == null ? 0 : shiftWindowEnd)
             .withShiftFormStart(shiftFormStart == null ? 0 : shiftFormStart)

@@ -58,9 +58,10 @@ public class AssessmentWindowControllerIntegrationTests {
         when(mockAssessmentWindowService.findAssessmentWindows(isA(AssessmentWindowParameters.class))).
             thenReturn(Collections.singletonList(window));
 
-        String url = "/SBAC_PT/assessments/math11/windows/student/23";
+        String url = "/SBAC_PT/assessments/math11/windows";
 
         http.perform(get(url)
+            .param("guestStudent", "false")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()", is(1)))
