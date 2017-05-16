@@ -4,7 +4,7 @@ package tds.assessment.model;
  * Contains the parameters for the assessment window lookup
  */
 public class AssessmentWindowParameters {
-    private long studentId;
+    private boolean guestStudent;
     private String clientName;
     private String assessmentId;
     private int shiftWindowStart;
@@ -14,7 +14,7 @@ public class AssessmentWindowParameters {
     private String formList;
 
     private AssessmentWindowParameters(Builder builder) {
-        this.studentId = builder.studentId;
+        this.guestStudent = builder.guestStudent;
         this.clientName = builder.clientName;
         this.assessmentId = builder.assessmentId;
         this.shiftWindowStart = builder.shiftWindowStart;
@@ -25,10 +25,10 @@ public class AssessmentWindowParameters {
     }
 
     /**
-     * @return The unique id for the student
+     * @return A flag indicating whether the window should be fetched for a guest student
      */
-    public long getStudentId() {
-        return studentId;
+    public boolean isGuestStudent() {
+        return guestStudent;
     }
 
     /**
@@ -81,7 +81,7 @@ public class AssessmentWindowParameters {
     }
 
     public static class Builder {
-        private long studentId;
+        private boolean guestStudent;
         private String clientName;
         private String assessmentId;
         private int shiftWindowStart = 0;
@@ -90,8 +90,8 @@ public class AssessmentWindowParameters {
         private int shiftFormEnd = 0;
         private String formList;
 
-        public Builder(long studentId, String clientName, String assessmentId) {
-            this.studentId = studentId;
+        public Builder(boolean guestStudent, String clientName, String assessmentId) {
+            this.guestStudent = guestStudent;
             this.clientName = clientName;
             this.assessmentId = assessmentId;
         }
@@ -133,7 +133,7 @@ public class AssessmentWindowParameters {
 
         AssessmentWindowParameters that = (AssessmentWindowParameters) o;
 
-        if (studentId != that.studentId) return false;
+        if (guestStudent != that.guestStudent) return false;
         if (shiftWindowStart != that.shiftWindowStart) return false;
         if (shiftWindowEnd != that.shiftWindowEnd) return false;
         if (shiftFormStart != that.shiftFormStart) return false;
@@ -145,7 +145,7 @@ public class AssessmentWindowParameters {
 
     @Override
     public int hashCode() {
-        int result = (int) (studentId ^ (studentId >>> 32));
+        int result = guestStudent ? 1 : 0;
         result = 31 * result + clientName.hashCode();
         result = 31 * result + assessmentId.hashCode();
         result = 31 * result + shiftWindowStart;

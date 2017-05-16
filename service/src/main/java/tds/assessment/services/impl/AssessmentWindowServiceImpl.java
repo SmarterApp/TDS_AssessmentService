@@ -32,7 +32,7 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
     }
 
     @Override
-    @Cacheable(CacheType.MEDIUM_TERM)
+    @Cacheable(CacheType.LONG_TERM)
     public Map<String, List<AssessmentWindow>> findAssessmentWindowsForAssessmentIds(final String clientName, final String... assessmentIds) {
         List<AssessmentWindow> assessmentWindows = assessmentWindowQueryRepository.findAssessmentWindowsForAssessmentIds(clientName, assessmentIds);
         return assessmentWindows.stream()
@@ -40,9 +40,9 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
     }
 
     @Override
-    @Cacheable(CacheType.MEDIUM_TERM)
+    @Cacheable(CacheType.LONG_TERM)
     public List<AssessmentWindow> findAssessmentWindows(final AssessmentWindowParameters assessmentWindowParameters) {
-        long studentId = assessmentWindowParameters.getStudentId();
+        boolean guestStudent = assessmentWindowParameters.isGuestStudent();
         String clientName = assessmentWindowParameters.getClientName();
         String assessmentId = assessmentWindowParameters.getAssessmentId();
 
@@ -67,7 +67,7 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
             assessmentWindowParameters.getShiftWindowEnd(),
             assessmentId);
 
-        if (studentId < 0) {
+        if (guestStudent) {
             return assessmentWindows;
         }
 
@@ -81,7 +81,7 @@ public class AssessmentWindowServiceImpl implements AssessmentWindowService {
         boolean requireFormWindow = false, requireForm = false;
 
         //Lines 3703 - 3710 in StudentDLL._GetTesteeTestForms_SP
-        if (assessmentWindowParameters.getStudentId() < 0) {
+        if (assessmentWindowParameters.isGuestStudent()) {
             return formWindows;
         }
 
