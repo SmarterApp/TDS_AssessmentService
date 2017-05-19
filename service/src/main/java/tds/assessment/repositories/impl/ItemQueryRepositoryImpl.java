@@ -63,7 +63,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "JOIN \n" +
                 "   itembank.tblitem item \n" +
                 "   ON item._key = adminItems._fk_item \n" +
-                "JOIN \n" +
+                "LEFT JOIN \n" +
                 "   itembank.testformitem formItem \n" +
                 "   ON formItem._fk_item = item._key \n" +
                 "   AND formItem._fk_adminsubject = adminItems._fk_adminsubject \n" +
@@ -93,7 +93,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "AND \n" +
                 "   adminItems.isactive = 1 \n" +
                 "AND \n" +
-                "   formItem.isactive = 1";
+                "   (formItem.isactive = 1 OR formItem.isactive IS NULL)";
 
         return jdbcTemplate.query(itemsSQL, parameters, (rs, rowNum) -> {
             Item item = new Item(rs.getString("id"));

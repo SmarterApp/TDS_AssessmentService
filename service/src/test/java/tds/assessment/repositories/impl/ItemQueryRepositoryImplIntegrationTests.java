@@ -82,10 +82,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
                 "('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 528, 528, 'PracTest::MG8::S1::SP14', 'ENU', '187-528', NULL, 0, 8233, NULL, 'Default'),\n" +
                 "('(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', 529, 529, 'PracTest::MG8::S1::SP14::Braille', 'ENU-Braille', '187-529', NULL, 0, 8233, NULL, 'Default'),\n" +
                 "('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 532, 532, 'PracTest::MG8::S2::SP14::Braille', 'ENU', '187-532', NULL, 0, 8233, NULL, 'Default'),\n" +
-                "('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 534, 534, 'PracTest::MG8::S2::SP14', 'ENU-Braille', '187-534', NULL, 0, 8233, NULL, 'Default'),\n" +
-                "('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 535, 535, 'PracTest::MG11::S1::SP14::Braille', 'ENU', '187-535', NULL, 0, 8233, NULL, 'Default'),\n" +
-                "('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 536, 536, 'PracTest::MG11::S1::SP14::ESN', 'ENU-Braille', '187-536', NULL, 0, 8233, NULL, 'Default')";
-
+                "('(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', 534, 534, 'PracTest::MG8::S2::SP14', 'ENU-Braille', '187-534', NULL, 0, 8233, NULL, 'Default')";
         final String tblTestFormItemInsertSQL =
             "INSERT INTO testformitem (_fk_item, _efk_itsformkey, formposition, _fk_adminsubject, _fk_testform, isactive)\n" +
                 "VALUES\n" +
@@ -94,10 +91,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
                 "('187-1235', 528, 2, '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', '187-528', 1),\n" +
                 "('187-1235', 529, 2, '(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015', '187-529', 1),\n" +
                 "('187-1236', 532, 1, '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', '187-532', 1),\n" +
-                "('187-1236', 534, 1, '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', '187-534', 1),\n" +
-                "('187-1237', 535, 1, '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', '187-535', 1),\n" +
-                "('187-1237', 536, 1, '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', '187-536', 1), \n" +
-                "('187-1234', 536, 2, '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', '187-535', 1)\n";
+                "('187-1236', 534, 1, '(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015', '187-534', 1)\n";
 
         final String tblClientInsertFromSQL =
             "INSERT INTO itembank.tblclient (_key, name, description, homepath) \n" +
@@ -187,23 +181,13 @@ public class ItemQueryRepositoryImplIntegrationTests {
     }
 
     @Test
-    public void shouldRetrieveSingleItemNonSegmentedTest() {
+    public void shouldRetrieveSingleItemNonSegmentedAdaptiveTest() {
         List<Item> items = repository.findItemsForAssessment("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(items).hasSize(2);
+        assertThat(items).hasSize(1);
 
-        Item item1 = null;
-        Item item2 = null;
-
-        for (Item item : items) {
-            if(item.getFormKey().equals("187-535")) {
-                item1 = item;
-            } else if (item.getFormKey().equals("187-536")) {
-                item2 = item;
-            }
-        }
+        Item item1 = items.get(0);
 
         assertThat(item1).isNotNull();
-        assertThat(item2).isNotNull();
 
         assertThat(item1.getId()).isEqualTo("187-1237");
         assertThat(item1.getGroupId()).isEqualTo("G-4");
@@ -215,30 +199,11 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.getStrand()).isEqualTo("silver strand");
         assertThat(item1.isFieldTest()).isTrue();
         assertThat(item1.isRequired()).isTrue();
-        assertThat(item1.getFormKey()).isEqualTo("187-535");
+        assertThat(item1.getFormKey()).isNull();
         assertThat(item1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1237/item-187-1237.xml");
         assertThat(item1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-7321/stim-187-7321.xml");
         assertThat(item1.isPrintable()).isFalse();
         assertThat(item1.isActive()).isFalse();
-        assertThat(item1.getFormPosition()).isEqualTo(1);
-
-
-        assertThat(item2.getId()).isEqualTo("187-1237");
-        assertThat(item2.getGroupId()).isEqualTo("G-4");
-        assertThat(item2.getGroupKey()).isEqualTo("GK-4");
-        assertThat(item2.getBlockId()).isEqualTo("A");
-        assertThat(item2.getItemType()).isEqualTo("MC");
-        assertThat(item2.getPosition()).isEqualTo(1);
-        assertThat(item2.getSegmentKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-        assertThat(item2.getStrand()).isEqualTo("silver strand");
-        assertThat(item2.isFieldTest()).isTrue();
-        assertThat(item2.isRequired()).isTrue();
-        assertThat(item2.getFormKey()).isEqualTo("187-536");
-        assertThat(item2.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1237/item-187-1237.xml");
-        assertThat(item2.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-7321/stim-187-7321.xml");
-        assertThat(item2.isPrintable()).isFalse();
-        assertThat(item2.isActive()).isFalse();
-        assertThat(item2.getFormPosition()).isEqualTo(1);
     }
 
     @Test
