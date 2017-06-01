@@ -203,7 +203,7 @@ public class ItemQueryRepositoryImplIntegrationTests {
         assertThat(item1.getItemFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/items/item-187-1237/item-187-1237.xml");
         assertThat(item1.getStimulusFilePath()).isEqualTo("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-7321/stim-187-7321.xml");
         assertThat(item1.isPrintable()).isFalse();
-        assertThat(item1.isActive()).isFalse();
+        assertThat(item1.isActive()).isTrue();
     }
 
     @Test

@@ -82,16 +82,19 @@ public class SegmentServiceImplTest {
     public void shouldReturnSegmentInformation() {
         Assessment assessment = new Assessment();
         assessment.setKey("assessmentKey");
+        Item otherItem = new Item("otherItem");
+        Item segmentItem = new Item("segment");
         Segment assessmentSegment = new Segment("assessmentKey", Algorithm.ADAPTIVE_2);
         Segment segment = new Segment("segmentKey", Algorithm.ADAPTIVE_2);
-        assessment.setSegments(Arrays.asList(assessmentSegment, segment));
+        segment.setItems(Collections.singletonList(segmentItem));
+        Segment otherSegment = new Segment("segmentKey1", Algorithm.ADAPTIVE_2);
+        otherSegment.setItems(Collections.singletonList(otherItem));
+        assessment.setSegments(Arrays.asList(assessmentSegment, segment, otherSegment));
 
         ContentLevelSpecification spec = new ContentLevelSpecification.Builder().build();
         ItemControlParameter itemControlParameter = new ItemControlParameter("bpId", "name", "value");
         ItemGroup itemGroup = new ItemGroup("group", 1, 10, 1f);
         ItemMeasurement itemMeasurement = new ItemMeasurement.Builder().build();
-        Item parentItem = new Item("parent");
-        Item segmentItem = new Item("segment");
 
         ItemProperty ignoreProperty = new ItemProperty(PROP_NAME_TYPE, "Bogus", "desc", "segmentItem");
         ItemProperty ignoreProperty2 = new ItemProperty("bogus", OFFGADE_PROP_VALUE_PREFIX + "_Something", "desc", "segmentItem");
@@ -101,8 +104,6 @@ public class SegmentServiceImplTest {
         when(mockStrandQueryRepository.findContentLevelSpecificationsBySegmentKey("segmentKey")).thenReturn(Collections.singletonList(spec));
         when(mockItemControlParametersQueryRepository.findControlParametersForSegment("segmentKey")).thenReturn(Collections.singletonList(itemControlParameter));
         when(mockItemGroupQueryRepository.findItemGroupsBySegment("segmentKey")).thenReturn(Collections.singletonList(itemGroup));
-        when(mockItemQueryRepository.findItemsForSegment("assessmentKey")).thenReturn(Collections.singletonList(parentItem));
-        when(mockItemQueryRepository.findItemsForSegment("segmentKey")).thenReturn(Collections.singletonList(segmentItem));
         when(mockItemMeasurementQueryRepository.findItemMeasurements("segmentKey", "assessmentKey")).thenReturn(Collections.singletonList(itemMeasurement));
         when(mockItemQueryRepository.findActiveItemsProperties("segmentKey")).thenReturn(Arrays.asList(ignoreProperty, ignoreProperty2, relevantProperty));
 
@@ -117,7 +118,7 @@ public class SegmentServiceImplTest {
         assertThat(info.getControlParameters()).containsExactly(itemControlParameter);
         assertThat(info.getItemGroups()).containsExactly(itemGroup);
         assertThat(info.getItemMeasurements()).containsExactly(itemMeasurement);
-        assertThat(info.getParentItems()).containsExactly(parentItem);
+        assertThat(info.getSiblingItems()).containsExactly(otherItem);
         assertThat(info.getSegmentItems()).containsExactly(segmentItem);
         assertThat(info.getPoolFilterProperties()).containsExactly(relevantProperty);
     }

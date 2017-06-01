@@ -10,7 +10,7 @@ public class SegmentItemInformation {
     private List<ContentLevelSpecification> contentLevelSpecifications;
     private List<ItemGroup> itemGroups;
     private List<Item> segmentItems;
-    private List<Item> parentItems;
+    private List<Item> siblingItems;
     private List<ItemProperty> poolFilterProperties;
     List<ItemMeasurement> itemMeasurements;
     List<ItemControlParameter> controlParameters;
@@ -47,10 +47,10 @@ public class SegmentItemInformation {
     }
 
     /**
-     * @return the parent assessment's {@link tds.assessment.Item}.  If a single segmented assessment this will be empty
+     * @return the assessment's {@link tds.assessment.Item}.  If a single segmented assessment this will be empty
      */
-    public List<Item> getParentItems() {
-        return parentItems;
+    public List<Item> getSiblingItems() {
+        return siblingItems;
     }
 
     /**
@@ -81,7 +81,7 @@ public class SegmentItemInformation {
         private List<ContentLevelSpecification> contentLevelSpecifications;
         private List<ItemGroup> itemGroups;
         private List<Item> segmentItems;
-        private List<Item> parentItems;
+        private List<Item> siblingItems;
         private List<ItemProperty> poolFilterProperties;
 
         public Builder withSegment(Segment segment) {
@@ -104,8 +104,8 @@ public class SegmentItemInformation {
             return this;
         }
 
-        public Builder withParentItems(List<Item> parentItems) {
-            this.parentItems = parentItems;
+        public Builder withSiblingItems(List<Item> siblingItems) {
+            this.siblingItems = siblingItems;
             return this;
         }
 
@@ -127,7 +127,7 @@ public class SegmentItemInformation {
         public SegmentItemInformation build() {
             SegmentItemInformation segmentItemInformation = new SegmentItemInformation();
             segmentItemInformation.contentLevelSpecifications = this.contentLevelSpecifications;
-            segmentItemInformation.parentItems = this.parentItems;
+            segmentItemInformation.siblingItems = this.siblingItems;
             segmentItemInformation.poolFilterProperties = this.poolFilterProperties;
             segmentItemInformation.segment = this.segment;
             segmentItemInformation.controlParameters = this.controlParameters;
@@ -150,7 +150,7 @@ public class SegmentItemInformation {
             return false;
         if (itemGroups != null ? !itemGroups.equals(that.itemGroups) : that.itemGroups != null) return false;
         if (segmentItems != null ? !segmentItems.equals(that.segmentItems) : that.segmentItems != null) return false;
-        if (parentItems != null ? !parentItems.equals(that.parentItems) : that.parentItems != null) return false;
+        if (siblingItems != null ? !siblingItems.equals(that.siblingItems) : that.siblingItems != null) return false;
         if (poolFilterProperties != null ? !poolFilterProperties.equals(that.poolFilterProperties) : that.poolFilterProperties != null)
             return false;
         if (itemMeasurements != null ? !itemMeasurements.equals(that.itemMeasurements) : that.itemMeasurements != null)
@@ -164,7 +164,7 @@ public class SegmentItemInformation {
         result = 31 * result + (contentLevelSpecifications != null ? contentLevelSpecifications.hashCode() : 0);
         result = 31 * result + (itemGroups != null ? itemGroups.hashCode() : 0);
         result = 31 * result + (segmentItems != null ? segmentItems.hashCode() : 0);
-        result = 31 * result + (parentItems != null ? parentItems.hashCode() : 0);
+        result = 31 * result + (siblingItems != null ? siblingItems.hashCode() : 0);
         result = 31 * result + (poolFilterProperties != null ? poolFilterProperties.hashCode() : 0);
         result = 31 * result + (itemMeasurements != null ? itemMeasurements.hashCode() : 0);
         result = 31 * result + (controlParameters != null ? controlParameters.hashCode() : 0);

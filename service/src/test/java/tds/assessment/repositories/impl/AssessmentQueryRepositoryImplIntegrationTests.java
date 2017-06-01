@@ -19,6 +19,7 @@ import tds.assessment.Assessment;
 import tds.assessment.AssessmentInfo;
 import tds.assessment.ItemConstraint;
 import tds.assessment.Segment;
+import tds.assessment.model.SegmentMetadata;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.common.Algorithm;
 import tds.common.data.mapping.ResultSetMapperUtility;
@@ -331,36 +332,17 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
     }
 
     @Test
-    public void shouldFindAssessmentBySegmentKey() {
+    public void shouldFindSegmentMetadataBySegmentKey() {
         final String segmentKey = "(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015";
-        Assessment assessment = repository.findAssessmentBySegmentKey(segmentKey).get();
+        SegmentMetadata segmentMetadata = repository.findSegmentMetadata(segmentKey).get();
 
-        assertThat(assessment.getKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015");
-
-        Segment segment1 = null;
-        Segment segment2 = null;
-
-        for (Segment segment : assessment.getSegments()) {
-            if (segment.getKey().equals("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015")) {
-                segment1 = segment;
-            } else {
-                segment2 = segment;
-            }
-        }
-
-        assertThat(segment1).isNotNull();
-        assertThat(segment2).isNotNull();
-
-        assertThat(segment1.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG1-MATH-8-Spring-2013-2015");
-        assertThat(segment2.getKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+        assertThat(segmentMetadata.getParentKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015");
+        assertThat(segmentMetadata.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+        assertThat(segmentMetadata.getClientName()).isEqualTo("SBAC_PT");
     }
 
     @Test
-    public void shouldFindSingleSegmentedAssessmentBySegmentKey() {
-        Optional<Assessment> maybeAssessment = repository.findAssessmentBySegmentKey("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
-
-        assertThat(maybeAssessment).isPresent();
-
-        assertThat(maybeAssessment.get().getKey()).isEqualTo("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+    public void shouldReturnEmptyWhenSegmentMetadataCannotBeFound() {
+        assertThat(repository.findSegmentMetadata("bogus")).isNotPresent();
     }
 }

@@ -16,6 +16,7 @@ import tds.assessment.Item;
 import tds.assessment.ItemConstraint;
 import tds.assessment.ItemProperty;
 import tds.assessment.Strand;
+import tds.assessment.model.SegmentMetadata;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
@@ -26,6 +27,7 @@ import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
 import tds.common.cache.CacheType;
+import tds.common.web.exceptions.NotFoundException;
 
 @Service
 class AssessmentServiceImpl implements AssessmentService {
@@ -88,6 +90,9 @@ class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey) {
-        return assessmentQueryRepository.findAssessmentBySegmentKey(segmentKey);
+        SegmentMetadata metadata = assessmentQueryRepository.findSegmentMetadata(segmentKey)
+            .orElseThrow(() -> new NotFoundException("Could not find a segment for key %s", segmentKey));
+
+        return findAssessment(metadata.getClientName(), metadata.getParentKey() == null ? segmentKey : metadata.getParentKey());
     }
 }

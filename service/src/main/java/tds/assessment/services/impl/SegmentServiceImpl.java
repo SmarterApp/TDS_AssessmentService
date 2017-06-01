@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import tds.assessment.Assessment;
@@ -36,7 +37,7 @@ public class SegmentServiceImpl implements SegmentService {
     private final StrandQueryRepository strandQueryRepository;
     private final ItemQueryRepository itemQueryRepository;
 
-    private static final String OFFGADE_PROP_VALUE_PREFIX = "OFFGRADE";
+    private static final String OFF_GRADE_PROP_VALUE_PREFIX = "OFFGRADE";
     private static final String PROP_NAME_TYPE = "TDSPoolFilter";
 
     @Autowired
@@ -69,11 +70,23 @@ public class SegmentServiceImpl implements SegmentService {
 
         List<ContentLevelSpecification> specifications = strandQueryRepository.findContentLevelSpecificationsBySegmentKey(segmentKey);
         List<ItemGroup> itemGroups = itemGroupQueryRepository.findItemGroupsBySegment(segmentKey);
-        List<Item> segmentItems = itemQueryRepository.findItemsForSegment(segmentKey);
-        List<Item> assessmentItems = new ArrayList<>();
+        List<Item> segmentItems = segment.getItems();
+        List<Item> siblingItems = new ArrayList<>();
 
         if (assessment.isSegmented()) {
-            assessmentItems = itemQueryRepository.findItemsForSegment(assessment.getKey());
+            Set<String> segmentItemIds = segment.getItems().stream()
+                .map(Item::getId)
+                .collect(Collectors.toSet());
+
+            for (Segment seg : assessment.getSegments()) {
+                if(seg.getKey().equals(segment.getKey())) continue;
+
+                List<Item> items = seg.getItems().stream()
+                    .filter(item -> !segmentItemIds.contains(item.getId()))
+                    .collect(Collectors.toList());
+
+                siblingItems.addAll(items);
+            }
         }
 
         List<ItemMeasurement> itemMeasurements = itemMeasurementQueryRepository.findItemMeasurements(segmentKey, assessment.getKey());
@@ -83,14 +96,14 @@ public class SegmentServiceImpl implements SegmentService {
 
         List<ItemProperty> segmentProperties = properties.stream()
             .filter(itemProperty ->
-                itemProperty.getValue().startsWith(OFFGADE_PROP_VALUE_PREFIX)
+                itemProperty.getValue().startsWith(OFF_GRADE_PROP_VALUE_PREFIX)
                     && PROP_NAME_TYPE.equals(itemProperty.getName()))
             .collect(Collectors.toList());
 
         return Optional.of(new SegmentItemInformation.Builder()
             .withSegment(segment)
             .withItemGroups(itemGroups)
-            .withParentItems(assessmentItems)
+            .withSiblingItems(siblingItems)
             .withSegmentItems(segmentItems)
             .withItemMeasurements(itemMeasurements)
             .withControlParameters(controlParameters)

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import tds.assessment.Assessment;
 import tds.assessment.Segment;
+import tds.assessment.model.SegmentMetadata;
 import tds.assessment.repositories.AccommodationsQueryRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
@@ -22,6 +23,7 @@ import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
 import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
+import tds.common.web.exceptions.NotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -119,5 +121,38 @@ public class AssessmentServiceImplTest {
         verify(mockItemGroupQueryRepository).findItemGroupsBySegment("segmentKey");
 
         assertThat(maybeAssessment.get()).isEqualTo(assessment);
+    }
+
+    @Test
+    public void shouldReturnMultiSegmentedAssessmentBySegmentKey() {
+        SegmentMetadata metadata = new SegmentMetadata("segmentKey", "parentKey", "clientName");
+        Assessment assessment = new Assessment();
+
+        when(mockAssessmentQueryRepository.findSegmentMetadata("segmentKey")).thenReturn(Optional.of(metadata));
+        when(mockAssessmentQueryRepository.findAssessmentByKey("clientName", "parentKey")).thenReturn(Optional.of(assessment));
+
+        assertThat(service.findAssessmentBySegmentKey("segmentKey").get()).isEqualTo(assessment);
+
+        verify(mockAssessmentQueryRepository).findSegmentMetadata("segmentKey");
+    }
+
+    @Test
+    public void shouldReturnSingleSegmentedAssessmentBySegmentKey() {
+        SegmentMetadata metadata = new SegmentMetadata("segmentKey", null, "clientName");
+        Assessment assessment = new Assessment();
+
+        when(mockAssessmentQueryRepository.findSegmentMetadata("segmentKey")).thenReturn(Optional.of(metadata));
+        when(mockAssessmentQueryRepository.findAssessmentByKey("clientName", "segmentKey")).thenReturn(Optional.of(assessment));
+
+        assertThat(service.findAssessmentBySegmentKey("segmentKey").get()).isEqualTo(assessment);
+
+        verify(mockAssessmentQueryRepository).findSegmentMetadata("segmentKey");
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void shouldThrowNotFoundWhenSegmentMetadataCannotBeFound() {
+        when(mockAssessmentQueryRepository.findSegmentMetadata("segmentKey")).thenReturn(Optional.empty());
+
+        service.findAssessmentBySegmentKey("segmentKey");
     }
 }

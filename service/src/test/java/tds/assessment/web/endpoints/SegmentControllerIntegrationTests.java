@@ -92,7 +92,7 @@ public class SegmentControllerIntegrationTests {
             .withControlParameters(Collections.singletonList(itemControlParameter))
             .withItemGroups(Collections.singletonList(itemGroup))
             .withItemMeasurements(Collections.singletonList(itemMeasurement))
-            .withParentItems(Collections.singletonList(parentItem))
+            .withSiblingItems(Collections.singletonList(parentItem))
             .withSegmentItems(Collections.singletonList(segmentItem))
             .withPoolFilterProperties(Collections.singletonList(relevantProperty))
             .withSegment(segment)
@@ -112,7 +112,7 @@ public class SegmentControllerIntegrationTests {
         assertThat(parsedResponse.getPoolFilterProperties()).containsExactly(relevantProperty);
         assertThat(parsedResponse.getItemGroups()).containsExactly(itemGroup);
         assertThat(parsedResponse.getSegmentItems()).containsExactly(segmentItem);
-        assertThat(parsedResponse.getParentItems()).containsExactly(parentItem);
+        assertThat(parsedResponse.getSiblingItems()).containsExactly(parentItem);
         assertThat(parsedResponse.getItemMeasurements()).containsExactly(itemMeasurement);
         assertThat(parsedResponse.getContentLevelSpecifications()).containsExactly(spec);
         assertThat(parsedResponse.getSegment().getKey()).isEqualTo(segment.getKey());

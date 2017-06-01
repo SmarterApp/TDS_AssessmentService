@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import tds.assessment.Assessment;
 import tds.assessment.AssessmentInfo;
 import tds.assessment.ItemConstraint;
+import tds.assessment.model.SegmentMetadata;
 import tds.assessment.repositories.AssessmentQueryRepository;
 
 @Repository
@@ -108,6 +110,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         "   ON tool.context = tp.testid \n" +
         "LEFT JOIN itembank.setoftestgrades g \n" +
         "   ON g.testid = tp.testid \n";
+
     @Autowired
     public AssessmentQueryRepositoryImpl(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -188,7 +191,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "GROUP BY \n" +
                 "   assessmentKey, assessmentId, subject, assessmentLabel, maxAttempts";
 
-        return jdbcTemplate.query(SQL, parameters, new AssessmentInfoRowMapper());
+        return jdbcTemplate.query(SQL, parameters, assessmentInfoRowMapper);
     }
 
     @Override
@@ -208,7 +211,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
                 "GROUP BY \n" +
                 "   assessmentKey, assessmentId, subject, assessmentLabel, maxAttempts";
 
-        return jdbcTemplate.query(SQL, parameters, new AssessmentInfoRowMapper());
+        return jdbcTemplate.query(SQL, parameters, assessmentInfoRowMapper);
     }
 
     @Override
@@ -245,52 +248,30 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
     }
 
     @Override
-    public Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey) {
-        SqlParameterSource parameters = new MapSqlParameterSource("segmentKey", segmentKey);
+    public Optional<SegmentMetadata> findSegmentMetadata(final String segmentKey) {
+        final SqlParameterSource parameters = new MapSqlParameterSource("segmentKey", segmentKey);
 
-        String SQL =
-            ASSESSMENT_SELECT_SQL +
-                "FROM \n" +
-                "   itembank.tblsetofadminsubjects A \n" +
-                "LEFT JOIN tblsetofadminsubjects B \n" +
-                "   ON (A.virtualtest = B.virtualtest OR B.virtualtest = A._key) \n" +
-                "JOIN \n" +
-                "   configs.client_testproperties CT \n" +
-                "   ON CT.testid = A.testid \n " +
-                "   OR CT.testid = (\n" +
-                "       SELECT parentTsa.testid \n" +
-                "       FROM itembank.tblsetofadminsubjects tsa \n" +
-                "       JOIN itembank.tblsetofadminsubjects parentTsa ON tsa.virtualtest = parentTsa._key \n" +
-                "       WHERE tsa._key = A._key \n" +
-                "   ) \n" +
-                "LEFT JOIN \n" +
-                "   configs.client_segmentproperties SP \n" +
-                "   ON SP.segmentid = A.testid \n" +
-                "LEFT JOIN \n" +
-                "   itembank.tblsubject S \n" +
-                "   ON S._key = A._fk_Subject \n" +
-                "JOIN \n" +
-                "   itembank.tblclient CL \n" +
-                "   ON (CL.name = SP.clientname OR CL.name = CT.clientname) \n" +
-                "LEFT JOIN \n" +
-                "   itembank.tbltestadmin TA \n" +
-                "   ON TA._fk_client = CL._key \n" +
-                "WHERE \n" +
-                "   B._key = :segmentKey \n OR A._key = :segmentKey \n" +
-                "ORDER BY  \n" +
-                "   assessmentKey DESC, \n" +
-                "   A.testPosition";
+        final String SQL = "SELECT \n" +
+            "  _key, \n" +
+            "  virtualtest, \n" +
+            "  _fk_testadmin \n" +
+            "FROM \n" +
+            "  tblsetofadminsubjects \n" +
+            "WHERE \n" +
+            "  _key = :segmentKey";
 
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQL, parameters);
-        Optional<Assessment> maybeAssessment = Optional.empty();
-
-        if (rows.isEmpty()) {
-            logger.debug("Could not find an Assessment in tblsetofadminsubjects using segmentKey = '%s'", segmentKey);
-        } else {
-            maybeAssessment = assessmentMapper.mapResults(rows);
+        Optional<SegmentMetadata> maybeSegmentMetadata;
+        try {
+            maybeSegmentMetadata = Optional.of(jdbcTemplate.queryForObject(SQL, parameters, (resultSet, i) -> new SegmentMetadata(
+                resultSet.getString("_key"),
+                resultSet.getString("virtualtest"),
+                resultSet.getString("_fk_testadmin")
+            )));
+        } catch (EmptyResultDataAccessException e) {
+            maybeSegmentMetadata = Optional.empty();
         }
 
-        return maybeAssessment;
+        return maybeSegmentMetadata;
     }
 
     private static class AssessmentInfoRowMapper implements RowMapper<AssessmentInfo> {

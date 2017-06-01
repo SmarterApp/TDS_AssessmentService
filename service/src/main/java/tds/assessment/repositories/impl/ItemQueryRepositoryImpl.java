@@ -49,6 +49,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
                 "   adminItems.strandname, \n" +
                 "   adminItems.responseMimeType, \n" +
                 "   adminItems.notForScoring, \n" +
+                "   adminItems.isActive, \n" +
                 "   CONCAT(client.homepath, bank.homepath, bank.itempath, item.filepath, item.filename) AS itemFilePath, \n" +
                 "   CONCAT(client.homepath, bank.homepath, bank.stimulipath, stimulus.filepath, stimulus.filename) AS stimulusFilePath, \n" +
                 "   upper(adminItems.IRT_Model) AS irtModel, \n" +
@@ -124,6 +125,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             item.setClaims(rs.getString("clString"));
             item.setItemKey(rs.getLong("itemKey"));
             item.setBankKey(rs.getLong("bankKey"));
+            item.setActive(rs.getBoolean("isActive"));
 
             return item;
         });

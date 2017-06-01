@@ -6,6 +6,7 @@ import java.util.Optional;
 import tds.assessment.Assessment;
 import tds.assessment.AssessmentInfo;
 import tds.assessment.ItemConstraint;
+import tds.assessment.model.SegmentMetadata;
 
 /**
  * Queries for admin subject related entities
@@ -49,10 +50,9 @@ public interface AssessmentQueryRepository {
     List<ItemConstraint> findItemConstraintsForAssessment(final String clientName, final String assessmentId);
 
     /**
-     * Finds an {@link tds.assessment.Assessment} by a segment key
-     *
-     * @param segmentKey the segment's key
-     * @return a {@link tds.assessment.Assessment} if found otherwise empty
+     * Finds {@link tds.assessment.model.SegmentMetadata} for the segment key
+     * @param segmentKey the unique segment key
+     * @return {@link tds.assessment.model.SegmentMetadata} if found otherwise empty
      */
-    Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey);
+    Optional<SegmentMetadata> findSegmentMetadata(final String segmentKey);
 }
