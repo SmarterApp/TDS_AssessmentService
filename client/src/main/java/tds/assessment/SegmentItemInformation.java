@@ -1,5 +1,6 @@
 package tds.assessment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,14 +8,15 @@ import java.util.List;
  */
 public class SegmentItemInformation {
     private Segment segment;
-    private List<ContentLevelSpecification> contentLevelSpecifications;
-    private List<ItemGroup> itemGroups;
-    private List<Item> segmentItems;
-    private List<Item> siblingItems;
-    private List<ItemProperty> poolFilterProperties;
-    List<ItemMeasurement> itemMeasurements;
-    List<ItemControlParameter> controlParameters;
+    private List<ContentLevelSpecification> contentLevelSpecifications = new ArrayList<>();
+    private List<ItemGroup> itemGroups = new ArrayList<>();
+    private List<Item> segmentItems = new ArrayList<>();
+    private List<Item> siblingItems = new ArrayList<>();
+    private List<ItemProperty> poolFilterProperties = new ArrayList<>();
+    List<ItemMeasurement> itemMeasurements = new ArrayList<>();
+    List<ItemControlParameter> controlParameters = new ArrayList<>();
 
+    //For frameworks
     private SegmentItemInformation(){
     }
 
