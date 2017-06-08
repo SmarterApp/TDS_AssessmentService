@@ -83,6 +83,14 @@ class AssessmentMapper {
         assessment.setValidateCompleteness(row.getBoolean("validateCompleteness"));
         assessment.setPrefetch(row.getInt("prefetch"));
         assessment.setDeleteUnansweredItems(row.getBoolean("deleteUnansweredItems"));
+        assessment.setMultiStageBraille(row.getBoolean("multiStageBraille"));
+        assessment.setHandScored(row.getIntNullable("handScored"));
+        assessment.setContract(row.getString("contract"));
+        assessment.setAcademicYear(row.getString("academicYear"));
+        assessment.setType(row.getString("assessmentType"));
+        assessment.setLoadVersion(row.getLongNullable("loadVersion"));
+        assessment.setUpdateVersion(row.getLongNullable("updateVersion"));
+
         // RULE:  An Assessment always has at least one Segment.  Create a "default" Segment from the data contained in
         // the row that represents the Assessment.  This will account for assessments that do not have any segments.  In
         // this case, the default Segment's assessmentKey will be set to the same value as the Assessment's key (to
@@ -148,6 +156,31 @@ class AssessmentMapper {
         segment.setFieldTestMaxItems(ftMaxItems);
         segment.setFieldTestStartPosition(ftStartPosition);
         segment.setFieldTestEndPosition(ftEndPosition);
+
+        segment.setBlueprintWeight(row.getFloat("blueprintWeight"));
+        segment.setItemWeight(row.getFloat("itemweight"));
+        segment.setAbilityOffset(row.getFloat("abilityOffset"));
+        segment.setCandidateSet1Size(row.getInt("cset1size"));
+        segment.setCandidateSet1Order(row.getString("cset1order"));
+        segment.setRandomizer(row.getInt("cset2random"));
+        segment.setInitialRandom(row.getInt("cset2initialrandom"));
+        segment.setSlope(row.getFloat("slope"));
+        segment.setIntercept(row.getFloat("intercept"));
+        segment.setAdaptiveVersion(row.getString("adaptiveVersion"));
+        segment.setAbilityWeight(row.getFloat("abilityWeight"));
+        segment.setReportingCandidateAbilityWeight(row.getFloat("rcAbilityWeight"));
+        segment.setPrecisionTarget(row.getFloat("precisionTarget"));
+        segment.setPrecisionTargetMetWeight(row.getFloat("precisionTargetMetWeight"));
+        segment.setPrecisionTargetNotMetWeight(row.getFloat("precisionTargetNotMetWeight"));
+        segment.setAdaptiveCut(row.getFloat("adaptiveCut"));
+        segment.setTooCloseStandardErrors(row.getFloat("tooCloseSEs"));
+        segment.setTerminationFlagsAnd(row.getBoolean("terminationFlagsAnd"));
+        segment.setTerminationMinCount(row.getBoolean("terminationMinCount"));
+        segment.setTerminationOverallInformation(row.getBoolean("terminationOverallInfo"));
+        segment.setTerminationReportingCategoryInfo(row.getBoolean("terminationRCInfo"));
+        segment.setTerminationTooClose(row.getBoolean("terminationTooClose"));
+        segment.setStartInfo(row.getFloat("startInfo"));
+
         return segment;
     }
 
@@ -165,12 +198,24 @@ class AssessmentMapper {
             return rowData.get(key) != null ? (int) rowData.get(key) : 0;
         }
 
+        long getLong(String key) {
+            return rowData.get(key) != null ? (long) rowData.get(key) : 0;
+        }
+
         float getFloat(String key) {
             return rowData.get(key) != null ? (float) rowData.get(key) : 0;
         }
 
         String getString(String key) {
             return rowData.get(key) != null ? (String) rowData.get(key) : null;
+        }
+
+        Integer getIntNullable(String key) {
+            return rowData.get(key) != null ? (int) rowData.get(key) : null;
+        }
+
+        Long getLongNullable(String key) {
+            return rowData.get(key) != null ? (Long) rowData.get(key) : null;
         }
 
         Instant getJodaInstantFromTimestamp(String key) {

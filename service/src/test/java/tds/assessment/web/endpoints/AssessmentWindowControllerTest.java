@@ -49,7 +49,7 @@ public class AssessmentWindowControllerTest {
 
         ResponseEntity<List<AssessmentWindow>> response = controller.findAssessmentWindows("SBAC_PT",
             "assessment",
-            1,
+            false,
             25,
             50,
             75,
@@ -66,7 +66,7 @@ public class AssessmentWindowControllerTest {
         AssessmentWindowParameters parameters = assessmentWindowParametersArgumentCaptor.getValue();
         assertThat(parameters.getAssessmentId()).isEqualTo("assessment");
         assertThat(parameters.getClientName()).isEqualTo("SBAC_PT");
-        assertThat(parameters.getStudentId()).isEqualTo(1);
+        assertThat(parameters.isGuestStudent()).isFalse();
         assertThat(parameters.getShiftWindowStart()).isEqualTo(25);
         assertThat(parameters.getShiftWindowEnd()).isEqualTo(50);
         assertThat(parameters.getShiftFormStart()).isEqualTo(75);
@@ -83,7 +83,7 @@ public class AssessmentWindowControllerTest {
 
         ResponseEntity<List<AssessmentWindow>> response = controller.findAssessmentWindows("SBAC",
             "assessment",
-            1,
+            false,
             null,
             null,
             null,

@@ -135,6 +135,29 @@ public class AssessmentMapperTest {
         assertThat(firstSegment.getFieldTestStartDate().getMillis()).isEqualTo(segmentFieldTestStartDate.getTime());
         assertThat(firstSegment.getFieldTestEndDate().getMillis()).isEqualTo(segmentFieldTestEndDate.getTime());
 
+        assertThat(firstSegment.getBlueprintWeight()).isEqualTo(99.9f);
+        assertThat(firstSegment.getItemWeight()).isEqualTo(99.8f);
+        assertThat(firstSegment.getAbilityOffset()).isEqualTo(99.7f);
+        assertThat(firstSegment.getCandidateSet1Size()).isEqualTo(201);
+        assertThat(firstSegment.getCandidateSet1Order()).isEqualTo("ability");
+        assertThat(firstSegment.getRandomizer()).isEqualTo(199);
+        assertThat(firstSegment.getInitialRandom()).isEqualTo(198);
+        assertThat(firstSegment.getSlope()).isEqualTo(99.3f);
+        assertThat(firstSegment.getIntercept()).isEqualTo(99.2f);
+        assertThat(firstSegment.getAdaptiveVersion()).isEqualTo("apVersion");
+        assertThat(firstSegment.getAbilityWeight()).isEqualTo(197.1f);
+        assertThat(firstSegment.getReportingCandidateAbilityWeight()).isEqualTo(99f);
+        assertThat(firstSegment.getPrecisionTarget()).isEqualTo(98.9f);
+        assertThat(firstSegment.getPrecisionTargetMetWeight()).isEqualTo(98.8f);
+        assertThat(firstSegment.getPrecisionTargetNotMetWeight()).isEqualTo(98.7f);
+        assertThat(firstSegment.getAdaptiveCut()).isEqualTo(98.6f);
+        assertThat(firstSegment.getTooCloseStandardErrors()).isEqualTo(98.5f);
+        assertThat(firstSegment.isTerminationFlagsAnd()).isTrue();
+        assertThat(firstSegment.isTerminationMinCount()).isTrue();
+        assertThat(firstSegment.isTerminationOverallInformation()).isTrue();
+        assertThat(firstSegment.isTerminationReportingCategoryInfo()).isTrue();
+        assertThat(firstSegment.isTerminationTooClose()).isTrue();
+
         Segment secondSegment = assessment.getSegment("segmentKey2");
         assertThat(secondSegment.getKey()).isEqualTo("segmentKey2");
         assertThat(secondSegment.getAssessmentKey()).isEqualTo(assessmentKey);
@@ -240,6 +263,7 @@ public class AssessmentMapperTest {
         assertThat(firstSegment.getFieldTestEndPosition()).isEqualTo(20);
         assertThat(firstSegment.getPosition()).isEqualTo(1);
         assertThat(firstSegment.getStartAbility()).isEqualTo(1.5f);
+        assertThat(firstSegment.getStartInfo()).isEqualTo(1.6f);
         assertThat(firstSegment.getSubject()).isEqualTo("ELA");
         assertThat(firstSegment.getFieldTestStartDate().getMillis()).isEqualTo(segmentFieldTestStartDate.getTime());
         assertThat(firstSegment.getFieldTestEndDate().getMillis()).isEqualTo(segmentFieldTestEndDate.getTime());

@@ -31,18 +31,50 @@ public class Segment {
     private Instant fieldTestEndDate;
     private int fieldTestStartPosition;
     private int fieldTestEndPosition;
+    private int refreshMinutes;
+    private float blueprintWeight;
+    private float itemWeight;
+    private float abilityOffset;
+    private int candidateSet1Size;
+    private String candidateSet1Order;
+    private int randomizer;
+    private int initialRandom;
+    private float abilityWeight;
+    private String adaptiveVersion;
+    private float reportingCandidateAbilityWeight;
+    private float precisionTarget;
+    private float precisionTargetMetWeight;
+    private float precisionTargetNotMetWeight;
+    private float adaptiveCut;
+    private float tooCloseStandardErrors;
+    private boolean terminationOverallInformation;
+    private boolean terminationReportingCategoryInfo;
+    private boolean terminationMinCount;
+    private boolean terminationTooClose;
+    private boolean terminationFlagsAnd;
+    private float slope;
+    private float intercept;
+    private float startInfo;
+    private List<ItemGroup> itemGroups = new ArrayList<>();
 
     // Fixed-form specific fields
-    private List<Form> forms;
-
+    private List<Form> forms = new ArrayList<>();
     // Adaptive-specific fields
-    private Set<Strand> strands;
-    private List<Item> items;
+    private Set<Strand> strands = new HashSet<>();
+    private List<Item> items = new ArrayList<>();
 
     public Segment(@JsonProperty("key") String key,
                    @JsonProperty("algorithm") Algorithm algorithm) {
         this.key = key;
         this.selectionAlgorithm = algorithm;
+    }
+
+    public float getStartInfo() {
+        return startInfo;
+    }
+
+    public void setStartInfo(final float startInfo) {
+        this.startInfo = startInfo;
     }
 
     /**
@@ -62,18 +94,18 @@ public class Segment {
     public void setAssessmentKey(String assessmentKey) {
         this.assessmentKey = assessmentKey;
     }
-    
+
     /**
      * @return The human-readable label of the segment
      */
     public String getLabel() {
         return label;
     }
-    
+
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
     /**
      * @return the associated segment id
      */
@@ -217,9 +249,9 @@ public class Segment {
     /**
      * @return All the {@link tds.assessment.Form}s associated with this segment.
      * <p>
-     *     This getter/setter is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.common.Algorithm}.  Segments configured for the "adaptive2" algorithm do not have forms, in which case an empty
-     *     {@code ArrayList} is returned
+     * This getter/setter is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
+     * {@link tds.common.Algorithm}.  Segments configured for the "adaptive2" algorithm do not have forms, in which case an empty
+     * {@code ArrayList} is returned
      * </p>
      */
     public List<Form> getForms() {
@@ -239,8 +271,8 @@ public class Segment {
     /**
      * Choose the {@link tds.assessment.Form}s for the specified language.
      * <p>
-     *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
+     * This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
+     * {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
      * </p>
      *
      * @param languageCode The student's specified language
@@ -265,12 +297,12 @@ public class Segment {
     /**
      * Choose the {@link tds.assessment.Form} for the specified language and form cohort.
      * <p>
-     *     This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
-     *     {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
+     * This method is only used by {@link tds.assessment.Segment}s that are configured for the fixed form
+     * {@link tds.common.Algorithm}.  Segments configured for the adaptive algorithm do not have forms.
      * </p>
      *
      * @param languageCode The student's specified language
-     * @param cohort The form cohort to filter by
+     * @param cohort       The form cohort to filter by
      * @return The {@link tds.assessment.Form} for the specified language
      */
     public Optional<Form> getForm(final String languageCode, final String cohort) {
@@ -290,25 +322,21 @@ public class Segment {
      * @return the collection of {@link tds.assessment.Strand}s containing adaptive algorithm metadata for the
      * {@link tds.assessment.Segment}
      * <p>
-     *     This method is only used by {@link tds.assessment.Segment}s that are configured for the adaptive
-     *     {@link tds.common.Algorithm}.  Segments configured for the fixed form algorithm do not have strands, in
-     *     which case this method will return an empty {@code HashSet}.
+     * This method is only used by {@link tds.assessment.Segment}s that are configured for the adaptive
+     * {@link tds.common.Algorithm}.  Segments configured for the fixed form algorithm do not have strands, in
+     * which case this method will return an empty {@code HashSet}.
      * </p>
      */
     public Set<Strand> getStrands() {
-        if (strands == null) {
-            strands = new HashSet<>();
-        }
-
         return strands;
     }
 
     public void setStrands(Set<Strand> strands) {
         this.strands = strands;
     }
-    
+
     public List<Item> getItems() {
-        return items == null ? new ArrayList<Item>() : items;
+        return items;
     }
 
     /**
@@ -328,7 +356,11 @@ public class Segment {
                 retItems.addAll(form.getItems());
             }
         } else {
-            retItems = items;
+            for (Item item : items) {
+                if (languageCode.equalsIgnoreCase(item.getLanguageCode())) {
+                    retItems.add(item);
+                }
+            }
         }
 
         return retItems;
@@ -341,5 +373,307 @@ public class Segment {
      */
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public int getRefreshMinutes() {
+        return refreshMinutes;
+    }
+
+    public void setRefreshMinutes(final int refreshMinutes) {
+        this.refreshMinutes = refreshMinutes;
+    }
+
+    public float getBlueprintWeight() {
+        return blueprintWeight;
+    }
+
+    public void setBlueprintWeight(final float blueprintWeight) {
+        this.blueprintWeight = blueprintWeight;
+    }
+
+    public float getItemWeight() {
+        return itemWeight;
+    }
+
+    public void setItemWeight(final float itemWeight) {
+        this.itemWeight = itemWeight;
+    }
+
+    public float getAbilityOffset() {
+        return abilityOffset;
+    }
+
+    public void setAbilityOffset(final float abilityOffset) {
+        this.abilityOffset = abilityOffset;
+    }
+
+    public int getCandidateSet1Size() {
+        return candidateSet1Size;
+    }
+
+    public void setCandidateSet1Size(final int candidateSet1Size) {
+        this.candidateSet1Size = candidateSet1Size;
+    }
+
+    public String getCandidateSet1Order() {
+        return candidateSet1Order;
+    }
+
+    public void setCandidateSet1Order(final String candidateSet1Order) {
+        this.candidateSet1Order = candidateSet1Order;
+    }
+
+    public int getRandomizer() {
+        return randomizer;
+    }
+
+    public void setRandomizer(final int randomizer) {
+        this.randomizer = randomizer;
+    }
+
+    public int getInitialRandom() {
+        return initialRandom;
+    }
+
+    public void setInitialRandom(final int initialRandom) {
+        this.initialRandom = initialRandom;
+    }
+
+    public float getAbilityWeight() {
+        return abilityWeight;
+    }
+
+    public void setAbilityWeight(final float abilityWeight) {
+        this.abilityWeight = abilityWeight;
+    }
+
+    public String getAdaptiveVersion() {
+        return adaptiveVersion;
+    }
+
+    public void setAdaptiveVersion(final String adaptiveVersion) {
+        this.adaptiveVersion = adaptiveVersion;
+    }
+
+    public float getReportingCandidateAbilityWeight() {
+        return reportingCandidateAbilityWeight;
+    }
+
+    public void setReportingCandidateAbilityWeight(final float reportingCandidateAbilityWeight) {
+        this.reportingCandidateAbilityWeight = reportingCandidateAbilityWeight;
+    }
+
+    public float getPrecisionTarget() {
+        return precisionTarget;
+    }
+
+    public void setPrecisionTarget(final float precisionTarget) {
+        this.precisionTarget = precisionTarget;
+    }
+
+    public float getPrecisionTargetMetWeight() {
+        return precisionTargetMetWeight;
+    }
+
+    public void setPrecisionTargetMetWeight(final float precisionTargetMetWeight) {
+        this.precisionTargetMetWeight = precisionTargetMetWeight;
+    }
+
+    public float getPrecisionTargetNotMetWeight() {
+        return precisionTargetNotMetWeight;
+    }
+
+    public void setPrecisionTargetNotMetWeight(final float precisionTargetNotMetWeight) {
+        this.precisionTargetNotMetWeight = precisionTargetNotMetWeight;
+    }
+
+    public float getAdaptiveCut() {
+        return adaptiveCut;
+    }
+
+    public void setAdaptiveCut(final float adaptiveCut) {
+        this.adaptiveCut = adaptiveCut;
+    }
+
+    public float getTooCloseStandardErrors() {
+        return tooCloseStandardErrors;
+    }
+
+    public void setTooCloseStandardErrors(final float tooCloseStandardErrors) {
+        this.tooCloseStandardErrors = tooCloseStandardErrors;
+    }
+
+    public boolean isTerminationOverallInformation() {
+        return terminationOverallInformation;
+    }
+
+    public void setTerminationOverallInformation(final boolean terminationOverallInformation) {
+        this.terminationOverallInformation = terminationOverallInformation;
+    }
+
+    public boolean isTerminationReportingCategoryInfo() {
+        return terminationReportingCategoryInfo;
+    }
+
+    public void setTerminationReportingCategoryInfo(final boolean terminationReportingCategoryInfo) {
+        this.terminationReportingCategoryInfo = terminationReportingCategoryInfo;
+    }
+
+    public boolean isTerminationMinCount() {
+        return terminationMinCount;
+    }
+
+    public void setTerminationMinCount(final boolean terminationMinCount) {
+        this.terminationMinCount = terminationMinCount;
+    }
+
+    public boolean isTerminationTooClose() {
+        return terminationTooClose;
+    }
+
+    public void setTerminationTooClose(final boolean terminationTooClose) {
+        this.terminationTooClose = terminationTooClose;
+    }
+
+    public boolean isTerminationFlagsAnd() {
+        return terminationFlagsAnd;
+    }
+
+    public void setTerminationFlagsAnd(final boolean terminationFlagsAnd) {
+        this.terminationFlagsAnd = terminationFlagsAnd;
+    }
+
+    public float getSlope() {
+        return slope;
+    }
+
+    public void setSlope(final float slope) {
+        this.slope = slope;
+    }
+
+    /**
+     * @return leveraged when choosing items during an adaptive selection algorithm
+     */
+    public float getIntercept() {
+        return intercept;
+    }
+
+    public void setIntercept(final float intercept) {
+        this.intercept = intercept;
+    }
+
+    /**
+     * @return The item groups that are associated with this segment.  This can be empty if there are not groups.  In
+     * those instances the item will be given a hard coded group in the selection code.
+     */
+    public List<ItemGroup> getItemGroups() {
+        return itemGroups;
+    }
+
+    public void setItemGroups(final List<ItemGroup> itemGroups) {
+        this.itemGroups = itemGroups;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Segment segment = (Segment) o;
+
+        if (Float.compare(segment.startAbility, startAbility) != 0) return false;
+        if (position != segment.position) return false;
+        if (minItems != segment.minItems) return false;
+        if (maxItems != segment.maxItems) return false;
+        if (fieldTestMinItems != segment.fieldTestMinItems) return false;
+        if (fieldTestMaxItems != segment.fieldTestMaxItems) return false;
+        if (fieldTestStartPosition != segment.fieldTestStartPosition) return false;
+        if (fieldTestEndPosition != segment.fieldTestEndPosition) return false;
+        if (refreshMinutes != segment.refreshMinutes) return false;
+        if (Float.compare(segment.blueprintWeight, blueprintWeight) != 0) return false;
+        if (Float.compare(segment.itemWeight, itemWeight) != 0) return false;
+        if (Float.compare(segment.abilityOffset, abilityOffset) != 0) return false;
+        if (candidateSet1Size != segment.candidateSet1Size) return false;
+        if (randomizer != segment.randomizer) return false;
+        if (initialRandom != segment.initialRandom) return false;
+        if (Float.compare(segment.abilityWeight, abilityWeight) != 0) return false;
+        if (Float.compare(segment.reportingCandidateAbilityWeight, reportingCandidateAbilityWeight) != 0) return false;
+        if (Float.compare(segment.precisionTarget, precisionTarget) != 0) return false;
+        if (Float.compare(segment.precisionTargetMetWeight, precisionTargetMetWeight) != 0) return false;
+        if (Float.compare(segment.precisionTargetNotMetWeight, precisionTargetNotMetWeight) != 0) return false;
+        if (Float.compare(segment.adaptiveCut, adaptiveCut) != 0) return false;
+        if (Float.compare(segment.tooCloseStandardErrors, tooCloseStandardErrors) != 0) return false;
+        if (terminationOverallInformation != segment.terminationOverallInformation) return false;
+        if (terminationReportingCategoryInfo != segment.terminationReportingCategoryInfo) return false;
+        if (terminationMinCount != segment.terminationMinCount) return false;
+        if (terminationTooClose != segment.terminationTooClose) return false;
+        if (terminationFlagsAnd != segment.terminationFlagsAnd) return false;
+        if (Float.compare(segment.slope, slope) != 0) return false;
+        if (Float.compare(segment.intercept, intercept) != 0) return false;
+        if (key != null ? !key.equals(segment.key) : segment.key != null) return false;
+        if (label != null ? !label.equals(segment.label) : segment.label != null) return false;
+        if (selectionAlgorithm != segment.selectionAlgorithm) return false;
+        if (segmentId != null ? !segmentId.equals(segment.segmentId) : segment.segmentId != null) return false;
+        if (subject != null ? !subject.equals(segment.subject) : segment.subject != null) return false;
+        if (assessmentKey != null ? !assessmentKey.equals(segment.assessmentKey) : segment.assessmentKey != null)
+            return false;
+        if (fieldTestStartDate != null ? !fieldTestStartDate.equals(segment.fieldTestStartDate) : segment.fieldTestStartDate != null)
+            return false;
+        if (fieldTestEndDate != null ? !fieldTestEndDate.equals(segment.fieldTestEndDate) : segment.fieldTestEndDate != null)
+            return false;
+        if (candidateSet1Order != null ? !candidateSet1Order.equals(segment.candidateSet1Order) : segment.candidateSet1Order != null)
+            return false;
+        if (adaptiveVersion != null ? !adaptiveVersion.equals(segment.adaptiveVersion) : segment.adaptiveVersion != null)
+            return false;
+        if (forms != null ? !forms.equals(segment.forms) : segment.forms != null) return false;
+        if (strands != null ? !strands.equals(segment.strands) : segment.strands != null) return false;
+        return items != null ? items.equals(segment.items) : segment.items == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (selectionAlgorithm != null ? selectionAlgorithm.hashCode() : 0);
+        result = 31 * result + (segmentId != null ? segmentId.hashCode() : 0);
+        result = 31 * result + (startAbility != +0.0f ? Float.floatToIntBits(startAbility) : 0);
+        result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + (assessmentKey != null ? assessmentKey.hashCode() : 0);
+        result = 31 * result + position;
+        result = 31 * result + minItems;
+        result = 31 * result + maxItems;
+        result = 31 * result + fieldTestMinItems;
+        result = 31 * result + fieldTestMaxItems;
+        result = 31 * result + (fieldTestStartDate != null ? fieldTestStartDate.hashCode() : 0);
+        result = 31 * result + (fieldTestEndDate != null ? fieldTestEndDate.hashCode() : 0);
+        result = 31 * result + fieldTestStartPosition;
+        result = 31 * result + fieldTestEndPosition;
+        result = 31 * result + refreshMinutes;
+        result = 31 * result + (blueprintWeight != +0.0f ? Float.floatToIntBits(blueprintWeight) : 0);
+        result = 31 * result + (itemWeight != +0.0f ? Float.floatToIntBits(itemWeight) : 0);
+        result = 31 * result + (abilityOffset != +0.0f ? Float.floatToIntBits(abilityOffset) : 0);
+        result = 31 * result + candidateSet1Size;
+        result = 31 * result + (candidateSet1Order != null ? candidateSet1Order.hashCode() : 0);
+        result = 31 * result + randomizer;
+        result = 31 * result + initialRandom;
+        result = 31 * result + (abilityWeight != +0.0f ? Float.floatToIntBits(abilityWeight) : 0);
+        result = 31 * result + (adaptiveVersion != null ? adaptiveVersion.hashCode() : 0);
+        result = 31 * result + (reportingCandidateAbilityWeight != +0.0f ? Float.floatToIntBits(reportingCandidateAbilityWeight) : 0);
+        result = 31 * result + (precisionTarget != +0.0f ? Float.floatToIntBits(precisionTarget) : 0);
+        result = 31 * result + (precisionTargetMetWeight != +0.0f ? Float.floatToIntBits(precisionTargetMetWeight) : 0);
+        result = 31 * result + (precisionTargetNotMetWeight != +0.0f ? Float.floatToIntBits(precisionTargetNotMetWeight) : 0);
+        result = 31 * result + (adaptiveCut != +0.0f ? Float.floatToIntBits(adaptiveCut) : 0);
+        result = 31 * result + (tooCloseStandardErrors != +0.0f ? Float.floatToIntBits(tooCloseStandardErrors) : 0);
+        result = 31 * result + (terminationOverallInformation ? 1 : 0);
+        result = 31 * result + (terminationReportingCategoryInfo ? 1 : 0);
+        result = 31 * result + (terminationMinCount ? 1 : 0);
+        result = 31 * result + (terminationTooClose ? 1 : 0);
+        result = 31 * result + (terminationFlagsAnd ? 1 : 0);
+        result = 31 * result + (slope != +0.0f ? Float.floatToIntBits(slope) : 0);
+        result = 31 * result + (intercept != +0.0f ? Float.floatToIntBits(intercept) : 0);
+        result = 31 * result + (forms != null ? forms.hashCode() : 0);
+        result = 31 * result + (strands != null ? strands.hashCode() : 0);
+        result = 31 * result + (items != null ? items.hashCode() : 0);
+        return result;
     }
 }

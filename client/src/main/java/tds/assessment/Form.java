@@ -8,7 +8,7 @@ import java.util.List;
  * A model representing a form for an {@link tds.assessment.Assessment} that uses the "fixed form" algorithm to select
  * the {@link tds.assessment.Item}s.
  */
-@JsonIgnoreProperties(value="length", allowGetters = true)
+@JsonIgnoreProperties(value = "length", allowGetters = true)
 public class Form {
     private String key;
     private String id;
@@ -22,7 +22,8 @@ public class Form {
     /**
      * Private constructor for framework
      */
-    private Form() {}
+    private Form() {
+    }
 
     private Form(Builder builder) {
         key = builder.key;
@@ -46,7 +47,7 @@ public class Form {
         private List<Item> items;
 
 
-        public Builder (String key) {
+        public Builder(String key) {
             this.key = key;
         }
 
@@ -157,5 +158,36 @@ public class Form {
      */
     public int getLength() {
         return items == null ? 0 : items.size();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Form form = (Form) o;
+
+        if (key != null ? !key.equals(form.key) : form.key != null) return false;
+        if (id != null ? !id.equals(form.id) : form.id != null) return false;
+        if (languageCode != null ? !languageCode.equals(form.languageCode) : form.languageCode != null) return false;
+        if (cohort != null ? !cohort.equals(form.cohort) : form.cohort != null) return false;
+        if (segmentKey != null ? !segmentKey.equals(form.segmentKey) : form.segmentKey != null) return false;
+        if (loadVersion != null ? !loadVersion.equals(form.loadVersion) : form.loadVersion != null) return false;
+        if (updateVersion != null ? !updateVersion.equals(form.updateVersion) : form.updateVersion != null)
+            return false;
+        return items != null ? items.equals(form.items) : form.items == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (languageCode != null ? languageCode.hashCode() : 0);
+        result = 31 * result + (cohort != null ? cohort.hashCode() : 0);
+        result = 31 * result + (segmentKey != null ? segmentKey.hashCode() : 0);
+        result = 31 * result + (loadVersion != null ? loadVersion.hashCode() : 0);
+        result = 31 * result + (updateVersion != null ? updateVersion.hashCode() : 0);
+        result = 31 * result + (items != null ? items.hashCode() : 0);
+        return result;
     }
 }

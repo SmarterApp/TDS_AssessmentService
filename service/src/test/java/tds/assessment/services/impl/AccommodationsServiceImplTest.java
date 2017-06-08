@@ -86,15 +86,15 @@ public class AccommodationsServiceImplTest {
     @Test
     public void shouldFindNonSegmentedAccommodations() {
         List<ItemProperty> languages1 = Arrays.asList(
-            new ItemProperty("Language", "ENU"),
-            new ItemProperty("Language", "Braille")
+            new ItemProperty("Language", "ENU", "", ""),
+            new ItemProperty("Language", "Braille", "", "")
         );
         Item item1 = new Item("item1");
         item1.setItemProperties(languages1);
 
         List<ItemProperty> languages2 = Arrays.asList(
-            new ItemProperty("Language", "FRN"),
-            new ItemProperty("Some other", "prop")
+            new ItemProperty("Language", "FRN", "", ""),
+            new ItemProperty("Some other", "prop", "", "")
         );
         Item item2 = new Item("item2");
         item2.setItemProperties(languages2);

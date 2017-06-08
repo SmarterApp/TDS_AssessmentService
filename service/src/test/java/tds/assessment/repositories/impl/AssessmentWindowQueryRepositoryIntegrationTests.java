@@ -34,6 +34,48 @@ public class AssessmentWindowQueryRepositoryIntegrationTests {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Test
+    public void shouldFindMultipleAssessmentWindowsForMultipleIds() {
+        final String assessmentId1 = "SBAC-Mathematics-3";
+        final String assessmentId2 = "SBAC-Mathematics-11";
+
+        String clientTestModeInsertSQL =
+            "INSERT INTO configs.client_testmode (clientname,testid,mode,algorithm,formtideselectable,issegmented,maxopps,requirertsform,requirertsformwindow,requirertsformifexists,sessiontype,testkey,_key) " +
+                "VALUES ('SBAC_PT','SBAC-Mathematics-3','online','virtual',0,1,50,0,0,1,0,'(SBAC_PT)SBAC-Mathematics-3-Spring-2013-2015',UNHEX('0431F6515F2D11E6B2C80243FCF25EAB'))," +
+                "('SBAC_PT','SBAC-Mathematics-11','online','virtual',0,1,50,0,0,1,0,'(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015',UNHEX('0431F6515F2D11E6B2C80243FCF25EAC'));";
+
+        String clientTestWindowInsertSQL =
+            "INSERT INTO configs.client_testwindow (clientname,testid,window,numopps,startdate,enddate,origin,source,windowid,_key,sessiontype,sortorder)" +
+                "VALUES ('SBAC_PT','SBAC-Mathematics-3',1,3, NULL ,NULL,NULL,NULL,'ANNUAL',UNHEX('043A37525F2D11E6B2C80243FCF25EAB'),-1,1), " +
+                "('SBAC_PT','SBAC-Mathematics-11',1,3, NULL ,NULL,NULL,NULL,'ANNUAL',UNHEX('043A37525F2D11E6B2C80243FCF25EAC'),-1,1);";
+
+        jdbcTemplate.update(clientTestModeInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(clientTestWindowInsertSQL, new MapSqlParameterSource());
+
+        List<AssessmentWindow> assessmentWindows = repository.findAssessmentWindowsForAssessmentIds("SBAC_PT", assessmentId1, assessmentId2);
+        assertThat(assessmentWindows).hasSize(2);
+
+        AssessmentWindow window1 = null;
+        AssessmentWindow window2 = null;
+
+        for (AssessmentWindow w : assessmentWindows) {
+            if (w.getAssessmentKey().equals("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015")) {
+                window1 = w;
+            } else if (w.getAssessmentKey().equals("(SBAC_PT)SBAC-Mathematics-3-Spring-2013-2015")) {
+                window2 = w;
+            }
+        }
+
+        assertThat(window1.getAssessmentKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-11-Spring-2013-2015");
+        assertThat(window1.getFormKey()).isNull();
+        assertThat(window1.getMode()).isEqualTo("online");
+        assertThat(window1.getWindowId()).isEqualTo("ANNUAL");
+        assertThat(window1.getModeMaxAttempts()).isEqualTo(50);
+        assertThat(window1.getWindowSessionType()).isEqualTo(-1);
+        assertThat(window1.getModeSessionType()).isEqualTo(0);
+        assertThat(window2).isNotNull();
+    }
+
+    @Test
     public void shouldFindAssessmentFormWindowsWithNoSegments() {
         DateTime startTime = new DateTime(2016, 8, 10, 19, 2, 11, DateTimeZone.UTC);
         DateTime endTime = new DateTime(2017, 8, 10, 19, 2, 11, DateTimeZone.UTC);
@@ -115,7 +157,7 @@ public class AssessmentWindowQueryRepositoryIntegrationTests {
 
     @Test
     public void shouldReturnEmptyListWhenWindowsCannotBeFound() {
-        List<AssessmentWindow> assessmentWindows = repository.findCurrentAssessmentWindows("SBAC_PT", "SBAC-Mathematics-3", 0, 0);
+        List<AssessmentWindow> assessmentWindows = repository.findCurrentAssessmentWindows("SBAC_PT", 0, 0, "SBAC-Mathematics-3");
         assertThat(assessmentWindows).isEmpty();
     }
 
@@ -133,7 +175,7 @@ public class AssessmentWindowQueryRepositoryIntegrationTests {
         jdbcTemplate.update(clientTestModeInsertSQL, new MapSqlParameterSource());
         jdbcTemplate.update(clientTestWindowInsertSQL, new MapSqlParameterSource());
 
-        List<AssessmentWindow> assessmentWindows = repository.findCurrentAssessmentWindows("SBAC_PT", "SBAC-Mathematics-3", 0, 0);
+        List<AssessmentWindow> assessmentWindows = repository.findCurrentAssessmentWindows("SBAC_PT", 0, 0, "SBAC-Mathematics-3");
         assertThat(assessmentWindows).hasSize(1);
 
         AssessmentWindow window = assessmentWindows.get(0);

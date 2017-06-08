@@ -11,24 +11,12 @@
     <parent>
         <groupId>org.opentestsystem.delivery</groupId>
         <artifactId>tds-assessment</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>3.1.0.RELEASE</version>
     </parent>
 
     <properties>
         <java.version>1.8</java.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-config</artifactId>
-                <version>${spring.cloud.config.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -39,7 +27,7 @@
         <dependency>
             <groupId>org.opentestsystem.delivery</groupId>
             <artifactId>tds-common</artifactId>
-            <version>${tds.common}</version>
+            <version>${tds-common.version}</version>
         </dependency>
 
         <!-- Spring dependencies -->
@@ -71,11 +59,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
@@ -100,10 +83,18 @@
             <version>2.3.9</version>
         </dependency>
 
+        <!-- Guava Utilities -->
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
+        <!-- Apache commons string utilities -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
         </dependency>
 
         <!-- Unit testing dependencies -->
@@ -127,31 +118,18 @@
         </dependency>
 
         <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest-assured.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- Guava Utilities -->
+        <!-- Random beans -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>19.0</version>
-        </dependency>
-
-        <!-- Apache commons string utilities -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <groupId>io.github.benas</groupId>
+            <artifactId>random-beans</artifactId>
+            <version>3.5.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -174,7 +152,6 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <skipTests>${unit-tests.skip}</skipTests>
                     <excludes>
                         <exclude>**/*IntegrationTests.java</exclude>
                     </excludes>

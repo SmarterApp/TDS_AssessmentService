@@ -5,13 +5,13 @@
     <artifactId>tds-assessment</artifactId>
     <name>tds-assessment</name>
     <packaging>pom</packaging>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>3.1.0.RELEASE</version>
 
     <scm>
         <connection>scm:git:https://github.com/SmarterApp/TDS_AssessmentService.git</connection>
         <developerConnection>scm:git:https://git@github.com/SmarterApp/TDS_AssessmentService.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AssessmentService</url>
-        <tag>HEAD</tag>
+        <tag>3.1.0.RELEASE</tag>
     </scm>
 
     <modules>
@@ -22,30 +22,24 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.0.RELEASE</version>
+        <version>1.5.2.RELEASE</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <unit-tests.skip>false</unit-tests.skip>
         <integration-tests.skip>true</integration-tests.skip>
         <docker.image.prefix>fwsbac</docker.image.prefix>
         <assertj.version>3.4.1</assertj.version>
         <mockito.version>1.10.19</mockito.version>
-        <rest-assured.version>2.9.0</rest-assured.version>
-        <h2-database.version>1.4.191</h2-database.version>
-        <spring.cloud.config.version>1.2.2.RELEASE</spring.cloud.config.version>
 
-        <tds.common.legacy.version>0.0.2</tds.common.legacy.version>
-        <tds.common>0.0.2</tds.common>
+        <tds-common.version>3.1.0.RELEASE</tds-common.version>
 
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>2.3.2</maven.jar.plugin.version>
         <maven.release.plugin.version>2.5.3</maven.release.plugin.version>
         <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
         <maven.toolchains.plugin.version>1.1</maven.toolchains.plugin.version>
-        <publish.package.name>org.opentestsystem.tds.assessment</publish.package.name>
     </properties>
 
     <build>

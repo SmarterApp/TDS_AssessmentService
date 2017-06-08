@@ -10,18 +10,10 @@ public class ItemProperty {
     private String description;
 
     public ItemProperty(String name, String value, String description, String itemId) {
-        this(name, value, description);
-        this.itemId = itemId;
-    }
-
-    public ItemProperty(String name, String value, String description) {
-        this(name, value);
-        this.description = description;
-    }
-
-    public ItemProperty(String name, String value) {
         this.name = name;
         this.value = value;
+        this.description = description;
+        this.itemId = itemId;
     }
 
     /**
@@ -58,21 +50,24 @@ public class ItemProperty {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ItemProperty itemProperty = (ItemProperty) o;
+        final ItemProperty that = (ItemProperty) o;
 
-        if (name != null ? !name.equals(itemProperty.name) : itemProperty.name != null) return false;
-        return value != null ? value.equals(itemProperty.value) : itemProperty.value == null;
-
+        if (itemId != null ? !itemId.equals(that.itemId) : that.itemId != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (value != null ? !value.equals(that.value) : that.value != null) return false;
+        return description != null ? description.equals(that.description) : that.description == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = itemId != null ? itemId.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
 }

@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.assessment.AssessmentInfo;
 import tds.assessment.ItemConstraint;
 import tds.assessment.Segment;
+import tds.assessment.model.SegmentMetadata;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.common.Algorithm;
 import tds.common.data.mapping.ResultSetMapperUtility;
@@ -47,7 +49,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         // Non-segmented, test
         String tblSetOfAdminSubjectsInsertSQL1 =
             "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016','SBAC_PT', 'SBAC_PT-ELA','IRP-Perf-ELA-11'," +
-                "0,1,4,4,1,1,3,7,1,4,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,8185,8185,5,0,'SBAC_PT',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
+                "0,1,4,4,1,1,3,7,1,4,NULL,'virtual',NULL,5,1,20,1,5,NULL,NULL,1,1,2112,1184,5,0,'Oregon',NULL,'ABILITY',NULL,1,NULL,1,1,NULL,NULL,0,0,0,0," +
                 "0,'bp1',NULL,NULL,'summative');";
         // Segmented test assessment
         String tblSetOfAdminSubjectsInsertSQL2 = "INSERT INTO itembank.tblsetofadminsubjects VALUES ('(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015','SBAC_PT', 'SBAC_PT-ELA','SBAC-Mathematics-8'," +
@@ -81,9 +83,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "   ('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ftstartDate", ResultSetMapperUtility.mapJodaInstantToTimestamp(Instant.now()));
-        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label) VALUES " +
-            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf'), \n" +
-            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math');\n";
+        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label, msb, handscoreproject, subjectname) VALUES " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf', 1, 1234, 'ELA'), \n" +
+            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math', 0, 4321, 'MATH');\n";
 
         SqlParameterSource segPropsParams = new MapSqlParameterSource("ftstartdate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtStartDate))
             .addValue("ftenddate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtEndDate));
@@ -91,6 +93,23 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
             "INSERT INTO configs.client_segmentproperties (ispermeable, clientname, entryapproval, exitapproval, itemreview, segmentid, segmentposition, parenttest, ftstartdate, ftenddate, label, modekey) VALUES " +
                 "(1, 'SBAC_PT', 0, 0, 0, 'SBAC-SEG1-MATH-8', 1, 'SBAC-Mathematics-8', :ftstartdate, :ftenddate, 'Grade 8 MATH segment', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015'), \n" +
                 "(1, 'SBAC_PT', 0, 0, 0, 'SBAC-SEG2-MATH-8', 2, 'SBAC-Mathematics-8', :ftstartdate, :ftenddate, 'Grade 8 MATH segment', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015')";
+
+        final String tblTestAdminInsertSQL =
+            "INSERT INTO itembank.tbltestadmin (schoolyear, season, _key, _fk_client) " +
+                "VALUES ('2112-2113', 'winter', 'SBAC_PT', 1)";
+
+        final String testToolTypeInsertSQL = "INSERT INTO configs.client_testtooltype (clientname, context, contexttype, toolname, allowchange, rtsfieldname, isrequired, isselectable, dateentered, testmode) " +
+            "VALUES ('SBAC_PT', 'IRP-Perf-ELA-11', 'TEST', 'Language', 0, 'rts', 1, 0, now(), 'ALL'), " +
+            "('SBAC_PT', 'SBAC-Mathematics-8', 'TEST', 'Language', 0, 'rts', 1, 0, now(), 'ALL');";
+        final String testToolInsertSQL = "INSERT INTO configs.client_testtool (clientname, context, contexttype, type, code, value, isdefault, allowcombine, testmode) " +
+            "VALUES ('SBAC_PT', 'IRP-Perf-ELA-11', 'TEST', 'Language', 'ENU', 'ENU', 1, 0, 'ALL'), " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', 'TEST', 'Language', 'FRN', 'FRN', 1, 0, 'ALL'), " +
+            "('SBAC_PT', 'SBAC-Mathematics-8', 'TEST', 'Language', 'ENU', 'ENU', 1, 0, 'ALL');";
+        final String setOfTestGradesInsertSql =
+            "INSERT INTO itembank.setoftestgrades (testid, grade, _fk_adminsubject, _key) " +
+                "VALUES ('IRP-Perf-ELA-11', '3', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 0x8ebc29966a52401b952e45b1a2d08e3f), " +
+                "('IRP-Perf-ELA-11', '11', '(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016', 0x8ebc29966a52401b952e45b1a2d08e3e)," +
+                "('SBAC-Mathematics-8', 'Kindergarden', '(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015', 0x8ebc29966a52401b952e45b1a2d08e3c)";
 
         jdbcTemplate.update(itemConstraintsInsertSql, new MapSqlParameterSource());
         jdbcTemplate.update(tblClientInsertSQL, new MapSqlParameterSource());
@@ -102,6 +121,10 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         jdbcTemplate.update(tblSetOfAdminSubjectsSBACInsertSQL, new MapSqlParameterSource());
         jdbcTemplate.update(clientTestPropertiesInsertSQL, parameters);
         jdbcTemplate.update(clientSegmentPropertiesInsertSQL, segPropsParams);
+        jdbcTemplate.update(tblTestAdminInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(testToolTypeInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(testToolInsertSQL, new MapSqlParameterSource());
+        jdbcTemplate.update(setOfTestGradesInsertSql, new MapSqlParameterSource());
     }
 
     @Test
@@ -126,6 +149,13 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.getMaxOpportunities()).isEqualTo(99);
         assertThat(assessment.getAbilityIntercept()).isEqualTo(2.3f);
         assertThat(assessment.isInitialAbilityBySubject()).isTrue();
+        assertThat(assessment.isMultiStageBraille()).isTrue();
+        assertThat(assessment.getAcademicYear()).isEqualTo("2112-2113");
+        assertThat(assessment.getHandScoreProjectId()).isEqualTo(1234);
+        assertThat(assessment.getLoadVersion()).isEqualTo(2112L);
+        assertThat(assessment.getUpdateVersion()).isEqualTo(1184L);
+        assertThat(assessment.getContract()).isEqualTo("Oregon");
+        assertThat(assessment.getType()).isEqualTo("summative");
 
         assertThat(assessment.getSegments().size()).isEqualTo(1);
         Segment seg = assessment.getSegments().get(0);
@@ -171,6 +201,7 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
         assertThat(assessment.shouldDeleteUnansweredItems()).isFalse();
         assertThat(assessment.isValidateCompleteness()).isTrue();
         assertThat(assessment.getLabel()).isEqualTo("Grade 8 Math");
+        assertThat(assessment.getAcademicYear()).isEqualTo("2112-2113");
 
         Segment segment1 = null;
         Segment segment2 = null;
@@ -250,9 +281,68 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
     }
 
     @Test
+    public void shouldRetrieveAssessmentsForGrade() {
+        List<AssessmentInfo> assessments = repository.findAssessmentInfoForGrade("SBAC_PT", "11");
+        assertThat(assessments).hasSize(1);
+        AssessmentInfo assessmentInfo = assessments.get(0);
+        assertThat(assessmentInfo.getId()).isEqualTo("IRP-Perf-ELA-11");
+        assertThat(assessmentInfo.getMaxAttempts()).isEqualTo(99);
+        assertThat(assessmentInfo.getLabel()).isEqualTo("Grade 11 ELA Perf");
+        assertThat(assessmentInfo.getSubject()).isEqualTo("ELA");
+        assertThat(assessmentInfo.getLanguages()).containsExactlyInAnyOrder("ENU", "FRN");
+        assertThat(assessmentInfo.getGrades()).containsExactlyInAnyOrder("11");
+    }
+
+    @Test
+    public void shouldRetrieveMultipleAssessments() {
+        List<AssessmentInfo> assessments = repository.findAssessmentInfoByKeys("SBAC_PT",
+            "(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        assertThat(assessments).hasSize(2);
+
+        AssessmentInfo assessmentInfo1 = null;
+        AssessmentInfo assessmentInfo2 = null;
+
+        for (AssessmentInfo assessmentInfo : assessments) {
+            if (assessmentInfo.getKey().equals("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015")) {
+                assessmentInfo1 = assessmentInfo;
+            } else if (assessmentInfo.getKey().equals("(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")) {
+                assessmentInfo2 = assessmentInfo;
+            }
+        }
+
+        assertThat(assessmentInfo1.getId()).isEqualTo("SBAC-Mathematics-8");
+        assertThat(assessmentInfo1.getMaxAttempts()).isEqualTo(95);
+        assertThat(assessmentInfo1.getLabel()).isEqualTo("Grade 8 Math");
+        assertThat(assessmentInfo1.getSubject()).isEqualTo("MATH");
+        assertThat(assessmentInfo1.getLanguages()).containsExactly("ENU");
+        assertThat(assessmentInfo1.getGrades()).containsExactly("Kindergarden");
+
+        assertThat(assessmentInfo2.getId()).isEqualTo("IRP-Perf-ELA-11");
+        assertThat(assessmentInfo2.getMaxAttempts()).isEqualTo(99);
+        assertThat(assessmentInfo2.getLabel()).isEqualTo("Grade 11 ELA Perf");
+        assertThat(assessmentInfo2.getSubject()).isEqualTo("ELA");
+        assertThat(assessmentInfo2.getLanguages()).containsExactlyInAnyOrder("ENU", "FRN");
+        assertThat(assessmentInfo2.getGrades()).containsExactlyInAnyOrder("11", "3");
+    }
+
+    @Test
     public void shouldRetrieveNoConstraintsForAssessment() {
         List<ItemConstraint> itemConstraints = repository.findItemConstraintsForAssessment("No client", "NoExam");
         assertThat(itemConstraints).isEmpty();
     }
 
+    @Test
+    public void shouldFindSegmentMetadataBySegmentKey() {
+        final String segmentKey = "(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015";
+        SegmentMetadata segmentMetadata = repository.findSegmentMetadata(segmentKey).get();
+
+        assertThat(segmentMetadata.getParentKey()).isEqualTo("(SBAC_PT)SBAC-Mathematics-8-Spring-2013-2015");
+        assertThat(segmentMetadata.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-SEG2-MATH-8-Spring-2013-2015");
+        assertThat(segmentMetadata.getClientName()).isEqualTo("SBAC_PT");
+    }
+
+    @Test
+    public void shouldReturnEmptyWhenSegmentMetadataCannotBeFound() {
+        assertThat(repository.findSegmentMetadata("bogus")).isNotPresent();
+    }
 }
