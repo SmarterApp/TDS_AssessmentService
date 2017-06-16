@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tds.accommodation.Accommodation;
 import tds.common.Algorithm;
 
 /**
@@ -349,16 +350,21 @@ public class Segment {
         // RULE: When the Segment's algorithm is set to "fixedform", the items should come from the Form that represents
         // the student's selected language.  Otherwise, the items are returned directly (because they will have been
         // collected by other means).
-        List<Item> retItems = new ArrayList<>();
+        final List<Item> retItems = new ArrayList<>();
 
         if (getSelectionAlgorithm() == Algorithm.FIXED_FORM) {
-            for (Form form : getForms(languageCode)) {
+            for (final Form form : getForms(languageCode)) {
                 retItems.addAll(form.getItems());
             }
         } else {
-            for (Item item : items) {
-                if (languageCode.equalsIgnoreCase(item.getLanguageCode())) {
-                    retItems.add(item);
+            for (final Item item : items) {
+                // An item can have many languages (e.g. English, English-Braille, Spanish).  If the item has a
+                // language property for the specified language code, return it.
+                for (final ItemProperty itemProperty : item.getItemProperties()) {
+                    if (itemProperty.getName().equalsIgnoreCase(Accommodation.ACCOMMODATION_TYPE_LANGUAGE)
+                        && itemProperty.getValue().equalsIgnoreCase(languageCode)) {
+                        retItems.add(item);
+                    }
                 }
             }
         }

@@ -3,7 +3,9 @@ package tds.assessment;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import tds.accommodation.Accommodation;
 
@@ -219,21 +221,6 @@ public class Item {
 
     public void setPrintable(boolean printable) {
         isPrintable = printable;
-    }
-
-    /**
-     * Finds the language code of the item based on its item properties.
-     *
-     * @return The language code of the item if one exists in its properties - otherwise null
-     */
-    public String getLanguageCode() {
-        for (ItemProperty property : itemProperties) {
-            if (Accommodation.ACCOMMODATION_TYPE_LANGUAGE.equalsIgnoreCase(property.getName())) {
-                return property.getValue();
-            }
-        }
-
-        return null;
     }
 
     /**
