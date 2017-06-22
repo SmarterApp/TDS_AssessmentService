@@ -5,13 +5,13 @@
     <artifactId>tds-assessment</artifactId>
     <name>tds-assessment</name>
     <packaging>pom</packaging>
-    <version>3.1.0.RELEASE</version>
+    <version>3.1.1.RELEASE</version>
 
     <scm>
         <connection>scm:git:https://github.com/SmarterApp/TDS_AssessmentService.git</connection>
         <developerConnection>scm:git:https://git@github.com/SmarterApp/TDS_AssessmentService.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AssessmentService</url>
-        <tag>3.1.0.RELEASE</tag>
+        <tag>3.1.1.RELEASE</tag>
     </scm>
 
     <modules>

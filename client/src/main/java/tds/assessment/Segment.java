@@ -1,3 +1,16 @@
+/***************************************************************************************************
+ * Copyright 2017 Regents of the University of California. Licensed under the Educational
+ * Community License, Version 2.0 (the “license”); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the license at
+ *
+ * https://opensource.org/licenses/ECL-2.0
+ *
+ * Unless required under applicable law or agreed to in writing, software distributed under the
+ * License is distributed in an “AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for specific language governing permissions
+ * and limitations under the license.
+ **************************************************************************************************/
+
 package tds.assessment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tds.accommodation.Accommodation;
 import tds.common.Algorithm;
 
 /**
@@ -349,16 +363,21 @@ public class Segment {
         // RULE: When the Segment's algorithm is set to "fixedform", the items should come from the Form that represents
         // the student's selected language.  Otherwise, the items are returned directly (because they will have been
         // collected by other means).
-        List<Item> retItems = new ArrayList<>();
+        final List<Item> retItems = new ArrayList<>();
 
         if (getSelectionAlgorithm() == Algorithm.FIXED_FORM) {
-            for (Form form : getForms(languageCode)) {
+            for (final Form form : getForms(languageCode)) {
                 retItems.addAll(form.getItems());
             }
         } else {
-            for (Item item : items) {
-                if (languageCode.equalsIgnoreCase(item.getLanguageCode())) {
-                    retItems.add(item);
+            for (final Item item : items) {
+                // An item can have many languages (e.g. English, English-Braille, Spanish).  If the item has a
+                // language property for the specified language code, return it.
+                for (final ItemProperty itemProperty : item.getItemProperties()) {
+                    if (itemProperty.getName().equalsIgnoreCase(Accommodation.ACCOMMODATION_TYPE_LANGUAGE)
+                        && itemProperty.getValue().equalsIgnoreCase(languageCode)) {
+                        retItems.add(item);
+                    }
                 }
             }
         }
