@@ -16,6 +16,7 @@ spring:
       maximum-pool-size: 32
       minimum-idle: 8
       idle-timeout: 10000
+      connectionTestQuery: "SELECT 1"
 
   mvc:
     throw-exception-if-no-handler-found: true
