@@ -193,16 +193,16 @@ public class AssessmentWindow {
 
     @Override
     public int hashCode() {
-        int result = windowId.hashCode();
+        int result = windowId != null ? windowId.hashCode() : 0;
         result = 31 * result + windowMaxAttempts;
+        result = 31 * result + (mode != null ? mode.hashCode() : 0);
         result = 31 * result + modeMaxAttempts;
-        result = 31 * result + Objects.hashCode(mode);
-        result = 31 * result + Objects.hashCode(startTime);
-        result = 31 * result + Objects.hashCode(endTime.hashCode());
-        result = 31 * result + Objects.hashCode(windowSessionType);
-        result = 31 * result + Objects.hashCode(modeSessionType);
-        result = 31 * result + Objects.hashCode(formKey.hashCode());
-        result = 31 * result + Objects.hashCode(assessmentKey.hashCode());
+        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+        result = 31 * result + windowSessionType;
+        result = 31 * result + modeSessionType;
+        result = 31 * result + (formKey != null ? formKey.hashCode() : 0);
+        result = 31 * result + (assessmentKey != null ? assessmentKey.hashCode() : 0);
         return result;
     }
 }
