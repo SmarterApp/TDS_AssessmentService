@@ -91,7 +91,7 @@ public class AssessmentWindowQueryRepositoryIntegrationTests {
     @Test
     public void shouldFindAssessmentFormWindowsWithNoSegments() {
         DateTime startTime = new DateTime(2016, 8, 10, 19, 2, 11, DateTimeZone.UTC);
-        DateTime endTime = new DateTime(2017, 8, 10, 19, 2, 11, DateTimeZone.UTC);
+        DateTime endTime = new DateTime(2080, 8, 10, 19, 2, 11, DateTimeZone.UTC);
 
         SqlParameterSource parameters = new MapSqlParameterSource("startTime", mapJodaInstantToTimestamp(startTime.toInstant()))
             .addValue("endTime", mapJodaInstantToTimestamp(endTime.toInstant()));
@@ -120,7 +120,7 @@ public class AssessmentWindowQueryRepositoryIntegrationTests {
     @Test
     public void shouldFindAssessmentFormWindowsWithSegments() {
         DateTime startTime = new DateTime(2016, 8, 10, 19, 2, 43, DateTimeZone.UTC);
-        DateTime endTime = new DateTime(2017, 8, 10, 19, 2, 43, DateTimeZone.UTC);
+        DateTime endTime = new DateTime(2080, 8, 10, 19, 2, 43, DateTimeZone.UTC);
 
         SqlParameterSource parameters = new MapSqlParameterSource("startTime", mapJodaInstantToTimestamp(startTime.toInstant()))
             .addValue("endTime", mapJodaInstantToTimestamp(endTime.toInstant()));
