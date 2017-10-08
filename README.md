@@ -5,6 +5,13 @@ The `TDS_Assessment` (aka Assessment Support Service) consists of two modules:
 * **client:** Contains the POJOs/classes needed for a consumer to interact with the Assessment Support Service
 * **service:** REST endpoints that provide TDS assessmnt data
 
+## Prerequisites
+This project requires
+
+* Java 7
+* Java 8
+* Maven 3
+
 ## Build
 To build the **client** and **service**, use the "parent" `pom.xml` that is contained in the `TDS_AssessmentService` directory:
 
@@ -17,6 +24,11 @@ To build the **client**:
 To build the **service**:
 
 * `mvn clean install -f /path/to/service/pom.xml`
+
+To build the **docker** image:
+
+1. Build the project with the parent
+2. Run `mvn docker:build` at `/path/to/service`
 
 To build the service and run integration tests:
   
@@ -43,3 +55,6 @@ java -Xms256m -Xmx512m \
     --spring.datasource.password="[MySQL user password]" \
     --spring.datasource.type=com.zaxxer.hikari.HikariDataSource
 ```
+
+## Spring Configuration
+This project uses Spring and Spring boot.  You can see documentation for the supported Spring properties can be found [here](documentation/spring_configuration.md).
