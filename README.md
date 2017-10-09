@@ -34,6 +34,34 @@ To build the service and run integration tests:
   
 * `mvn clean install -Dintegration-tests.skip=false -f /path/to/service/pom.xml`
 
+In addition to the tools the project also uses [Maven toolchains](https://maven.apache.org/guides/mini/guide-using-toolchains.html) since the client needs to be built at Java 1.7 to support legacy applications.  You will need to either append to your current toolchain file or create a new one in your local .m2 directory.
+
+**Sample Mac OS Version**  
+
+```<?xml version="1.0" encoding="UTF8"?>
+<toolchains>
+  <!-- JDK toolchains -->
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>1.7</version>
+    </provides>
+    <configuration>
+      <jdkHome>/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home</jdkHome>
+    </configuration>
+  </toolchain>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>1.8</version>
+    </provides>
+    <configuration>
+      <jdkHome>/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
+```
+
 ## Run
 ### Run in IDE
 To run the Assessment Support Service in the IDE, update the `spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password` properties defined in the `service/src/main/resources/application.properties` file and set them to appropriate values.
