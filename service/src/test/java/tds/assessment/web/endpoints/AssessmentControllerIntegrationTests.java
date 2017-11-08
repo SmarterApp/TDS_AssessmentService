@@ -39,11 +39,15 @@ import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
 import tds.common.configuration.SecurityConfiguration;
 import tds.common.web.advice.ExceptionAdvice;
+import tds.common.web.exceptions.NotFoundException;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +63,7 @@ public class AssessmentControllerIntegrationTests {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private AssessmentService assessmentSegmentService;
+    private AssessmentService assessmentService;
 
     @Test
     public void shouldReturnAssessmentByKey() throws Exception {
@@ -75,7 +79,7 @@ public class AssessmentControllerIntegrationTests {
         assessment.setStartAbility(50F);
         assessment.setDeleteUnansweredItems(true);
 
-        when(assessmentSegmentService.findAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
+        when(assessmentService.findAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
         URI uri = UriComponentsBuilder.fromUriString("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016").build().toUri();
 
@@ -122,7 +126,7 @@ public class AssessmentControllerIntegrationTests {
         assessment.setSubject("ELA");
         assessment.setStartAbility(50F);
 
-        when(assessmentSegmentService.findAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
+        when(assessmentService.findAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.of(assessment));
 
         http.perform(get(new URI("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
             .contentType(MediaType.APPLICATION_JSON))
@@ -147,9 +151,26 @@ public class AssessmentControllerIntegrationTests {
 
     @Test
     public void shouldReturnNotFound() throws Exception {
-        when(assessmentSegmentService.findAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.empty());
+        when(assessmentService.findAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")).thenReturn(Optional.empty());
         http.perform(get(new URI("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldReturn204WhenRemoveSuccessful() throws Exception {
+        http.perform(delete(new URI("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+        verify(assessmentService).removeAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+    }
+
+    @Test
+    public void shouldReturn404WhenAssessmentNotFound() throws Exception {
+        doThrow(NotFoundException.class).when(assessmentService).removeAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        http.perform(delete(new URI("/SBAC_PT/assessments/(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016"))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+        verify(assessmentService).removeAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
     }
 }
