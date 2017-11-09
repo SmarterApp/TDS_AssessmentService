@@ -27,11 +27,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.assessment.Segment;
 import tds.assessment.repositories.AssessmentCommandRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
+import tds.common.Algorithm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AssessmentCommandRepositoryImplIntegrationTests {
     private static final String TEST_CLIENT_NAME = "SBAC_PT";
     private static final String TEST_ASSESSMENT_KEY = "(SBAC_PT)SBAC-IRP-CAT-ELA-3-Summer-2015-2016";
+    private static final String TEST_ASSESSMENT_KEY2 = "(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018";
 
     @Autowired
     private AssessmentCommandRepository commandRepository;
@@ -53,22 +57,35 @@ public class AssessmentCommandRepositoryImplIntegrationTests {
     private JdbcTemplate jdbcTemplate;
 
     @Value("classpath:(SBAC_PT)SBAC-IRP-CAT-ELA-3-Summer-2015-2016.xml")
-    private Resource res;
+    private Resource assessmentToRemove;
+
+    @Value("classpath:(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018.xml")
+    private Resource otherAssessment;
 
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         // Loads the test package
-        jdbcTemplate.execute(String.format("CALL itembank.loader_main('%s')", Files.toString(res.getFile(), Charsets.UTF_8)));
+        jdbcTemplate.execute(String.format("CALL itembank.loader_main('%s')", Files.toString(assessmentToRemove.getFile(), Charsets.UTF_8)));
+        jdbcTemplate.execute(String.format("CALL itembank.loader_main('%s')", Files.toString(otherAssessment.getFile(), Charsets.UTF_8)));
+
     }
 
     @Test
-    public void testRepository() {
+    public void shouldRemoveAssessmentSuccessfully() {
+        // Make sure both loaded assessments exist
         Optional<Assessment> assessment = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY);
         assertThat(assessment.isPresent()).isTrue();
+        Optional<Assessment> assessment2 = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY2);
+        assertThat(assessment2.isPresent()).isTrue();
 
         commandRepository.removeAssessmentData(TEST_CLIENT_NAME, assessment.get());
+//        commandRepository.removeAssessmentData(TEST_CLIENT_NAME, assessment2.get());
 
+        // The second assessment's data should not be affected by the delete
         Optional<Assessment> retAssessment = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY);
         assertThat(retAssessment.isPresent()).isFalse();
+        Optional<Assessment> retAssessment2 = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY2);
+        assertThat(retAssessment2.isPresent()).isTrue();
+        assertThat(assessment2).isEqualTo(retAssessment2);
     }
 }

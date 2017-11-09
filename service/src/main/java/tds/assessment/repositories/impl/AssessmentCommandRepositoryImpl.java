@@ -17,11 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import tds.assessment.Assessment;
+import tds.assessment.Segment;
 import tds.assessment.repositories.AssessmentCommandRepository;
 
 @Repository
@@ -66,17 +69,28 @@ public class AssessmentCommandRepositoryImpl implements AssessmentCommandReposit
 
     @Override
     public void removeAssessmentData(final String clientName, final Assessment assessment) {
-        final List<String> SQL = generateItembankDeleteSQL(assessment.getKey());
-        SQL.addAll(generateConfigsDeleteSQL(clientName, assessment.getAssessmentId()));
+        final List<String> SQL = new ArrayList<>();
+
+        // If the assessment is multi-segmented, remove segment data first
+        if (assessment.isSegmented()) {
+            for (Segment segment : assessment.getSegments()) {
+                SQL.addAll(generateItembankDeleteSQL(segment.getKey()));
+                SQL.addAll(generateConfigsDeleteQL(clientName, segment.getSegmentId()));
+            }
+        }
+
+        SQL.addAll(generateItembankDeleteSQL(assessment.getKey()));
+        SQL.addAll(generateConfigsDeleteQL(clientName, assessment.getAssessmentId()));
+
 
         jdbcTemplate.batchUpdate(SQL.toArray(new String[SQL.size()]));
     }
 
-    private List<String> generateItembankDeleteSQL(final String assessmentKey) {
+    private List<String> generateItembankDeleteSQL(final String key) {
         final List<String> SQL = Arrays.stream(ITEMBANK_TABLE_NAMES)
             .map(table -> table.equals("tblsetofadminsubjects")
-                ? String.format("DELETE FROM itembank.%s WHERE _key = '%s';", table, assessmentKey)
-                : String.format("DELETE FROM itembank.%s WHERE _fk_adminsubject = '%s';", table, assessmentKey))
+                ? String.format("DELETE FROM itembank.%s WHERE _key = '%s';", table, key)
+                : String.format("DELETE FROM itembank.%s WHERE _fk_adminsubject = '%s';", table, key))
             .collect(Collectors.toList());
 
         // Delete items that are not being used by any assessment
@@ -121,16 +135,16 @@ public class AssessmentCommandRepositoryImpl implements AssessmentCommandReposit
         return SQL;
     }
 
-    private List<String> generateConfigsDeleteSQL(final String clientName, final String assessmentId) {
+    private List<String> generateConfigsDeleteQL(final String clientName, final String id) {
         final List<String> SQL = Arrays.stream(CONFIGS_TABLE_NAMES)
             .map(table -> {
                 switch (table) {
                     case "client_segmentproperties":
-                        return String.format("DELETE FROM configs.%s WHERE clientname = '%s' AND parenttest = '%s';", table, clientName, assessmentId);
+                        return String.format("DELETE FROM configs.%s WHERE clientname = '%s' AND parenttest = '%s';", table, clientName, id);
                     case "client_testtooltype":
-                        return String.format("DELETE FROM configs.%s WHERE clientname = '%s' AND context = '%s';", table, clientName, assessmentId);
+                        return String.format("DELETE FROM configs.%s WHERE clientname = '%s' AND context = '%s';", table, clientName, id);
                     default:
-                        return String.format("DELETE FROM configs.%s WHERE clientname = '%s' AND testid = '%s';", table, clientName, assessmentId);
+                        return String.format("DELETE FROM configs.%s WHERE clientname = '%s' AND testid = '%s';", table, clientName, id);
                 }
             })
             .collect(Collectors.toList());

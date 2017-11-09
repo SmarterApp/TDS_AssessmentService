@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><testspecification purpose="administration" publisher="SBAC_PT" publishdate="Jul 17 2017  4:15PM" version="1.0">
+  <identifier uniqueid="(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018" name="SBAC-Perf-ELA-5" label="G5 ELA Performance Task" version="12516"/>
+  <property name="subject" value="ELA" label="ELA"/>
+  <property name="grade" value="5" label="grade 5"/>
+  <property name="type" value="summative" label="summative" />
+  <administration>
+    <testblueprint>
+      <bpelement elementtype="segment" minopitems="3" maxopitems="3" minftitems="0" maxftitems="0" opitemcount="0" ftitemcount="3">
+        <identifier uniqueid="(SBAC_PT)SBAC-Perf-S1-ELA-5-Fall-2017-2018" name="SBAC-Perf-S1-ELA-5" version="12516"/>
+      </bpelement>
+      <bpelement elementtype="segment" minopitems="1" maxopitems="1" minftitems="0" maxftitems="0" opitemcount="0" ftitemcount="1">
+        <identifier uniqueid="(SBAC_PT)SBAC-Perf-S2-ELA-5-Fall-2017-2018" name="SBAC-Perf-S2-ELA-5" version="12516"/>
+      </bpelement>
+      <bpelement elementtype="test" minopitems="4" maxopitems="4" minftitems="0" maxftitems="0" opitemcount="0" ftitemcount="4">
+        <identifier uniqueid="(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018" name="SBAC-Perf-ELA-5" version="12516"/>
+      </bpelement>
+      <bpelement elementtype="strand" minopitems="4" maxopitems="4" opitemcount="0" ftitemcount="4">
+        <identifier uniqueid="SBAC_PT-ELA-Undesignated" name="ELA-Undesignated" version="12516"/>
+      </bpelement>
+    </testblueprint>
+    <poolproperty property="--ITEMTYPE--" value="ER" label="ItemType = ER" itemcount="2"/>
+    <poolproperty property="--ITEMTYPE--" value="MI" label="ItemType = MI" itemcount="1"/>
+    <poolproperty property="--ITEMTYPE--" value="WER" label="ItemType = WER" itemcount="1"/>
+    <poolproperty property="Language" value="ENU" label="English" itemcount="4"/>
+    <poolproperty property="Language" value="ENU-Braille" label="Braille" itemcount="4"/>
+    <itempool>
+      <passage filename="stim-187-3751.xml">
+        <identifier uniqueid="187-3751" version="12516"/>
+      </passage>
+      <testitem filename="item-187-2646.xml" itemtype="MI">
+        <identifier uniqueid="187-2646" version="12516"/>
+        <bpref>(SBAC_PT)SBAC-Perf-S1-ELA-5-Fall-2017-2018</bpref>
+        <bpref>SBAC_PT-ELA-Undesignated</bpref>
+        <passageref>187-3751</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MI" label="ItemType = MI"/>
+        <poolproperty property="Language" value="ENU" label="English"/>
+        <poolproperty property="Language" value="ENU-Braille" label="Braille"/>
+        <poolproperty property="Answer Key" value="MI" label="Answer Key"/>
+        <itemscoredimension measurementmodel="RAWSCORE" scorepoints="1" weight="1.000000000000000e+000"/>
+      </testitem>
+      <testitem filename="item-187-2647.xml" itemtype="ER">
+        <identifier uniqueid="187-2647" version="12516"/>
+        <bpref>(SBAC_PT)SBAC-Perf-S1-ELA-5-Fall-2017-2018</bpref>
+        <bpref>SBAC_PT-ELA-Undesignated</bpref>
+        <passageref>187-3751</passageref>
+        <poolproperty property="--ITEMTYPE--" value="ER" label="ItemType = ER"/>
+        <poolproperty property="Language" value="ENU" label="English"/>
+        <poolproperty property="Language" value="ENU-Braille" label="Braille"/>
+        <poolproperty property="Answer Key" value="ER" label="Answer Key"/>
+        <itemscoredimension measurementmodel="RAWSCORE" scorepoints="2" weight="1.000000000000000e+000"/>
+      </testitem>
+      <testitem filename="item-187-2648.xml" itemtype="ER">
+        <identifier uniqueid="187-2648" version="12516"/>
+        <bpref>(SBAC_PT)SBAC-Perf-S1-ELA-5-Fall-2017-2018</bpref>
+        <bpref>SBAC_PT-ELA-Undesignated</bpref>
+        <passageref>187-3751</passageref>
+        <poolproperty property="--ITEMTYPE--" value="ER" label="ItemType = ER"/>
+        <poolproperty property="Language" value="ENU" label="English"/>
+        <poolproperty property="Language" value="ENU-Braille" label="Braille"/>
+        <poolproperty property="Answer Key" value="ER" label="Answer Key"/>
+        <itemscoredimension measurementmodel="RAWSCORE" scorepoints="2" weight="1.000000000000000e+000"/>
+      </testitem>
+      <testitem filename="item-187-2649.xml" itemtype="WER">
+        <identifier uniqueid="187-2649" version="12516"/>
+        <bpref>(SBAC_PT)SBAC-Perf-S2-ELA-5-Fall-2017-2018</bpref>
+        <bpref>SBAC_PT-ELA-Undesignated</bpref>
+        <passageref>187-3751</passageref>
+        <poolproperty property="--ITEMTYPE--" value="WER" label="ItemType = WER"/>
+        <poolproperty property="Language" value="ENU" label="English"/>
+        <poolproperty property="Language" value="ENU-Braille" label="Braille"/>
+        <poolproperty property="Answer Key" value="WER" label="Answer Key"/>
+        <itemscoredimension measurementmodel="RAWSCORE" scorepoints="10" weight="1.000000000000000e+000"/>
+      </testitem>
+    </itempool>
+    <testform length="4">
+      <identifier uniqueid="(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018:Default-ENU" name="(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018:Default-ENU" version="12516"/>
+      <property name="language" value="ENU" label="English"/>
+      <poolproperty property="--ITEMTYPE--" value="ER" label="ItemType = ER" itemcount="2"/>
+      <poolproperty property="--ITEMTYPE--" value="MI" label="ItemType = MI" itemcount="1"/>
+      <poolproperty property="--ITEMTYPE--" value="WER" label="ItemType = WER" itemcount="1"/>
+      <poolproperty property="Language" value="ENU" label="English" itemcount="4"/>
+      <poolproperty property="Language" value="ENU-Braille" label="Braille" itemcount="4"/>
+      <formpartition>
+        <identifier uniqueid="187-1017" name="PracTest::ELAG5::Perf::S1::FA17::ENU" version="12516"/>
+        <itemgroup formposition="1" maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="187-1017:G-187-3751-1" name="187-1017:G-187-3751-1" version="12516"/>
+          <passageref>187-3751</passageref>
+          <groupitem itemid="187-2646" formposition="1" groupposition="1" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+          <groupitem itemid="187-2647" formposition="2" groupposition="2" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+          <groupitem itemid="187-2648" formposition="3" groupposition="3" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+        </itemgroup>
+      </formpartition>
+      <formpartition>
+        <identifier uniqueid="187-1019" name="PracTest::ELAG5::Perf::S2::FA17::ENU" version="12516"/>
+        <itemgroup formposition="1" maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="187-1019:G-187-3751-2" name="187-1019:G-187-3751-2" version="12516"/>
+          <passageref>187-3751</passageref>
+          <groupitem itemid="187-2649" formposition="1" groupposition="1" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+        </itemgroup>
+      </formpartition>
+    </testform>
+    <testform length="4">
+      <identifier uniqueid="(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018:Default-ENU-Braille" name="(SBAC_PT)SBAC-Perf-ELA-5-Fall-2017-2018:Default-ENU-Braille" version="12516"/>
+      <property name="language" value="ENU-Braille" label="English"/>
+      <poolproperty property="--ITEMTYPE--" value="ER" label="ItemType = ER" itemcount="2"/>
+      <poolproperty property="--ITEMTYPE--" value="MI" label="ItemType = MI" itemcount="1"/>
+      <poolproperty property="--ITEMTYPE--" value="WER" label="ItemType = WER" itemcount="1"/>
+      <poolproperty property="Language" value="ENU" label="English" itemcount="4"/>
+      <poolproperty property="Language" value="ENU-Braille" label="Braille" itemcount="4"/>
+      <formpartition>
+        <identifier uniqueid="187-1018" name="PracTest::ELAG5::Perf::S1::FA17::BRL" version="12516"/>
+        <itemgroup formposition="1" maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="187-1018:G-187-3751-1" name="187-1018:G-187-3751-1" version="12516"/>
+          <passageref>187-3751</passageref>
+          <groupitem itemid="187-2646" formposition="1" groupposition="1" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+          <groupitem itemid="187-2647" formposition="2" groupposition="2" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+          <groupitem itemid="187-2648" formposition="3" groupposition="3" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+        </itemgroup>
+      </formpartition>
+      <formpartition>
+        <identifier uniqueid="187-1020" name="PracTest::ELAG5::Perf::S2::FA17::BRL" version="12516"/>
+        <itemgroup formposition="1" maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="187-1020:G-187-3751-2" name="187-1020:G-187-3751-2" version="12516"/>
+          <passageref>187-3751</passageref>
+          <groupitem itemid="187-2649" formposition="1" groupposition="1" adminrequired="false" responserequired="false" isactive="true" isfieldtest="true" blockid="A"/>
+        </itemgroup>
+      </formpartition>
+    </testform>
+    <adminsegment segmentid="(SBAC_PT)SBAC-Perf-S1-ELA-5-Fall-2017-2018" position="1" itemselection="fixedform">
+      <segmentblueprint>
+        <segmentbpelement bpelementid="SBAC_PT-ELA-Undesignated" minopitems="3" maxopitems="3"/>
+      </segmentblueprint>
+      <itemselector type="fixedform">
+        <identifier uniqueid="AIR FIXEDFORM1" name="AIR FIXEDFORM" label="AIR FIXEDFORM" version="1.0"/>
+        <itemselectionparameter bpelementid="(SBAC_PT)SBAC-Perf-S1-ELA-5-Fall-2017-2018">
+          <property name="slope" value="1" label="slope"/>
+          <property name="intercept" value="1" label="intercept"/>
+        </itemselectionparameter>
+      </itemselector>
+      <segmentform formpartitionid="187-1017"/>
+      <segmentform formpartitionid="187-1018"/>
+    </adminsegment>
+    <adminsegment segmentid="(SBAC_PT)SBAC-Perf-S2-ELA-5-Fall-2017-2018" position="2" itemselection="fixedform">
+      <segmentblueprint>
+        <segmentbpelement bpelementid="SBAC_PT-ELA-Undesignated" minopitems="1" maxopitems="1"/>
+      </segmentblueprint>
+      <itemselector type="fixedform">
+        <identifier uniqueid="AIR FIXEDFORM1" name="AIR FIXEDFORM" label="AIR FIXEDFORM" version="1.0"/>
+        <itemselectionparameter bpelementid="(SBAC_PT)SBAC-Perf-S2-ELA-5-Fall-2017-2018">
+          <property name="slope" value="1" label="slope"/>
+          <property name="intercept" value="1" label="intercept"/>
+        </itemselectionparameter>
+      </itemselector>
+      <segmentform formpartitionid="187-1019"/>
+      <segmentform formpartitionid="187-1020"/>
+    </adminsegment>
+  </administration>
+</testspecification>
