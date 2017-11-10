@@ -19,7 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +69,10 @@ public class AssessmentCommandRepositoryImpl implements AssessmentCommandReposit
     @Override
     public void removeAssessmentData(final String clientName, final Assessment assessment) {
         final List<String> SQL = new ArrayList<>();
+
+        if (!isClientAssessmentCombinationPresent(clientName, assessment.getAssessmentId())) {
+            return;
+        }
 
         // If the assessment is multi-segmented, remove segment data first
         if (assessment.isSegmented()) {
@@ -136,7 +139,7 @@ public class AssessmentCommandRepositoryImpl implements AssessmentCommandReposit
     }
 
     private List<String> generateConfigsDeleteQL(final String clientName, final String id) {
-        final List<String> SQL = Arrays.stream(CONFIGS_TABLE_NAMES)
+        return Arrays.stream(CONFIGS_TABLE_NAMES)
             .map(table -> {
                 switch (table) {
                     case "client_segmentproperties":
@@ -148,7 +151,11 @@ public class AssessmentCommandRepositoryImpl implements AssessmentCommandReposit
                 }
             })
             .collect(Collectors.toList());
+    }
 
-        return SQL;
+    private boolean isClientAssessmentCombinationPresent(final String clientName, final String assessmentId) {
+        // Execute this statement using a prepared statement to prevent SQL Injection attacks
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM configs.client_testproperties WHERE clientName = ? AND testid = ?",
+            new String[]{clientName, assessmentId}, Boolean.class);
     }
 }
