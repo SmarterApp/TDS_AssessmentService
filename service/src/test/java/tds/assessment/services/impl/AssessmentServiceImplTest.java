@@ -28,6 +28,7 @@ import tds.assessment.Assessment;
 import tds.assessment.Segment;
 import tds.assessment.model.SegmentMetadata;
 import tds.assessment.repositories.AccommodationsQueryRepository;
+import tds.assessment.repositories.AssessmentCommandRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.GradesQueryRepository;
@@ -38,6 +39,7 @@ import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
 import tds.common.web.exceptions.NotFoundException;
 
+import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,6 +49,9 @@ import static org.mockito.Mockito.when;
 public class AssessmentServiceImplTest {
     @Mock
     private AssessmentQueryRepository mockAssessmentQueryRepository;
+
+    @Mock
+    private AssessmentCommandRepository mockAssessmentCommandRepository;
 
     @Mock
     private AccommodationsQueryRepository mockAccommodationsQueryRepository;
@@ -70,7 +75,7 @@ public class AssessmentServiceImplTest {
 
     @Before
     public void setUp() {
-        service = new AssessmentServiceImpl(mockAssessmentQueryRepository, mockItemQueryRepository, mockFormQueryRepository,
+        service = new AssessmentServiceImpl(mockAssessmentQueryRepository, mockAssessmentCommandRepository, mockItemQueryRepository, mockFormQueryRepository,
             mockStrandQueryRepository, mockAccommodationsQueryRepository, mockGradesQueryRepository, mockItemGroupQueryRepository);
     }
 
@@ -123,7 +128,7 @@ public class AssessmentServiceImplTest {
 
         Optional<Assessment> maybeAssessment = service.findAssessment("SBAC_PT", "theKey");
 
-        verify(mockAssessmentQueryRepository).findAssessmentByKey( "SBAC_PT", "theKey");
+        verify(mockAssessmentQueryRepository).findAssessmentByKey("SBAC_PT", "theKey");
         verify(mockFormQueryRepository, times(0)).findFormsForAssessment("theKey");
         verify(mockItemQueryRepository).findActiveItemsProperties("theKey");
         verify(mockItemQueryRepository).findItemsForAssessment("theKey");
@@ -162,10 +167,27 @@ public class AssessmentServiceImplTest {
         verify(mockAssessmentQueryRepository).findSegmentMetadata("segmentKey");
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void shouldThrowNotFoundWhenSegmentMetadataCannotBeFound() {
         when(mockAssessmentQueryRepository.findSegmentMetadata("segmentKey")).thenReturn(Optional.empty());
 
         service.findAssessmentBySegmentKey("segmentKey");
+    }
+
+    @Test
+    public void shouldRemoveAssessment() {
+        Assessment assessment = random(Assessment.class);
+        when(mockAssessmentQueryRepository.findAssessmentByKey("SBAC_PT", assessment.getKey()))
+            .thenReturn(Optional.of(assessment));
+        service.removeAssessment("SBAC_PT", assessment.getKey());
+        verify(mockAssessmentQueryRepository).findAssessmentByKey("SBAC_PT", assessment.getKey());
+        verify(mockAssessmentCommandRepository).removeAssessmentData("SBAC_PT", assessment);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void shouldThrowForNoAssessmentFoundRemoveAssessment() {
+        when(mockAssessmentQueryRepository.findAssessmentByKey("SBAC_PT", "noAssessment"))
+            .thenReturn(Optional.empty());
+        service.removeAssessment("SBAC_PT", "noAssessment");
     }
 }

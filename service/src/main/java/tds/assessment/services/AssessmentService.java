@@ -33,8 +33,17 @@ public interface AssessmentService {
 
     /**
      * Finds an assessment by the segment key including single segmented assessments
+     *
      * @param segmentKey the segment key
      * @return optional with {@link tds.assessment.Assessment} if found otherwise empty
      */
     Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey);
+
+    /**
+     * Deletes an {@link tds.assessment.Assessment} with the specified key and client name
+     *
+     * @param clientName the client environment identifier
+     * @param key        the key of the {@link tds.assessment.Assessment}
+     */
+    void removeAssessment(final String clientName, final String key);
 }

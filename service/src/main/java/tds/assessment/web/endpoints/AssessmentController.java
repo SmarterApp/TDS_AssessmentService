@@ -14,8 +14,10 @@
 package tds.assessment.web.endpoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,13 +48,18 @@ class AssessmentController {
      */
     @GetMapping(value = "/{clientName}/assessments/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<Assessment> findAssessment(@PathVariable final String clientName, @PathVariable final String key)
-        throws NotFoundException {
+    ResponseEntity<Assessment> findAssessment(@PathVariable final String clientName,
+                                              @PathVariable final String key) throws NotFoundException {
         final Assessment assessment = service.findAssessment(clientName, key)
             .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
 
         return ResponseEntity.ok(assessment);
     }
 
-
+    @DeleteMapping(value = "/{clientName}/assessments/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> removeAssessment(@PathVariable final String clientName,
+                                       @PathVariable final String key) throws NotFoundException {
+        service.removeAssessment(clientName, key);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
 }
