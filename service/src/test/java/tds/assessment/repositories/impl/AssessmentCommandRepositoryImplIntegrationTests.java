@@ -61,6 +61,9 @@ public class AssessmentCommandRepositoryImplIntegrationTests {
 
     @Before
     public void setup() throws IOException, InterruptedException {
+        // Add the tblclient
+        jdbcTemplate.execute("INSERT INTO itembank.tblclient (_key, name, description, homepath) VALUES (2, 'SBAC_PT', NULL, '/usr/local/tomcat/resources/tds/');");
+
         // Loads the test package
         jdbcTemplate.execute(String.format("CALL itembank.loader_main('%s')", Files.toString(assessmentToRemove.getFile(), Charsets.UTF_8)));
         jdbcTemplate.execute(String.format("CALL itembank.loader_main('%s')", Files.toString(otherAssessment.getFile(), Charsets.UTF_8)));
