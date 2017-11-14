@@ -1,4 +1,4 @@
-/***************************************************************************************************
+/* **************************************************************************************************
  * Copyright 2017 Regents of the University of California. Licensed under the Educational
  * Community License, Version 2.0 (the “license”); you may not use this file except in
  * compliance with the License. You may obtain a copy of the license at
@@ -129,6 +129,7 @@ public class AssessmentMapperTest {
         assertThat(assessment.getMaxOpportunities()).isEqualTo(100);
         assertThat(assessment.getAccommodationFamily()).isEqualTo("family");
         assertThat(assessment.getSelectionAlgorithm()).isEqualTo(Algorithm.VIRTUAL);
+        assertThat(assessment.isForceComplete()).isTrue();
 
         assertThat(assessment.getSegments()).hasSize(2);
 

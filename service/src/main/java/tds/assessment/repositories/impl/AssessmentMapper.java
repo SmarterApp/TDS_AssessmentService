@@ -1,4 +1,4 @@
-/***************************************************************************************************
+/* **************************************************************************************************
  * Copyright 2017 Regents of the University of California. Licensed under the Educational
  * Community License, Version 2.0 (the “license”); you may not use this file except in
  * compliance with the License. You may obtain a copy of the license at
@@ -103,6 +103,7 @@ class AssessmentMapper {
         assessment.setType(row.getString("assessmentType"));
         assessment.setLoadVersion(row.getLongNullable("loadVersion"));
         assessment.setUpdateVersion(row.getLongNullable("updateVersion"));
+        assessment.setForceComplete(row.getBoolean("forcecomplete"));
 
         // RULE:  An Assessment always has at least one Segment.  Create a "default" Segment from the data contained in
         // the row that represents the Assessment.  This will account for assessments that do not have any segments.  In
@@ -209,10 +210,6 @@ class AssessmentMapper {
 
         int getInt(String key) {
             return rowData.get(key) != null ? (int) rowData.get(key) : 0;
-        }
-
-        long getLong(String key) {
-            return rowData.get(key) != null ? (long) rowData.get(key) : 0;
         }
 
         float getFloat(String key) {
