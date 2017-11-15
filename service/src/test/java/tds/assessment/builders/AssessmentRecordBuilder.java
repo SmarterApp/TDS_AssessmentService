@@ -217,6 +217,7 @@ public class AssessmentRecordBuilder {
         assessmentResult.put("initialabilitybysubject", true);
         assessmentResult.put("segFieldTestStartDate", segmentFieldTestStartDate); // this is always null in the db; set here for testing purposes only
         assessmentResult.put("segFieldTestEndDate", segmentFieldTestEndDate); // this is always null in the db; set here for testing purposes only
+        assessmentResult.put("forcecomplete", Boolean.TRUE);
 
         // Build the fixed-form segments first (if any were requested)
         for (int i = 1; i <= numberOfFixedFormSegments; i++) {

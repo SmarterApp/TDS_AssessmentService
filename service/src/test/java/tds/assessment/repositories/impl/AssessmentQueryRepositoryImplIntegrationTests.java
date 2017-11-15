@@ -96,9 +96,9 @@ public class AssessmentQueryRepositoryImplIntegrationTests {
                 "   ('SBAC_PT', 'IRP-Perf-ELA-3', 'Language', 'ENU', 'Language', 'ENU', 1)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ftstartDate", ResultSetMapperUtility.mapJodaInstantToTimestamp(Instant.now()));
-        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label, msb, handscoreproject, subjectname) VALUES " +
-            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf', 1, 1234, 'ELA'), \n" +
-            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math', 0, 4321, 'MATH');\n";
+        final String clientTestPropertiesInsertSQL = "INSERT INTO configs.client_testproperties (clientname, testid, ftstartdate, accommodationfamily, maxopportunities, abilityslope, abilityintercept, initialabilitybysubject, prefetch, validatecompleteness, deleteUnansweredItems, label, msb, handscoreproject, subjectname, forcecomplete) VALUES " +
+            "('SBAC_PT', 'IRP-Perf-ELA-11', :ftstartDate, 'family', 99, 1.5, 2.3, 1, 2, 1, 0, 'Grade 11 ELA Perf', 1, 1234, 'ELA', 0), \n" +
+            "('SBAC_PT', 'SBAC-Mathematics-8', :ftstartDate, 'otherFamily', 95, 5.5, 6.3, 0, 2, 1, 0, 'Grade 8 Math', 0, 4321, 'MATH', 1);\n";
 
         SqlParameterSource segPropsParams = new MapSqlParameterSource("ftstartdate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtStartDate))
             .addValue("ftenddate", ResultSetMapperUtility.mapJodaInstantToTimestamp(segFtEndDate));
