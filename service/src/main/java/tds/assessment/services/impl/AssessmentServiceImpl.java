@@ -36,6 +36,8 @@ import tds.assessment.repositories.AssessmentCommandRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.GradesQueryRepository;
+import tds.assessment.repositories.ItemBankDataCommandRepository;
+import tds.assessment.repositories.ItemBankDataQueryRepository;
 import tds.assessment.repositories.ItemGroupQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
