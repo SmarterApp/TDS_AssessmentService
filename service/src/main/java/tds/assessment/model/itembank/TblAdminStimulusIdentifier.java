@@ -39,7 +39,7 @@ public class TblAdminStimulusIdentifier implements Serializable {
         this.segmentKey = segmentKey;
     }
 
-    @Column(name = "fk_stimulus")
+    @Column(name = "_fk_stimulus")
     public String getStimulusKey() {
         return stimulusKey;
     }

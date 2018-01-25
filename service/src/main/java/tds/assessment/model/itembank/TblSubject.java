@@ -24,9 +24,15 @@ public class TblSubject {
     private String name;
     private String key;
     private long clientKey;
-    private String version;
+    private Long version;
 
-    public TblSubject(final String name, final String key, final long clientKey, final String version) {
+    /**
+     * Private constructor for frameworks
+     */
+    private TblSubject() {
+    }
+
+    public TblSubject(final String name, final String key, final long clientKey, final Long version) {
         this.name = name;
         this.key = key;
         this.clientKey = clientKey;
@@ -45,7 +51,7 @@ public class TblSubject {
         this.clientKey = clientKey;
     }
 
-    public void setVersion(final String version) {
+    public void setVersion(final Long version) {
         this.version = version;
     }
 
@@ -65,7 +71,7 @@ public class TblSubject {
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 }

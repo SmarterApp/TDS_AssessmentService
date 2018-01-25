@@ -55,6 +55,7 @@ public class Client {
         return name;
     }
 
+    @Column(name = "homepath")
     public String getHomePath() {
         return homePath;
     }

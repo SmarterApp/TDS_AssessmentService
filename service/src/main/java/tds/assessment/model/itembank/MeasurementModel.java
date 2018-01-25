@@ -13,9 +13,35 @@
 
 package tds.assessment.model.itembank;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import tds.assessment.repositories.ItemBankDataCommandRepository;
+import tds.assessment.repositories.ItemBankDataQueryRepository;
+import tds.assessment.repositories.loader.AffinityGroupItemRepository;
+import tds.assessment.repositories.loader.AffinityGroupRepository;
+import tds.assessment.repositories.loader.ItemContentLevelRepository;
+import tds.assessment.repositories.loader.ItemMeasurementParameterRepository;
+import tds.assessment.repositories.loader.ItemScoreDimensionsRepository;
+import tds.assessment.repositories.loader.MeasurementModelRepository;
+import tds.assessment.repositories.loader.MeasurementParameterRepository;
+import tds.assessment.repositories.loader.SetOfTestGradesRepository;
+import tds.assessment.repositories.loader.TblAdminStimuliRepository;
+import tds.assessment.repositories.loader.TblAdminStrandsRepository;
+import tds.assessment.repositories.loader.TblItemRepository;
+import tds.assessment.repositories.loader.TblItemSelectionParameterRepository;
+import tds.assessment.repositories.loader.TblSetOfAdminItemsRepository;
+import tds.assessment.repositories.loader.TblSetOfAdminSubjectsRepository;
+import tds.assessment.repositories.loader.TblSetOfItemStrandsRepository;
+import tds.assessment.repositories.loader.TblStimuliRepository;
+import tds.assessment.repositories.loader.TblStrandRepository;
+import tds.assessment.repositories.loader.TblSubjectRepository;
+import tds.assessment.repositories.loader.TblTestAdminRepository;
+import tds.assessment.repositories.loader.TestCohortRepository;
+import tds.assessment.repositories.loader.TestFormItemRepository;
+import tds.assessment.repositories.loader.TestFormRepository;
 
 @Entity
 @Table(name = "measurementmodel", schema = "itembank")
@@ -37,10 +63,12 @@ public class MeasurementModel {
     }
 
     @Id
+    @Column(name = "modelnumber")
     public int getModelNumber() {
         return modelNumber;
     }
 
+    @Column(name = "modelname")
     public String getModelName() {
         return modelName;
     }

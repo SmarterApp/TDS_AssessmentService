@@ -20,14 +20,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "affinitygroupitem", schema = "itembank")
 public class AffinityGroupItem {
-
-    @EmbeddedId
-    private final AffinityGroupItemIdentity affinityGroupItemIdentity;
+    private AffinityGroupItemIdentity affinityGroupItemIdentity;
 
     public AffinityGroupItem(final AffinityGroupItemIdentity affinityGroupItemIdentity) {
         this.affinityGroupItemIdentity = affinityGroupItemIdentity;
     }
 
+    public void setAffinityGroupItemIdentity(final AffinityGroupItemIdentity affinityGroupItemIdentity) {
+        this.affinityGroupItemIdentity = affinityGroupItemIdentity;
+    }
+
+    @EmbeddedId
     public AffinityGroupItemIdentity getAffinityGroupItemIdentity() {
         return affinityGroupItemIdentity;
     }

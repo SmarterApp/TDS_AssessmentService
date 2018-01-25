@@ -21,11 +21,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tblstimulus", schema = "itembank")
 public class TblStimulus {
-    private int key;
-    private int bankKey;
+    private long key;
+    private long bankKey;
     private String filePath;
     private String fileName;
-    private String version;
+    private Long version;
     private String id; // For hibernate compatibility - not used
 
     private TblStimulus(Builder builder) {
@@ -37,11 +37,11 @@ public class TblStimulus {
     }
 
     public static final class Builder {
-        private int key;
-        private int bankKey;
+        private long key;
+        private long bankKey;
         private String filePath;
         private String fileName;
-        private String version;
+        private Long version;
 
         public Builder() {
         }
@@ -66,7 +66,7 @@ public class TblStimulus {
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
@@ -77,25 +77,27 @@ public class TblStimulus {
     }
 
     @Column(name = "_efk_itskey")
-    public int getKey() {
+    public long getKey() {
         return key;
     }
 
     @Column(name = "_efk_itembank")
-    public int getBankKey() {
+    public long getBankKey() {
         return bankKey;
     }
 
+    @Column(name = "filepath")
     public String getFilePath() {
         return filePath;
     }
 
+    @Column(name = "filename")
     public String getFileName() {
         return fileName;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
@@ -110,11 +112,11 @@ public class TblStimulus {
         this.id = id;
     }
 
-    public void setKey(final int key) {
+    public void setKey(final long key) {
         this.key = key;
     }
 
-    public void setBankKey(final int bankKey) {
+    public void setBankKey(final long bankKey) {
         this.bankKey = bankKey;
     }
 
@@ -126,7 +128,7 @@ public class TblStimulus {
         this.fileName = fileName;
     }
 
-    public void setVersion(final String version) {
+    public void setVersion(final Long version) {
         this.version = version;
     }
 }

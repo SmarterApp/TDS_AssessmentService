@@ -63,7 +63,7 @@ public class TblItemSelectionParameter {
     }
 
     @Id
-    @Column(name = "_key")
+    @Column(name = "_key", columnDefinition = "VARBINARY(16)")
     public UUID getKey() {
         return key;
     }

@@ -15,10 +15,8 @@ package tds.assessment.repositories.loader;
 
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.UUID;
-
 import tds.assessment.model.itembank.ItemMeasurementParameter;
-import tds.assessment.model.itembank.ItemMeasurementParameterIdentifier;
+import tds.assessment.model.itembank.ItemMeasurementParameterIdentity;
 
-public interface ItemMeasurementParameterRepository extends CrudRepository<ItemMeasurementParameter, ItemMeasurementParameterIdentifier> {
+public interface ItemMeasurementParameterRepository extends CrudRepository<ItemMeasurementParameter, ItemMeasurementParameterIdentity> {
 }

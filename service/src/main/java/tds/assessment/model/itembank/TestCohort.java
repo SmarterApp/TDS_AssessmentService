@@ -19,11 +19,11 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(schema = "itembank")
+@Table(name = "testcohort", schema = "itembank")
 public class TestCohort {
-    private static final double DEFAULT_ITEM_RATIO = 1.0;
+    private static final float DEFAULT_ITEM_RATIO = 1.0F;
     private TestCohortIdentity testCohortIdentity;
-    private double itemRatio;
+    private float itemRatio;
 
     public TestCohort(final String segmentKey) {
         this.testCohortIdentity = new TestCohortIdentity(segmentKey);
@@ -34,11 +34,12 @@ public class TestCohort {
         this.testCohortIdentity = testCohortIdentity;
     }
 
-    public void setItemRatio(final double itemRatio) {
+    public void setItemRatio(final float itemRatio) {
         this.itemRatio = itemRatio;
     }
 
-    public double getItemRatio() {
+    @Column(name = "itemratio")
+    public float getItemRatio() {
         return itemRatio;
     }
 

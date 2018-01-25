@@ -22,29 +22,29 @@ import java.util.UUID;
 @Entity
 @Table(name = "itemmeasurementparameter", schema = "itembank")
 public class ItemMeasurementParameter {
-    private ItemMeasurementParameterIdentifier itemMeasurementParameterIdentifier;
-    private double parameterValue;
+    private ItemMeasurementParameterIdentity itemMeasurementParameterIdentity;
+    private float parameterValue;
 
-    public ItemMeasurementParameter(final UUID itemScoreDimensionKey, final int measurementParmaeterKey, final double parameterValue) {
-        this.itemMeasurementParameterIdentifier = new ItemMeasurementParameterIdentifier(itemScoreDimensionKey, measurementParmaeterKey);
+    public ItemMeasurementParameter(final UUID itemScoreDimensionKey, final int measurementParmaeterKey, final float parameterValue) {
+        this.itemMeasurementParameterIdentity = new ItemMeasurementParameterIdentity(itemScoreDimensionKey, measurementParmaeterKey);
         this.parameterValue = parameterValue;
     }
 
-    public void setItemMeasurementParameterIdentifier(final ItemMeasurementParameterIdentifier itemMeasurementParameterIdentifier) {
-        this.itemMeasurementParameterIdentifier = itemMeasurementParameterIdentifier;
+    public void setItemMeasurementParameterIdentity(final ItemMeasurementParameterIdentity itemMeasurementParameterIdentity) {
+        this.itemMeasurementParameterIdentity = itemMeasurementParameterIdentity;
     }
 
-    public void setParameterValue(final double parameterValue) {
+    public void setParameterValue(final float parameterValue) {
         this.parameterValue = parameterValue;
     }
 
     @Column(name = "parmvalue")
-    public double getParameterValue() {
+    public float getParameterValue() {
         return parameterValue;
     }
 
     @EmbeddedId
-    public ItemMeasurementParameterIdentifier getItemMeasurementParameterIdentifier() {
-        return itemMeasurementParameterIdentifier;
+    public ItemMeasurementParameterIdentity getItemMeasurementParameterIdentity() {
+        return itemMeasurementParameterIdentity;
     }
 }

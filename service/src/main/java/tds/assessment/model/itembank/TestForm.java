@@ -27,8 +27,8 @@ public class TestForm {
     private String formId;
     private String language;
     private String formKey;
-    private String version;
-    private String updateVersion;
+    private Long version;
+    private Long updateVersion;
     private String cohort;
 
     public static final class Builder {
@@ -37,8 +37,8 @@ public class TestForm {
         private String formId;
         private String language;
         private String formKey;
-        private String version;
-        private String updateVersion;
+        private Long version;
+        private Long updateVersion;
         private String cohort;
 
         public Builder() {
@@ -69,12 +69,12 @@ public class TestForm {
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
 
-        public Builder withUpdateVersion(String updateVersion) {
+        public Builder withUpdateVersion(Long updateVersion) {
             this.updateVersion = updateVersion;
             return this;
         }
@@ -119,11 +119,11 @@ public class TestForm {
         this.formKey = formKey;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 
-    private void setUpdateVersion(final String updateVersion) {
+    private void setUpdateVersion(final Long updateVersion) {
         this.updateVersion = updateVersion;
     }
 
@@ -150,6 +150,7 @@ public class TestForm {
         return key;
     }
 
+    @Column(name = "formid")
     public String getFormId() {
         return formId;
     }
@@ -165,12 +166,12 @@ public class TestForm {
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
     @Column(name = "updateconfig")
-    public String getUpdateVersion() {
+    public Long getUpdateVersion() {
         return updateVersion;
     }
 

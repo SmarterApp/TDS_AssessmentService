@@ -23,9 +23,9 @@ import java.util.UUID;
 @Table(name = "itemscoredimension", schema = "itembank")
 public class ItemScoreDimension {
     private String dimension;
-    private String recordeRule;
+    private String recodeRule;
     private int scorePoints;
-    private double weight;
+    private float weight;
     private UUID key;
     private String segmentKey;
     private String itemId;
@@ -33,9 +33,9 @@ public class ItemScoreDimension {
 
     public static final class Builder {
         private String dimension;
-        private String recordeRule;
+        private String recodeRule;
         private int scorePoints;
-        private double weight;
+        private float weight;
         private UUID key;
         private String segmentKey;
         private String itemId;
@@ -49,8 +49,8 @@ public class ItemScoreDimension {
             return this;
         }
 
-        public Builder withRecordeRule(String recordeRule) {
-            this.recordeRule = recordeRule;
+        public Builder withRecodeRule(String recodeRule) {
+            this.recodeRule = recodeRule;
             return this;
         }
 
@@ -59,7 +59,7 @@ public class ItemScoreDimension {
             return this;
         }
 
-        public Builder withWeight(double weight) {
+        public Builder withWeight(float weight) {
             this.weight = weight;
             return this;
         }
@@ -91,7 +91,7 @@ public class ItemScoreDimension {
             itemScoreDimension.key = this.key;
             itemScoreDimension.scorePoints = this.scorePoints;
             itemScoreDimension.measurementModelKey = this.measurementModelKey;
-            itemScoreDimension.recordeRule = this.recordeRule;
+            itemScoreDimension.recodeRule = this.recodeRule;
             itemScoreDimension.itemId = this.itemId;
             itemScoreDimension.segmentKey = this.segmentKey;
             return itemScoreDimension;
@@ -102,19 +102,22 @@ public class ItemScoreDimension {
         return dimension;
     }
 
-    public String getRecordeRule() {
-        return recordeRule;
+    @Column(name = "recoderule")
+    public String getRecodeRule() {
+        return recodeRule;
     }
 
+    @Column(name = "scorepoints")
     public int getScorePoints() {
         return scorePoints;
     }
 
-    public double getWeight() {
+    public float getWeight() {
         return weight;
     }
 
     @Id
+    @Column(name = "_key", columnDefinition = "VARBINARY(16)")
     public UUID getKey() {
         return key;
     }
@@ -139,15 +142,15 @@ public class ItemScoreDimension {
         this.dimension = dimension;
     }
 
-    private void setRecordeRule(final String recordeRule) {
-        this.recordeRule = recordeRule;
+    private void setRecodeRule(final String recodeRule) {
+        this.recodeRule = recodeRule;
     }
 
     private void setScorePoints(final int scorePoints) {
         this.scorePoints = scorePoints;
     }
 
-    private void setWeight(final double weight) {
+    private void setWeight(final float weight) {
         this.weight = weight;
     }
 

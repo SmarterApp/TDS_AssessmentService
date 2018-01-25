@@ -24,16 +24,16 @@ public class TblAdminStimulus {
     private TblAdminStimulusIdentifier tblAdminStimulusIdentifier;
     private int numItemsRequired;
     private int maxItems;
-    private String version;
-    private String updateVersion;
+    private Long version;
+    private Long updateVersion;
     private String groupId;
 
     public static final class Builder {
         private TblAdminStimulusIdentifier tblAdminStimulusIdentifier;
         private int numItemsRequired;
         private int maxItems;
-        private String version;
-        private String updateVersion;
+        private Long version;
+        private Long updateVersion;
         private String groupId;
 
         public Builder(String stimulusKey, String segmentKey) {
@@ -50,12 +50,12 @@ public class TblAdminStimulus {
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
 
-        public Builder withUpdateVersion(String updateVersion) {
+        public Builder withUpdateVersion(Long updateVersion) {
             this.updateVersion = updateVersion;
             return this;
         }
@@ -82,24 +82,27 @@ public class TblAdminStimulus {
         return tblAdminStimulusIdentifier;
     }
 
+    @Column(name = "numitemsrequired")
     public int getNumItemsRequired() {
         return numItemsRequired;
     }
 
+    @Column(name = "maxitems")
     public int getMaxItems() {
         return maxItems;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
     @Column(name = "updateconfig")
-    public String getUpdateVersion() {
+    public Long getUpdateVersion() {
         return updateVersion;
     }
 
+    @Column(name = "groupid")
     public String getGroupId() {
         return groupId;
     }
@@ -117,11 +120,11 @@ public class TblAdminStimulus {
         this.maxItems = maxItems;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 
-    private void setUpdateVersion(final String updateVersion) {
+    private void setUpdateVersion(final Long updateVersion) {
         this.updateVersion = updateVersion;
     }
 

@@ -57,6 +57,7 @@ public class ItemContentLevelIdentity implements Serializable {
         return itemId;
     }
 
+    @Column(name = "contentlevel")
     public String getContentLevel() {
         return contentLevel;
     }

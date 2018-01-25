@@ -26,9 +26,9 @@ public class TblStrand {
     private String name;
     private String key;
     private String parentKey;
-    private float clientKey;
+    private long clientKey;
     private int treeLevel;
-    private String version;
+    private Long version;
     private String type;
     private boolean leafTarget;
 
@@ -49,9 +49,9 @@ public class TblStrand {
         private String name;
         private String key;
         private String parentKey;
-        private float clientKey;
+        private long clientKey;
         private int treeLevel;
-        private String version;
+        private Long version;
         private String type;
         private boolean leafTarget;
 
@@ -78,7 +78,7 @@ public class TblStrand {
             return this;
         }
 
-        public Builder withClientKey(float clientKey) {
+        public Builder withClientKey(long clientKey) {
             this.clientKey = clientKey;
             return this;
         }
@@ -88,7 +88,7 @@ public class TblStrand {
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
@@ -129,16 +129,17 @@ public class TblStrand {
     }
 
     @Column(name = "_fk_client")
-    public float getClientKey() {
+    public long getClientKey() {
         return clientKey;
     }
 
+    @Column(name = "treelevel")
     public int getTreeLevel() {
         return treeLevel;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
@@ -169,7 +170,7 @@ public class TblStrand {
         this.parentKey = parentKey;
     }
 
-    private void setClientKey(final float clientKey) {
+    private void setClientKey(final long clientKey) {
         this.clientKey = clientKey;
     }
 
@@ -177,7 +178,7 @@ public class TblStrand {
         this.treeLevel = treeLevel;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 

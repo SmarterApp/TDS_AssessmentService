@@ -47,8 +47,8 @@ public class TblAdminSubject {
     private Integer testPosition;
     private boolean segmented;
     private boolean computeAbilityEstimates;
-    private String version;
-    private String updateVersion;
+    private Long version;
+    private Long updateVersion;
     private float itemWeight;
     private float abilityOffset;
     private String cSet1Order;
@@ -94,8 +94,8 @@ public class TblAdminSubject {
         private Integer testPosition;
         private boolean segmented;
         private boolean computeAbilityEstimates;
-        private String version;
-        private String updateVersion;
+        private Long version;
+        private Long updateVersion;
         private float itemWeight;
         private float abilityOffset;
         private String cSet1Order;
@@ -246,12 +246,12 @@ public class TblAdminSubject {
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
 
-        public Builder withUpdateVersion(String updateVersion) {
+        public Builder withUpdateVersion(Long updateVersion) {
             this.updateVersion = updateVersion;
             return this;
         }
@@ -413,18 +413,22 @@ public class TblAdminSubject {
         return id;
     }
 
+    @Column(name = "startability")
     public float getStartAbility() {
         return startAbility;
     }
 
+    @Column(name = "startinfo")
     public float getStartInfo() {
         return startInfo;
     }
 
+    @Column(name = "minitems")
     public int getMinItems() {
         return minItems;
     }
 
+    @Column(name = "maxitems")
     public int getMaxItems() {
         return maxItems;
     }
@@ -457,42 +461,52 @@ public class TblAdminSubject {
         return fieldTestMaxItems;
     }
 
+    @Column(name = "sampletarget")
     public Float getSampleTarget() {
         return sampleTarget;
     }
 
+    @Column(name = "selectionalgorithm")
     public String getSelectionAlgorithm() {
         return selectionAlgorithm;
     }
 
+    @Column(name = "formselection")
     public String getFormSelection() {
         return formSelection;
     }
 
+    @Column(name = "blueprintweight")
     public float getBlueprintWeight() {
         return blueprintWeight;
     }
 
+    @Column(name = "abilityweight")
     public float getAbilityWeight() {
         return abilityWeight;
     }
 
+    @Column(name = "cset1size")
     public int getcSet1Size() {
         return cSet1Size;
     }
 
+    @Column(name = "cset2random")
     public int getcSet2Random() {
         return cSet2Random;
     }
 
+    @Column(name = "cset2initialrandom")
     public int getcSet2InitialRandom() {
         return cSet2InitialRandom;
     }
 
+    @Column(name = "virtualtest")
     public String getVirtualTest() {
         return virtualTest;
     }
 
+    @Column(name = "testposition")
     public Integer getTestPosition() {
         return testPosition;
     }
@@ -502,80 +516,97 @@ public class TblAdminSubject {
         return segmented;
     }
 
+    @Column(name = "computeabilityestimates")
     public boolean isComputeAbilityEstimates() {
         return computeAbilityEstimates;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
     @Column(name = "updateconfig")
-    public String getUpdateVersion() {
+    public Long getUpdateVersion() {
         return updateVersion;
     }
 
+    @Column(name = "itemweight")
     public float getItemWeight() {
         return itemWeight;
     }
 
+    @Column(name = "abilityoffset")
     public float getAbilityOffset() {
         return abilityOffset;
     }
 
+    @Column(name = "cset1order")
     public String getcSet1Order() {
         return cSet1Order;
     }
 
+    @Column(name = "rcabilityweight")
     public float getRcAbilityWeight() {
         return rcAbilityWeight;
     }
 
+    @Column(name = "precisiontarget")
     public Float getPrecisionTarget() {
         return precisionTarget;
     }
 
+    @Column(name = "precisiontargetmetweight")
     public Float getPrecisionTargetMetWeight() {
         return precisionTargetMetWeight;
     }
 
+    @Column(name = "precisiontargetnotmetweight")
     public Float getPrecisionTargetNotMetWeight() {
         return precisionTargetNotMetWeight;
     }
 
+    @Column(name = "adaptivecut")
     public Float getAdaptiveCut() {
         return adaptiveCut;
     }
 
+    @Column(name = "toocloseses")
     public Float getTooCloseses() {
         return tooCloseses;
     }
 
+    @Column(name = "terminationoverallinfo")
     public boolean isTerminationOverallInfo() {
         return terminationOverallInfo;
     }
 
+    @Column(name = "terminationrcinfo")
     public boolean isTerminationRCInfo() {
         return terminationRCInfo;
     }
 
+    @Column(name = "terminationmincount")
     public boolean isTerminationMinCount() {
         return terminationMinCount;
     }
 
+    @Column(name = "terminationtooclose")
     public boolean isTerminationTooClose() {
         return terminationTooClose;
     }
 
+    @Column(name = "terminationflagsand")
     public boolean isTerminationFlagsAnd() {
         return terminationFlagsAnd;
     }
 
+    @Column(name = "bpmetricfunction")
     public String getBpMetricFunction() {
         return bpMetricFunction;
     }
 
+    @Column(name = "testtype")
     public String getTestType() {
         return testType;
     }
@@ -685,11 +716,11 @@ public class TblAdminSubject {
         this.computeAbilityEstimates = computeAbilityEstimates;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 
-    private void setUpdateVersion(final String updateVersion) {
+    private void setUpdateVersion(final Long updateVersion) {
         this.updateVersion = updateVersion;
     }
 

@@ -22,9 +22,9 @@ import javax.persistence.Table;
 @Table(name = "tblsetofitemstrands")
 public class TblSetOfItemStrand {
     private TblSetOfItemStrandIdentity tblSetOfItemStrandIdentity;
-    private String version;
+    private Long version;
 
-    public TblSetOfItemStrand(final String itemId, final String strandKey, final String segmentKey, final String version) {
+    public TblSetOfItemStrand(final String itemId, final String strandKey, final String segmentKey, final Long version) {
         this.tblSetOfItemStrandIdentity = new TblSetOfItemStrandIdentity(itemId, strandKey, segmentKey);
         this.version = version;
     }
@@ -33,12 +33,12 @@ public class TblSetOfItemStrand {
         this.tblSetOfItemStrandIdentity = tblSetOfItemStrandIdentity;
     }
 
-    public void setVersion(final String version) {
+    public void setVersion(final Long version) {
         this.version = version;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 

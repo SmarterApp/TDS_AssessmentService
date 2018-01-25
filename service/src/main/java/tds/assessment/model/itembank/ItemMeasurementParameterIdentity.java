@@ -20,27 +20,27 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Embeddable
-public class ItemMeasurementParameterIdentifier implements Serializable {
+public class ItemMeasurementParameterIdentity implements Serializable {
     @NotNull
     private UUID itemScoreDimensionKey;
 
     @NotNull
     private int measurementParmaeterKey;
 
-    public ItemMeasurementParameterIdentifier(final UUID itemScoreDimensionKey, final int measurementParmaeterKey) {
+    public ItemMeasurementParameterIdentity(final UUID itemScoreDimensionKey, final int measurementParmaeterKey) {
         this.itemScoreDimensionKey = itemScoreDimensionKey;
         this.measurementParmaeterKey = measurementParmaeterKey;
     }
 
-    public void setItemScoreDimensionKey(final UUID itemScoreDimensionKey) {
+    private void setItemScoreDimensionKey(final UUID itemScoreDimensionKey) {
         this.itemScoreDimensionKey = itemScoreDimensionKey;
     }
 
-    public void setMeasurementParmaeterKey(final int measurementParmaeterKey) {
+    private void setMeasurementParmaeterKey(final int measurementParmaeterKey) {
         this.measurementParmaeterKey = measurementParmaeterKey;
     }
 
-    @Column(name = "fk_itemscoredimension")
+    @Column(name = "_fk_itemscoredimension", columnDefinition = "VARBINARY(16)")
     public UUID getItemScoreDimensionKey() {
         return itemScoreDimensionKey;
     }
@@ -55,7 +55,7 @@ public class ItemMeasurementParameterIdentifier implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final ItemMeasurementParameterIdentifier that = (ItemMeasurementParameterIdentifier) o;
+        final ItemMeasurementParameterIdentity that = (ItemMeasurementParameterIdentity) o;
 
         if (measurementParmaeterKey != that.measurementParmaeterKey) return false;
         return itemScoreDimensionKey.equals(that.itemScoreDimensionKey);

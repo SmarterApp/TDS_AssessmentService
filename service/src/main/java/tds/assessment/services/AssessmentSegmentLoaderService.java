@@ -11,13 +11,17 @@
  * and limitations under the license.
  **************************************************************************************************/
 
-package tds.assessment.repositories.loader;
+package tds.assessment.services;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import tds.assessment.model.itembank.Client;
+import tds.testpackage.model.TestPackage;
 
-import tds.assessment.model.itembank.TblSubject;
+public interface AssessmentSegmentLoaderService {
+    void loadTestCohorts(TestPackage testPackage);
 
-@Repository
-public interface TblSubjectRepository extends CrudRepository<TblSubject, String> {
+    void loadTestGrades(TestPackage testPackage);
+
+    void loadTestAdmin(TestPackage testPackage, Client client);
+
+    void loadAdminSubjects(TestPackage testPackage, String subjectKey);
 }

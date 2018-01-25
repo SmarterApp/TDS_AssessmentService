@@ -25,9 +25,9 @@ public class TblTestAdmin {
     private static final String TEST_ADMIN_DESCRIPTION = " administration";
     private String academicYear;
     private String key;
-    private float clientKey;
-    private String version;
-    private String updateVersion;
+    private long clientKey;
+    private Long version;
+    private Long updateVersion;
     private String description;
 
     private TblTestAdmin(final Builder builder) {
@@ -42,9 +42,9 @@ public class TblTestAdmin {
     public static final class Builder {
         private String academicYear;
         private String key;
-        private float clientKey;
-        private String version;
-        private String updateVersion;
+        private long clientKey;
+        private Long version;
+        private Long updateVersion;
 
         public Builder() {
         }
@@ -59,17 +59,17 @@ public class TblTestAdmin {
             return this;
         }
 
-        public Builder withClientKey(float clientKey) {
+        public Builder withClientKey(long clientKey) {
             this.clientKey = clientKey;
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
 
-        public Builder withUpdateVersion(String updateVersion) {
+        public Builder withUpdateVersion(Long updateVersion) {
             this.updateVersion = updateVersion;
             return this;
         }
@@ -91,17 +91,17 @@ public class TblTestAdmin {
     }
 
     @Column(name = "_fk_client")
-    public float getClientKey() {
+    public long getClientKey() {
         return clientKey;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
     @Column(name = "updateconfig")
-    public String getUpdateVersion() {
+    public Long getUpdateVersion() {
         return updateVersion;
     }
 
@@ -118,15 +118,15 @@ public class TblTestAdmin {
         this.key = key;
     }
 
-    private void setClientKey(final float clientKey) {
+    private void setClientKey(final long clientKey) {
         this.clientKey = clientKey;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 
-    private void setUpdateVersion(final String updateVersion) {
+    private void setUpdateVersion(final Long updateVersion) {
         this.updateVersion = updateVersion;
     }
 

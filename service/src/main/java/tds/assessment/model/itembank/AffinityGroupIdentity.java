@@ -36,6 +36,7 @@ public class AffinityGroupIdentity implements Serializable {
         return segmentKey;
     }
 
+    @Column(name = "groupid")
     public String getGroupId() {
         return groupId;
     }

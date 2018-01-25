@@ -26,30 +26,30 @@ public class AffinityGroup {
     private int minItems;
     private int maxItems;
     private boolean strictMax;
-    private double weight;
-    private String version;
-    private String updatedVersion;
-    private Double startAbility;
-    private Double startInfo;
-    private Double abilityWeight;
-    private Double precisionTarget;
-    private Double precisionTargetMetWeight;
-    private Double precisionTargetNotMetWeight;
+    private Float weight;
+    private Long version;
+    private Long updatedVersion;
+    private Float startAbility;
+    private Float startInfo;
+    private Float abilityWeight;
+    private Float precisionTarget;
+    private Float precisionTargetMetWeight;
+    private Float precisionTargetNotMetWeight;
 
     public static final class Builder {
         private AffinityGroupIdentity affinityGroupId;
         private int minItems;
         private int maxItems;
         private boolean strictMax;
-        private double weight;
-        private String version;
-        private String updatedVersion;
-        private Double startAbility;
-        private Double startInfo;
-        private Double abilityWeight;
-        private Double precisionTarget;
-        private Double precisionTargetMetWeight;
-        private Double precisionTargetNotMetWeight;
+        private float weight;
+        private Long version;
+        private Long updatedVersion;
+        private Float startAbility;
+        private Float startInfo;
+        private Float abilityWeight;
+        private Float precisionTarget;
+        private Float precisionTargetMetWeight;
+        private Float precisionTargetNotMetWeight;
 
         public Builder() {
         }
@@ -74,47 +74,47 @@ public class AffinityGroup {
             return this;
         }
 
-        public Builder withWeight(double weight) {
+        public Builder withWeight(float weight) {
             this.weight = weight;
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
 
-        public Builder withUpdatedVersion(String updatedVersion) {
+        public Builder withUpdatedVersion(Long updatedVersion) {
             this.updatedVersion = updatedVersion;
             return this;
         }
 
-        public Builder withStartAbility(Double startAbility) {
+        public Builder withStartAbility(Float startAbility) {
             this.startAbility = startAbility;
             return this;
         }
 
-        public Builder withStartInfo(Double startInfo) {
+        public Builder withStartInfo(Float startInfo) {
             this.startInfo = startInfo;
             return this;
         }
 
-        public Builder withAbilityWeight(Double abilityWeight) {
+        public Builder withAbilityWeight(Float abilityWeight) {
             this.abilityWeight = abilityWeight;
             return this;
         }
 
-        public Builder withPrecisionTarget(Double precisionTarget) {
+        public Builder withPrecisionTarget(Float precisionTarget) {
             this.precisionTarget = precisionTarget;
             return this;
         }
 
-        public Builder withPrecisionTargetMetWeight(Double precisionTargetMetWeight) {
+        public Builder withPrecisionTargetMetWeight(Float precisionTargetMetWeight) {
             this.precisionTargetMetWeight = precisionTargetMetWeight;
             return this;
         }
 
-        public Builder withPrecisionTargetNotMetWeight(Double precisionTargetNotMetWeight) {
+        public Builder withPrecisionTargetNotMetWeight(Float precisionTargetNotMetWeight) {
             this.precisionTargetNotMetWeight = precisionTargetNotMetWeight;
             return this;
         }
@@ -143,10 +143,12 @@ public class AffinityGroup {
         return affinityGroupId;
     }
 
+    @Column(name = "minitems")
     public int getMinItems() {
         return minItems;
     }
 
+    @Column(name = "maxitems")
     public int getMaxItems() {
         return maxItems;
     }
@@ -156,41 +158,47 @@ public class AffinityGroup {
         return strictMax;
     }
 
-    public double getWeight() {
+    public Float getWeight() {
         return weight;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
     @Column(name = "updateconfig")
-    public String getUpdatedVersion() {
+    public Long getUpdatedVersion() {
         return updatedVersion;
     }
 
-    public Double getStartAbility() {
+    @Column(name = "startability")
+    public Float getStartAbility() {
         return startAbility;
     }
 
-    public Double getStartInfo() {
+    @Column(name = "startinfo")
+    public Float getStartInfo() {
         return startInfo;
     }
 
-    public Double getAbilityWeight() {
+    @Column(name = "abilityweight")
+    public Float getAbilityWeight() {
         return abilityWeight;
     }
 
-    public Double getPrecisionTarget() {
+    @Column(name = "precisiontarget")
+    public Float getPrecisionTarget() {
         return precisionTarget;
     }
 
-    public Double getPrecisionTargetMetWeight() {
+    @Column(name = "precisiontargetmetweight")
+    public Float getPrecisionTargetMetWeight() {
         return precisionTargetMetWeight;
     }
 
-    public Double getPrecisionTargetNotMetWeight() {
+    @Column(name = "precisiontargetnotmetweight")
+    public Float getPrecisionTargetNotMetWeight() {
         return precisionTargetNotMetWeight;
     }
 
@@ -212,39 +220,39 @@ public class AffinityGroup {
         this.strictMax = strictMax;
     }
 
-    private void setWeight(final double weight) {
+    private void setWeight(final float weight) {
         this.weight = weight;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 
-    private void setUpdatedVersion(final String updatedVersion) {
+    private void setUpdatedVersion(final Long updatedVersion) {
         this.updatedVersion = updatedVersion;
     }
 
-    private void setStartAbility(final Double startAbility) {
+    private void setStartAbility(final Float startAbility) {
         this.startAbility = startAbility;
     }
 
-    private void setStartInfo(final Double startInfo) {
+    private void setStartInfo(final Float startInfo) {
         this.startInfo = startInfo;
     }
 
-    private void setAbilityWeight(final Double abilityWeight) {
+    private void setAbilityWeight(final Float abilityWeight) {
         this.abilityWeight = abilityWeight;
     }
 
-    private void setPrecisionTarget(final Double precisionTarget) {
+    private void setPrecisionTarget(final Float precisionTarget) {
         this.precisionTarget = precisionTarget;
     }
 
-    private void setPrecisionTargetMetWeight(final Double precisionTargetMetWeight) {
+    private void setPrecisionTargetMetWeight(final Float precisionTargetMetWeight) {
         this.precisionTargetMetWeight = precisionTargetMetWeight;
     }
 
-    private void setPrecisionTargetNotMetWeight(final Double precisionTargetNotMetWeight) {
+    private void setPrecisionTargetNotMetWeight(final Float precisionTargetNotMetWeight) {
         this.precisionTargetNotMetWeight = precisionTargetNotMetWeight;
     }
 

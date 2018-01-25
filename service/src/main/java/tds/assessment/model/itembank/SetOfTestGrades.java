@@ -26,14 +26,14 @@ public class SetOfTestGrades {
     private String id;
     private String key;
     private String grade;
-    private boolean enrolledSubject;
+    private boolean requireEnrollment;
 
     public SetOfTestGrades(final String id, final String key, final String grade) {
         this.id = id;
         this.key = key;
         this.grade = grade;
         this.gradeKey = UUID.randomUUID();
-        this.enrolledSubject = false;
+        this.requireEnrollment = false;
     }
 
     public void setId(final String id) {
@@ -52,8 +52,8 @@ public class SetOfTestGrades {
         this.gradeKey = gradeKey;
     }
 
-    public void setEnrolledSubject(final boolean enrolledSubject) {
-        this.enrolledSubject = enrolledSubject;
+    public void setRequireEnrollment(final boolean requireEnrollment) {
+        this.requireEnrollment = requireEnrollment;
     }
 
     @Column(name = "testid")
@@ -70,12 +70,13 @@ public class SetOfTestGrades {
         return grade;
     }
 
-    public boolean isEnrolledSubject() {
-        return enrolledSubject;
+    @Column(name = "requireenrollment")
+    public boolean isRequireEnrollment() {
+        return requireEnrollment;
     }
 
     @Id
-    @Column(name = "_key")
+    @Column(name = "_key", columnDefinition = "VARBINARY(16)")
     public UUID getGradeKey() {
         return gradeKey;
     }

@@ -28,7 +28,7 @@ public class TblItem {
     private int scorePoints;
     private String filePath;
     private String fileName;
-    private String version;
+    private Long version;
 
     private TblItem(Builder builder) {
         key = String.format("%s-%s", builder.bankKey, builder.id);
@@ -48,7 +48,7 @@ public class TblItem {
         private int scorePoints;
         private String filePath;
         private String fileName;
-        private String version;
+        private Long version;
 
         public Builder() {
         }
@@ -83,7 +83,7 @@ public class TblItem {
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
@@ -103,19 +103,22 @@ public class TblItem {
         return bankKey;
     }
 
+    @Column(name = "filepath")
     public String getFilePath() {
         return filePath;
     }
 
+    @Column(name = "filename")
     public String getFileName() {
         return fileName;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
+    @Column(name = "itemtype")
     public String getItemType() {
         return itemType;
     }
@@ -160,7 +163,7 @@ public class TblItem {
         this.fileName = fileName;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 }

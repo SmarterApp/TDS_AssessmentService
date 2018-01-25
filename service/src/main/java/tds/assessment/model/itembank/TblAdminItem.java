@@ -19,7 +19,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tblsetofadminsubjects", schema = "itembank")
+@Table(name = "tblsetofadminitems", schema = "itembank")
 public class TblAdminItem {
     private TblAdminItemIdentifier tblAdminItemIdentifier;
     private String groupKey;
@@ -35,11 +35,11 @@ public class TblAdminItem {
     private String responseMimeType;
     private int testCohort;
     private String strandKey;
-    private String version;
-    private String updatedVersion;
+    private Long version;
+    private Long updatedVersion;
     private String claimName;
-    private String irtA;
-    private String irtC;
+    private Float irtA;
+    private Float irtC;
     private String irtModel;
     private String bVector;
     private boolean notForScoring;
@@ -48,7 +48,7 @@ public class TblAdminItem {
     private String irt2B;
     private String irt2C;
     private String irt2Model;
-    private double ftWeight;
+    private float ftWeight;
 
     public static final class Builder {
         private TblAdminItemIdentifier tblAdminItemIdentifier;
@@ -64,11 +64,11 @@ public class TblAdminItem {
         private String responseMimeType;
         private int testCohort;
         private String strandKey;
-        private String version;
-        private String updatedVersion;
+        private Long version;
+        private Long updatedVersion;
         private String claimName;
-        private String irtA;
-        private String irtC;
+        private Float irtA;
+        private Float irtC;
         private String irtModel;
         private String bVector;
         private boolean notForScoring;
@@ -77,7 +77,7 @@ public class TblAdminItem {
         private String irt2B;
         private String irt2C;
         private String irt2Model;
-        private double ftWeight;
+        private float ftWeight;
 
         public Builder(String itemId, String segmentKey) {
             this.tblAdminItemIdentifier = new TblAdminItemIdentifier(itemId, segmentKey);
@@ -143,12 +143,12 @@ public class TblAdminItem {
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
 
-        public Builder withUpdatedVersion(String updatedVersion) {
+        public Builder withUpdatedVersion(Long updatedVersion) {
             this.updatedVersion = updatedVersion;
             return this;
         }
@@ -158,12 +158,12 @@ public class TblAdminItem {
             return this;
         }
 
-        public Builder withIrtA(String irtA) {
+        public Builder withIrtA(Float irtA) {
             this.irtA = irtA;
             return this;
         }
 
-        public Builder withIrtC(String irtC) {
+        public Builder withIrtC(Float irtC) {
             this.irtC = irtC;
             return this;
         }
@@ -208,7 +208,7 @@ public class TblAdminItem {
             return this;
         }
 
-        public Builder withFtWeight(double ftWeight) {
+        public Builder withFtWeight(float ftWeight) {
             this.ftWeight = ftWeight;
             return this;
         }
@@ -252,10 +252,12 @@ public class TblAdminItem {
         return tblAdminItemIdentifier;
     }
 
+    @Column(name = "groupid")
     public String getGroupId() {
         return groupId;
     }
 
+    @Column(name = "itemposition")
     public int getItemPosition() {
         return itemPosition;
     }
@@ -275,6 +277,7 @@ public class TblAdminItem {
         return irtB;
     }
 
+    @Column(name = "blockid")
     public String getBlockId() {
         return blockId;
     }
@@ -294,10 +297,12 @@ public class TblAdminItem {
         return clientName;
     }
 
+    @Column(name = "responsemimetype")
     public String getResponseMimeType() {
         return responseMimeType;
     }
 
+    @Column(name = "testcohort")
     public int getTestCohort() {
         return testCohort;
     }
@@ -308,15 +313,16 @@ public class TblAdminItem {
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
     @Column(name = "updateconfig")
-    public String getUpdatedVersion() {
+    public Long getUpdatedVersion() {
         return updatedVersion;
     }
 
+    @Column(name = "groupkey")
     public String getGroupKey() {
         return groupKey;
     }
@@ -327,12 +333,12 @@ public class TblAdminItem {
     }
 
     @Column(name = "irt_a")
-    public String getIrtA() {
+    public Float getIrtA() {
         return irtA;
     }
 
     @Column(name = "irt_c")
-    public String getIrtC() {
+    public Float getIrtC() {
         return irtC;
     }
 
@@ -346,10 +352,12 @@ public class TblAdminItem {
         return bVector;
     }
 
+    @Column(name = "notforscoring")
     public boolean isNotForScoring() {
         return notForScoring;
     }
 
+    @Column(name = "clstring", columnDefinition = "text")
     public String getClString() {
         return clString;
     }
@@ -374,7 +382,8 @@ public class TblAdminItem {
         return irt2Model;
     }
 
-    public double getFtWeight() {
+    @Column(name = "ftweight")
+    public float getFtWeight() {
         return ftWeight;
     }
 
@@ -431,11 +440,11 @@ public class TblAdminItem {
         this.strandKey = strandKey;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 
-    private void setUpdatedVersion(final String updatedVersion) {
+    private void setUpdatedVersion(final Long updatedVersion) {
         this.updatedVersion = updatedVersion;
     }
 
@@ -443,11 +452,11 @@ public class TblAdminItem {
         this.claimName = claimName;
     }
 
-    private void setIrtA(final String irtA) {
+    private void setIrtA(final Float irtA) {
         this.irtA = irtA;
     }
 
-    private void setIrtC(final String irtC) {
+    private void setIrtC(final Float irtC) {
         this.irtC = irtC;
     }
 
@@ -483,7 +492,7 @@ public class TblAdminItem {
         this.irt2Model = irt2Model;
     }
 
-    private void setFtWeight(final double ftWeight) {
+    private void setFtWeight(final float ftWeight) {
         this.ftWeight = ftWeight;
     }
 

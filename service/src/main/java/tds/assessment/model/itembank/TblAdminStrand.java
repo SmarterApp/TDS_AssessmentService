@@ -26,19 +26,19 @@ public class TblAdminStrand {
     private String strandKey;
     private int minItems;
     private int maxItems;
-    private Double adaptiveCut;
-    private Double startAbility;
-    private Double startInfo;
-    private Double scalar;
+    private Float adaptiveCut;
+    private Float startAbility;
+    private Float startInfo;
+    private Float scalar;
     private Integer loadMin;
     private Integer loadMax;
     private boolean strictMax;
-    private Integer bpWeight;
-    private String version;
-    private Double precisionTarget;
-    private Double precisionTargetMetWeight;
-    private Double precisionTargetNotMetWeight;
-    private Double abilityWeight;
+    private Float bpWeight;
+    private Long version;
+    private Float precisionTarget;
+    private Float precisionTargetMetWeight;
+    private Float precisionTargetNotMetWeight;
+    private Float abilityWeight;
 
     public static final class Builder {
         private String key;
@@ -46,19 +46,19 @@ public class TblAdminStrand {
         private String strandKey;
         private int minItems;
         private int maxItems;
-        private Double adaptiveCut;
-        private Double startAbility;
-        private Double startInfo;
-        private Double scalar;
+        private Float adaptiveCut;
+        private Float startAbility;
+        private Float startInfo;
+        private Float scalar;
         private Integer loadMin;
         private Integer loadMax;
         private boolean strictMax;
-        private Integer bpWeight;
-        private String version;
-        private Double precisionTarget;
-        private Double precisionTargetMetWeight;
-        private Double precisionTargetNotMetWeight;
-        private Double abilityWeight;
+        private Float bpWeight;
+        private Long version;
+        private Float precisionTarget;
+        private Float precisionTargetMetWeight;
+        private Float precisionTargetNotMetWeight;
+        private Float abilityWeight;
 
         public Builder() {
         }
@@ -83,22 +83,22 @@ public class TblAdminStrand {
             return this;
         }
 
-        public Builder withAdaptiveCut(Double adaptiveCut) {
+        public Builder withAdaptiveCut(Float adaptiveCut) {
             this.adaptiveCut = adaptiveCut;
             return this;
         }
 
-        public Builder withStartAbility(Double startAbility) {
+        public Builder withStartAbility(Float startAbility) {
             this.startAbility = startAbility;
             return this;
         }
 
-        public Builder withStartInfo(Double startInfo) {
+        public Builder withStartInfo(Float startInfo) {
             this.startInfo = startInfo;
             return this;
         }
 
-        public Builder withScalar(Double scalar) {
+        public Builder withScalar(Float scalar) {
             this.scalar = scalar;
             return this;
         }
@@ -118,32 +118,32 @@ public class TblAdminStrand {
             return this;
         }
 
-        public Builder withBpWeight(Integer bpWeight) {
+        public Builder withBpWeight(Float bpWeight) {
             this.bpWeight = bpWeight;
             return this;
         }
 
-        public Builder withVersion(String version) {
+        public Builder withVersion(Long version) {
             this.version = version;
             return this;
         }
 
-        public Builder withPrecisionTarget(Double precisionTarget) {
+        public Builder withPrecisionTarget(Float precisionTarget) {
             this.precisionTarget = precisionTarget;
             return this;
         }
 
-        public Builder withPrecisionTargetMetWeight(Double precisionTargetMetWeight) {
+        public Builder withPrecisionTargetMetWeight(Float precisionTargetMetWeight) {
             this.precisionTargetMetWeight = precisionTargetMetWeight;
             return this;
         }
 
-        public Builder withPrecisionTargetNotMetWeight(Double precisionTargetNotMetWeight) {
+        public Builder withPrecisionTargetNotMetWeight(Float precisionTargetNotMetWeight) {
             this.precisionTargetNotMetWeight = precisionTargetNotMetWeight;
             return this;
         }
 
-        public Builder withAbilityWeight(Double abilityWeight) {
+        public Builder withAbilityWeight(Float abilityWeight) {
             this.abilityWeight = abilityWeight;
             return this;
         }
@@ -188,34 +188,42 @@ public class TblAdminStrand {
         return strandKey;
     }
 
+    @Column(name = "minitems")
     public int getMinItems() {
         return minItems;
     }
 
+    @Column(name = "maxitems")
     public int getMaxItems() {
         return maxItems;
     }
 
-    public Double getAdaptiveCut() {
+    @Column(name = "adaptivecut")
+    public Float getAdaptiveCut() {
         return adaptiveCut;
     }
 
-    public Double getStartAbility() {
+    @Column(name = "startability")
+    public Float getStartAbility() {
         return startAbility;
     }
 
-    public Double getStartInfo() {
+    @Column(name = "startinfo")
+    public Float getStartInfo() {
         return startInfo;
     }
 
-    public Double getScalar() {
+    @Column(name = "scalar")
+    public Float getScalar() {
         return scalar;
     }
 
+    @Column(name = "loadmin")
     public Integer getLoadMin() {
         return loadMin;
     }
 
+    @Column(name = "loadmax")
     public Integer getLoadMax() {
         return loadMax;
     }
@@ -225,31 +233,35 @@ public class TblAdminStrand {
         return strictMax;
     }
 
-    public Integer getBpWeight() {
+    @Column(name = "bpweight")
+    public Float getBpWeight() {
         return bpWeight;
     }
 
     @Column(name = "loadconfig")
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public Double getPrecisionTarget() {
+    @Column(name = "precisiontarget")
+    public Float getPrecisionTarget() {
         return precisionTarget;
     }
 
-    public Double getPrecisionTargetMetWeight() {
+    @Column(name = "precisiontargetmetweight")
+    public Float getPrecisionTargetMetWeight() {
         return precisionTargetMetWeight;
     }
 
-    public Double getPrecisionTargetNotMetWeight() {
+    @Column(name = "precisiontargetnotmetweight")
+    public Float getPrecisionTargetNotMetWeight() {
         return precisionTargetNotMetWeight;
     }
 
-    public Double getAbilityWeight() {
+    @Column(name = "abilityweight")
+    public Float getAbilityWeight() {
         return abilityWeight;
     }
-
 
     /* Note: NEVER USE THESE SETTERS - They are only for Hibernate compatibility - use the builder */
     private void setSegmentKey(final String segmentKey) {
@@ -268,19 +280,19 @@ public class TblAdminStrand {
         this.maxItems = maxItems;
     }
 
-    private void setAdaptiveCut(final Double adaptiveCut) {
+    private void setAdaptiveCut(final Float adaptiveCut) {
         this.adaptiveCut = adaptiveCut;
     }
 
-    private void setStartAbility(final Double startAbility) {
+    private void setStartAbility(final Float startAbility) {
         this.startAbility = startAbility;
     }
 
-    private void setStartInfo(final Double startInfo) {
+    private void setStartInfo(final Float startInfo) {
         this.startInfo = startInfo;
     }
 
-    private void setScalar(final Double scalar) {
+    private void setScalar(final Float scalar) {
         this.scalar = scalar;
     }
 
@@ -296,27 +308,27 @@ public class TblAdminStrand {
         this.strictMax = strictMax;
     }
 
-    private void setBpWeight(final Integer bpWeight) {
+    private void setBpWeight(final Float bpWeight) {
         this.bpWeight = bpWeight;
     }
 
-    private void setVersion(final String version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 
-    private void setPrecisionTarget(final Double precisionTarget) {
+    private void setPrecisionTarget(final Float precisionTarget) {
         this.precisionTarget = precisionTarget;
     }
 
-    private void setPrecisionTargetMetWeight(final Double precisionTargetMetWeight) {
+    private void setPrecisionTargetMetWeight(final Float precisionTargetMetWeight) {
         this.precisionTargetMetWeight = precisionTargetMetWeight;
     }
 
-    private void setPrecisionTargetNotMetWeight(final Double precisionTargetNotMetWeight) {
+    private void setPrecisionTargetNotMetWeight(final Float precisionTargetNotMetWeight) {
         this.precisionTargetNotMetWeight = precisionTargetNotMetWeight;
     }
 
-    private void setAbilityWeight(final Double abilityWeight) {
+    private void setAbilityWeight(final Float abilityWeight) {
         this.abilityWeight = abilityWeight;
     }
 

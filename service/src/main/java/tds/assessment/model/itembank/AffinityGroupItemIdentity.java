@@ -35,7 +35,7 @@ public class AffinityGroupItemIdentity implements Serializable {
         this.itemId = itemId;
     }
 
-    @Column(name = "segmentKey")
+    @Column(name = "_fk_adminsubject")
     public String getSegmentKey() {
         return segmentKey;
     }
@@ -45,9 +45,21 @@ public class AffinityGroupItemIdentity implements Serializable {
         return affinityGroupId;
     }
 
-    @Column(name = "_fk_admin")
+    @Column(name = "_fk_item")
     public String getItemId() {
         return itemId;
+    }
+
+    public void setSegmentKey(final String segmentKey) {
+        this.segmentKey = segmentKey;
+    }
+
+    public void setAffinityGroupId(final String affinityGroupId) {
+        this.affinityGroupId = affinityGroupId;
+    }
+
+    public void setItemId(final String itemId) {
+        this.itemId = itemId;
     }
 
     @Override

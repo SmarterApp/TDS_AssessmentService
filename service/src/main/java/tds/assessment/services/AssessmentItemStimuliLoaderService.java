@@ -11,13 +11,24 @@
  * and limitations under the license.
  **************************************************************************************************/
 
-package tds.assessment.repositories.loader;
+package tds.assessment.services;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Map;
 
-import tds.assessment.model.itembank.TblSubject;
+import tds.assessment.model.ItemMetadataWrapper;
+import tds.assessment.model.itembank.TblStrand;
+import tds.testpackage.model.TestPackage;
 
-@Repository
-public interface TblSubjectRepository extends CrudRepository<TblSubject, String> {
+public interface AssessmentItemStimuliLoaderService {
+    void loadItemProperties(Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
+
+    void loadAdminItems(TestPackage testPackage, Map<String, ItemMetadataWrapper> itemIdToItemMetadata,
+                        Map<String, TblStrand> keyToStrands);
+
+    void loadLinkItemsToStrands(Map<String, ItemMetadataWrapper> itemMetadataWrapperMap,
+                                Map<String, TblStrand> keyToStrands, Long version);
+
+    void loadAdminStimuli(TestPackage testPackage);
+
+    void loadAdminStrands(TestPackage testPackage, Map<String, TblStrand> keyToStrands);
 }
