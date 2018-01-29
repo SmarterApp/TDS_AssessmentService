@@ -14,9 +14,11 @@
 package tds.assessment.repositories.loader;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import tds.assessment.model.itembank.AffinityGroup;
 import tds.assessment.model.itembank.AffinityGroupIdentity;
 
+@Repository
 public interface AffinityGroupRepository extends CrudRepository<AffinityGroup, AffinityGroupIdentity> {
 }

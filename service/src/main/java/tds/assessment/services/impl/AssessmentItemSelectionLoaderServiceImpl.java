@@ -16,12 +16,15 @@ package tds.assessment.services.impl;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -43,7 +46,7 @@ import tds.testpackage.model.TestPackage;
 
 @Service
 public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemSelectionLoaderService {
-    private static final List<String> ALGORITHM_PROPERTY_NAMES = Arrays.asList(
+    private static final Set<String> ALGORITHM_PARAMETER_NAMES = new HashSet<>(Arrays.asList(
         "ftstartpos",
         "ftendpos",
         "bpweight",
@@ -70,12 +73,12 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
         "terminationmincount",
         "terminationtooclose",
         "terminationflagsand"
-    );
+    ));
 
     /**
      * These measurement models and parameters are hardcoded and inserted in the load_measurementparameters stored procedure
      */
-    private final List<MeasurementModel> measurementModels = ImmutableList.of(
+    private final Set<MeasurementModel> measurementModels = ImmutableSet.of(
         new MeasurementModel(1, "IRT3pln"),
         new MeasurementModel(2, "IRTPCL"),
         new MeasurementModel(3, "raw"),
@@ -83,7 +86,7 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
         new MeasurementModel(5, "IRTGPC")
     );
 
-    private final List<MeasurementParameter> measurementParameters = ImmutableList.of(
+    private final Set<MeasurementParameter> measurementParameters = new HashSet<>(ImmutableList.of(
         // IRT3pln
         new MeasurementParameter(1, 0, "a", "Slope (a)"),
         new MeasurementParameter(1, 1, "b", "Difficulty (b)"),
@@ -107,7 +110,7 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
         new MeasurementParameter(5, 4, "b3", "Difficulty cut 3 (b3)"),
         new MeasurementParameter(5, 5, "b4", "Difficulty cut 4 (b4)"),
         new MeasurementParameter(5, 6, "b5", "Difficulty cut 5 (b5)")
-    );
+    ));
 
     private final ItemScoreDimensionsRepository itemScoreDimensionsRepository;
     private final MeasurementModelRepository measurementModelRepository;
@@ -166,7 +169,6 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
         itemScoreDimensionsRepository.save(itemScoreDimensionsMap.values());
 
         // Stream over each item score dimension and create a list of ItemMeasurementParameters
-
         List<ItemMeasurementParameter> itemMeasurementParameters = itemScoreDimensionsMap.values().stream()
             .map(dimension -> itemIdToItemMetadata.get(dimension.getItemId()))
             .flatMap(wrapper -> wrapper.getItem().getItemScoreDimension().itemScoreParameters().stream()
@@ -190,11 +192,11 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
         // Get all the item selection parameters for CAT segments that are not in the known "algorithm property names" list
         final List<TblItemSelectionParameter> parameters = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream())
-            .filter(segment -> segment.getAlgorithmType().equalsIgnoreCase(Algorithm.ADAPTIVE_2.getType()))
+            .filter(segment -> segment.getAlgorithmType().contains("adaptive"))
             .flatMap(segment -> segment.segmentBlueprint().stream()
                 .filter(bpElement -> bpElement.getIdRef().equalsIgnoreCase(segment.getId()))
                 .flatMap(segmentBpElement -> segmentBpElement.itemSelection().stream()
-                    .filter(param -> ALGORITHM_PROPERTY_NAMES.contains(param.getName()))
+                    .filter(param -> !ALGORITHM_PARAMETER_NAMES.contains(param.getName().toLowerCase()))
                     .map(param -> new TblItemSelectionParameter(segment.getKey(), segment.getId(), param.getName(), param.getValue()))
                 )
             )

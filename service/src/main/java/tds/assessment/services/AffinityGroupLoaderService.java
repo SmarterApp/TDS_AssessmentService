@@ -19,5 +19,5 @@ import tds.assessment.model.ItemMetadataWrapper;
 import tds.testpackage.model.TestPackage;
 
 public interface AffinityGroupLoaderService {
-    void loadAffinityGroups(TestPackage testPackage, Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
+    void loadAffinityGroups(final TestPackage testPackage, final Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
 }

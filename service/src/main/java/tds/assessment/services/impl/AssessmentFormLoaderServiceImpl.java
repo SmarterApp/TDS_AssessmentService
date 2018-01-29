@@ -89,10 +89,7 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                     .flatMap(form -> form.itemGroups().stream()
                         .flatMap(itemGroup -> itemGroup.items().stream()
                             .map(formItem ->
-                                new TestFormItem.Builder(
-                                    formItem.position(),
-                                    segment.getKey(), String.format("%s-%s", testPackage.getBankKey(),
-                                    formItem.getKey()),
+                                new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
                                     testFormMap.get(form.getId()).getFormKey())
                                     .withFormItsKey(testFormMap.get(form.getId()).getItsKey())
                                     .withActive(true)

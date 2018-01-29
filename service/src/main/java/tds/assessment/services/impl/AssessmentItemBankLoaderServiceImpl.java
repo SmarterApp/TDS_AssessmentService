@@ -13,6 +13,7 @@
 
 package tds.assessment.services.impl;
 
+import com.google.common.collect.ImmutableSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
@@ -42,6 +45,8 @@ import tds.testpackage.model.TestPackage;
 
 @Service
 public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLoaderService {
+    private final static Set<String> CLAIMS_AND_TARGET_TYPES =
+        ImmutableSet.of("claim", "target", "strand", "contentlevel");
     private final TblSubjectRepository tblSubjectRepository;
     private final TblItemRepository tblItemRepository;
     private final TblStimuliRepository tblStimuliRepository;
@@ -72,14 +77,14 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
 
         List<TblStimulus> stimuli = testPackage.getAssessments().stream().flatMap(
             assessment -> assessment.getSegments().stream().flatMap(segment -> {
-                if (segment.getAlgorithmType().equals(Algorithm.FIXED_FORM.getType())) {
+                if (segment.getAlgorithmType().equalsIgnoreCase(Algorithm.FIXED_FORM.getType())) {
                     return segment.segmentForms().stream()
                         .flatMap(form -> form.itemGroups().stream()
                             .filter(itemGroup -> itemGroup.getStimulus().isPresent())
                             .map(itemGroup -> itemGroup.getStimulus())
                             .map(stimulus -> mapStimuliToTblStimuli(bankKey, version, stimulus)));
 
-                } else if (segment.getAlgorithmType().equals(Algorithm.ADAPTIVE_2.getType())) {
+                } else if (segment.getAlgorithmType().contains("adaptive")) {
                     return segment.pool().stream()
                         .filter(itemGroup -> itemGroup.getStimulus().isPresent())
                         .map(itemGroup -> itemGroup.getStimulus())
@@ -104,12 +109,12 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
         tblStrandRepository.save(tblStrands);
 
         return tblStrands.stream()
-            .collect(Collectors.toMap(TblStrand::getKey, s -> s));
+            .collect(Collectors.toMap(TblStrand::getName, Function.identity()));
     }
 
     @Override
-    public void loadTblItems(final TestPackage testPackage, final Map<String, ItemMetadataWrapper> itemIdToItemMetadata) {
-        List<TblItem> items = itemIdToItemMetadata.values().stream()
+    public void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers) {
+        List<TblItem> items = itemMetadataWrappers.stream()
             .map(itemWrapper -> mapItemToTblItem(testPackage.getBankKey(), testPackage.getVersion(), itemWrapper.getItem()))
             .collect(Collectors.toList());
 
@@ -137,7 +142,11 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
 
         // Recursively create the tblStrands we will insert into the database
         for (BlueprintElement bpElement : blueprintElements) {
-            final String key = client.getName() + '-' + bpElement.getId();
+            // For claims and targets, the convention is to prepend the client name to the id
+            final String key = CLAIMS_AND_TARGET_TYPES.contains(bpElement.getType())
+                ? client.getName() + '-' + bpElement.getId()
+                : bpElement.getId();
+
             // Leaf node - Let's create the strand out of this blueprint element and add it to the list we will persist
             if (bpElement.blueprintElements().size() == 0) {
                 TblStrand tblStrand = new TblStrand.Builder()
@@ -154,11 +163,22 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
                     .build();
                 tblStrands.add(tblStrand);
             } else {
-                for (BlueprintElement innerBpElement : bpElement.blueprintElements()) {
-                    // Recursively load the leaf node
-                    this.loadBlueprintElementsHelper(innerBpElement.blueprintElements(),
-                        tblStrands, client, key, subjectKey, version, treeLevel + 1);
-                }
+                TblStrand tblStrand = new TblStrand.Builder()
+                    .withName(bpElement.getId())
+                    .withParentKey(parentKey)
+                    .withKey(key)
+                    .withClientKey(client.getKey())
+                    .withTreeLevel(treeLevel)
+                    .withVersion(Long.parseLong(version))
+                    .withType(bpElement.getType())
+                    .withSubjectKey(subjectKey)
+                    .withLeafTarget(false)
+                    .build();
+                tblStrands.add(tblStrand);
+
+                // Recursively load each blueprint element
+                loadBlueprintElementsHelper(bpElement.blueprintElements(),
+                    tblStrands, client, key, subjectKey, version, treeLevel + 1);
             }
         }
 

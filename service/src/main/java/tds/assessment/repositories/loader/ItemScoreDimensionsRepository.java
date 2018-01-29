@@ -14,10 +14,12 @@
 package tds.assessment.repositories.loader;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 import tds.assessment.model.itembank.ItemScoreDimension;
 
+@Repository
 public interface ItemScoreDimensionsRepository extends CrudRepository<ItemScoreDimension, UUID>{
 }

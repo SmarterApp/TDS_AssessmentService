@@ -14,9 +14,11 @@
 package tds.assessment.repositories.loader;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import tds.assessment.model.itembank.TestFormItem;
 import tds.assessment.model.itembank.TestFormItemIdentity;
 
+@Repository
 public interface TestFormItemRepository extends CrudRepository<TestFormItem, TestFormItemIdentity> {
 }

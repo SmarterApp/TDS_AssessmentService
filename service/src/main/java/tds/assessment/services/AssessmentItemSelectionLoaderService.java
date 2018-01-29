@@ -21,7 +21,7 @@ import tds.testpackage.model.TestPackage;
 public interface AssessmentItemSelectionLoaderService {
     void loadScoringSeedData();
 
-    void loadAdminItemMeasurementParameters(Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
+    void loadAdminItemMeasurementParameters(final Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
 
-    void loadItemSelectionParm(TestPackage testPackage);
+    void loadItemSelectionParm(final TestPackage testPackage);
 }

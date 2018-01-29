@@ -14,8 +14,10 @@
 package tds.assessment.repositories.loader;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import tds.assessment.model.itembank.TblStimulus;
 
+@Repository
 public interface TblStimuliRepository extends CrudRepository<TblStimulus, String> {
 }

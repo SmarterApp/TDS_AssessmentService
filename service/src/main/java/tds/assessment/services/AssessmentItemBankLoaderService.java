@@ -26,12 +26,12 @@ import tds.testpackage.model.TestPackage;
  * A service responsible for loading general item bank data
  */
 public interface AssessmentItemBankLoaderService {
-    void loadSubject(TestPackage testPackage, Client client, String subjectKey);
+    void loadSubject(final TestPackage testPackage, final Client client, final String subjectKey);
 
-    void loadTblStimuli(TestPackage testPackage);
+    void loadTblStimuli(final TestPackage testPackage);
 
-    Map<String, TblStrand> loadStrands(List<BlueprintElement> blueprintElements, String subjectKey,
-                                       Client client, String version);
+    Map<String, TblStrand> loadStrands(final List<BlueprintElement> blueprintElements, final String subjectKey,
+                                       final Client client, final String version);
 
-    void loadTblItems(TestPackage testPackage, Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
+    void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers);
 }

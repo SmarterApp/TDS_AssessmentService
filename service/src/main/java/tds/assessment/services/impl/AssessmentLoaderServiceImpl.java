@@ -13,6 +13,7 @@
 
 package tds.assessment.services.impl;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +108,7 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
             assessmentItemBankLoaderService.loadTblStimuli(testPackage);
 
             /* load_items() */
-            assessmentItemBankLoaderService.loadTblItems(testPackage, itemIdToItemMetadata);
+            assessmentItemBankLoaderService.loadTblItems(testPackage, Lists.newArrayList(itemIdToItemMetadata.values()));
 
             /* load_linkitemtostrands() */
             assessmentItemStimuliLoaderService.loadLinkItemsToStrands(itemIdToItemMetadata, keyToStrands, Long.parseLong(testPackage.getVersion()));

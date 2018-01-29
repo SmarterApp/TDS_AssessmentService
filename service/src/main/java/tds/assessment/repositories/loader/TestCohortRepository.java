@@ -14,9 +14,11 @@
 package tds.assessment.repositories.loader;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import tds.assessment.model.itembank.TestCohort;
 import tds.assessment.model.itembank.TestCohortIdentity;
 
+@Repository
 public interface TestCohortRepository extends CrudRepository<TestCohort, TestCohortIdentity> {
 }

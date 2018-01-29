@@ -11,17 +11,30 @@
  * and limitations under the license.
  **************************************************************************************************/
 
-package tds.assessment.services;
+package tds.assessment.services.impl;
 
-import tds.assessment.model.itembank.Client;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import org.junit.Before;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+
 import tds.testpackage.model.TestPackage;
 
-public interface AssessmentSegmentLoaderService {
-    void loadTestCohorts(final TestPackage testPackage);
+public class AssessmentLoaderServiceBaseTest {
+    @Value("classpath:V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml")
+    private Resource testPackageXml;
 
-    void loadTestGrades(final TestPackage testPackage);
+    protected TestPackage mockTestPackage;
 
-    void loadTestAdmin(final TestPackage testPackage, final Client client);
+    @Before
+    public void deserializeTestPackage() throws IOException {
+        final XmlMapper xmlMapper = new XmlMapper();
+        xmlMapper.registerModule(new Jdk8Module());
 
-    void loadAdminSubjects(final TestPackage testPackage, final String subjectKey);
+        mockTestPackage = xmlMapper.readValue(this.getClass().getResourceAsStream("/V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml"),
+            TestPackage.class);
+    }
 }

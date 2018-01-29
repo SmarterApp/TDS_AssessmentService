@@ -14,9 +14,11 @@
 package tds.assessment.repositories.loader;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import tds.assessment.model.itembank.TblAdminItem;
 import tds.assessment.model.itembank.TblAdminItemIdentifier;
 
+@Repository
 public interface TblSetOfAdminItemsRepository extends CrudRepository<TblAdminItem, TblAdminItemIdentifier> {
 }

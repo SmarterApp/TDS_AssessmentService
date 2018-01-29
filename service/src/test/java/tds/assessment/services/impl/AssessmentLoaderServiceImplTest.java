@@ -13,18 +13,15 @@
 
 package tds.assessment.services.impl;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,7 +38,6 @@ import tds.assessment.services.AssessmentItemStimuliLoaderService;
 import tds.assessment.services.AssessmentLoaderService;
 import tds.assessment.services.AssessmentSegmentLoaderService;
 import tds.common.ValidationError;
-import tds.testpackage.model.TestPackage;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +49,7 @@ import static org.mockito.Mockito.when;
 import static tds.assessment.model.itembank.Client.DEFAULT_HOME_PATH;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AssessmentLoaderServiceImplTest {
+public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBaseTest {
     private AssessmentLoaderService service;
 
     @Mock
@@ -80,11 +76,6 @@ public class AssessmentLoaderServiceImplTest {
     @Mock
     private ItemBankDataCommandRepository itemBankDataCommandRepository;
 
-    @Value("classpath:V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml")
-    private Resource testPackageXml;
-
-    private TestPackage mockTestPackage;
-
     @Before
     public void setup() throws IOException {
         service = new AssessmentLoaderServiceImpl(assessmentItemBankLoaderService,
@@ -95,12 +86,6 @@ public class AssessmentLoaderServiceImplTest {
             assessmentSegmentLoaderService,
             itemBankDataQueryRepository,
             itemBankDataCommandRepository);
-
-        final XmlMapper xmlMapper = new XmlMapper();
-        xmlMapper.registerModule(new Jdk8Module());
-
-        mockTestPackage = xmlMapper.readValue(this.getClass().getResourceAsStream("/V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml"),
-            TestPackage.class);
     }
 
     @Test
@@ -122,7 +107,7 @@ public class AssessmentLoaderServiceImplTest {
         verify(assessmentItemBankLoaderService).loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
             isA(Client.class), eq(mockTestPackage.getVersion()));
         verify(assessmentItemBankLoaderService).loadTblStimuli(mockTestPackage);
-        verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(Map.class));
+        verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
         verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(Map.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
         verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(Map.class));
         verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));
@@ -157,7 +142,7 @@ public class AssessmentLoaderServiceImplTest {
         verify(assessmentItemBankLoaderService).loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
             isA(Client.class), eq(mockTestPackage.getVersion()));
         verify(assessmentItemBankLoaderService).loadTblStimuli(mockTestPackage);
-        verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(Map.class));
+        verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
         verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(Map.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
         verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(Map.class));
         verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));

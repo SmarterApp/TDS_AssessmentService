@@ -57,4 +57,24 @@ public class MeasurementParameter {
     public MeasurementParameterIdentity getMeasurementParameterIdentity() {
         return measurementParameterIdentity;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final MeasurementParameter that = (MeasurementParameter) o;
+
+        if (!measurementParameterIdentity.equals(that.measurementParameterIdentity)) return false;
+        if (!parameterName.equals(that.parameterName)) return false;
+        return parameterDescription != null ? parameterDescription.equals(that.parameterDescription) : that.parameterDescription == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = measurementParameterIdentity.hashCode();
+        result = 31 * result + parameterName.hashCode();
+        result = 31 * result + (parameterDescription != null ? parameterDescription.hashCode() : 0);
+        return result;
+    }
 }
