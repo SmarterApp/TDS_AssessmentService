@@ -46,7 +46,7 @@ public class TblAdminItem {
     private String irtModel;
     private String bVector;
     private boolean notForScoring;
-    private String clString;
+    private String targetString;
     private String irt2A;
     private String irt2B;
     private String irt2C;
@@ -81,7 +81,7 @@ public class TblAdminItem {
         private String irtModel;
         private String bVector;
         private boolean notForScoring;
-        private String clString;
+        private String targetString;
         private String irt2A;
         private String irt2B;
         private String irt2C;
@@ -192,8 +192,8 @@ public class TblAdminItem {
             return this;
         }
 
-        public Builder withClString(String clString) {
-            this.clString = clString;
+        public Builder withTargetString(String targetString) {
+            this.targetString = targetString;
             return this;
         }
 
@@ -243,7 +243,7 @@ public class TblAdminItem {
             tblAdminItem.version = this.version;
             tblAdminItem.irt2Model = this.irt2Model;
             tblAdminItem.itemPosition = this.itemPosition;
-            tblAdminItem.clString = this.clString;
+            tblAdminItem.targetString = this.targetString;
             tblAdminItem.strandKey = this.strandKey;
             tblAdminItem.required = this.required;
             tblAdminItem.irt2C = this.irt2C;
@@ -367,8 +367,8 @@ public class TblAdminItem {
     }
 
     @Column(name = "clstring", columnDefinition = "text")
-    public String getClString() {
-        return clString;
+    public String getTargetString() {
+        return targetString;
     }
 
     @Column(name = "irt2_a")
@@ -481,8 +481,8 @@ public class TblAdminItem {
         this.notForScoring = notForScoring;
     }
 
-    private void setClString(final String clString) {
-        this.clString = clString;
+    private void setTargetString(final String targetString) {
+        this.targetString = targetString;
     }
 
     private void setIrt2A(final String irt2A) {

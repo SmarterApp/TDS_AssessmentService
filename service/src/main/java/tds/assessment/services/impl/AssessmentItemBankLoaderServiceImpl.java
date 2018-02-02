@@ -75,7 +75,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
     public void loadTblStimuli(final TestPackage testPackage) {
         final int bankKey = testPackage.getBankKey();
         final String version = testPackage.getVersion();
-
+        // Creates a flat list of all stimuli in the test package
         List<TblStimulus> stimuli = testPackage.getAssessments().stream().flatMap(
             assessment -> assessment.getSegments().stream().flatMap(segment -> {
                 if (segment.getAlgorithmType().equalsIgnoreCase(Algorithm.FIXED_FORM.getType())) {
@@ -105,7 +105,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
                                               final Client client, final String version) {
         final List<TblStrand> tblStrands = new ArrayList<>();
         final int treeLevel = 1;
-        // Begin the recursive call with null parent and
+        // Begin the recursive call with at the root level (with a null parentKey)
         loadBlueprintElementsHelper(blueprintElements, tblStrands, client, null, subjectKey, version, treeLevel);
         tblStrandRepository.save(tblStrands);
 
@@ -115,6 +115,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
 
     @Override
     public void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers) {
+        // We have the flat list of items - we simply need to map them to a "tblitem"
         List<TblItem> items = itemMetadataWrappers.stream()
             .map(itemWrapper -> mapItemToTblItem(testPackage.getBankKey(), testPackage.getVersion(), itemWrapper.getItem()))
             .collect(Collectors.toList());
@@ -129,7 +130,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
                                                         final String subjectKey,
                                                         final String version,
                                                         final int treeLevel) {
-        // Recursively create the tblStrands we will insert into the database
+        // Recursively create the TblStrands we will insert into the database
         for (BlueprintElement bpElement : blueprintElements) {
             // For claims and targets, the convention is to prepend the client name to the id
             final String key = CLAIM_AND_TARGET_TYPES.contains(bpElement.getType())

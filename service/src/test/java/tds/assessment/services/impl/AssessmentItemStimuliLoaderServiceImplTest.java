@@ -170,7 +170,7 @@ public class AssessmentItemStimuliLoaderServiceImplTest extends AssessmentLoader
         assertThat(singleItem.getIrtC()).isEqualTo(0f);
         assertThat(singleItem.getIrtModel()).isEqualTo("IRT3PLn");
         assertThat(singleItem.getbVector()).isEqualTo("0.678030000000000");
-        assertThat(singleItem.getClString()).isEqualTo("G11Math_DOK2;SBAC_PT-3|G-SRT|A|NA|NA");
+        assertThat(singleItem.getTargetString()).isEqualTo("G11Math_DOK2;SBAC_PT-3|G-SRT|A|NA|NA");
         assertThat(singleItem.getFtWeight()).isEqualTo(1);
 
         TblAdminItem groupedItem = savedAdminItems.stream()

@@ -37,22 +37,37 @@ public class ItemMetadataWrapper {
         this.adaptive = adaptive;
     }
 
+    /**
+     * @return The {@link tds.testpackage.model.Item} wrapped by this object
+     */
     public Item getItem() {
         return item;
     }
 
+    /**
+     * @return The segment key the item corresponds to
+     */
     public String getSegmentKey() {
         return segmentKey;
     }
 
+    /**
+     * @return The item group id the {@link tds.testpackage.model.Item} corresponds to
+     */
     public String getGroupId() {
         return groupId;
     }
 
+    /**
+     * @return A flag indicating whether the item corresponds to an adaptive segment
+     */
     public boolean isAdaptive() {
         return adaptive;
     }
 
+    /**
+     * @return The list of grades this item is eligible for
+     */
     public List<Grade> getGrades() {
         return grades;
     }

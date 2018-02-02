@@ -53,6 +53,7 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
         // database key manually for backup compatibility purposes
         AtomicLong newFormKey = new AtomicLong(itemBankDataQueryRepository.generateFormKey());
 
+        // Map each SegmentForm to a "testform" - we will generate the form key manually
         List<TestForm> testForms = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                 .filter(segment -> segment.getAlgorithmType().equalsIgnoreCase(Algorithm.FIXED_FORM.getType()))
@@ -82,6 +83,7 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
         // formId -> testForm
         Map<String, TestForm> testFormMap = testForms.stream().collect(Collectors.toMap(TestForm::getFormId, Function.identity()));
 
+        // Map each item to its "testform"
         List<TestFormItem> testFormItems = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                 .filter(segment -> segment.getAlgorithmType().equalsIgnoreCase(Algorithm.FIXED_FORM.getType()))

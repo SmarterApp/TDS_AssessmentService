@@ -53,6 +53,8 @@ public class AffinityGroupLoaderServiceImpl implements AffinityGroupLoaderServic
             .filter(bpElement -> bpElement.getType().equalsIgnoreCase(AFFINITY_GROUP))
             .collect(Collectors.toMap(BlueprintElement::getId, Function.identity()));
 
+        // Get the affinity group blueprint elements from the blueprint, and map the item selection properties of the blueprint
+        // to the affinity group
         List<AffinityGroup> affinityGroups = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                 .flatMap(segment -> segment.segmentBlueprint().stream()
@@ -98,6 +100,7 @@ public class AffinityGroupLoaderServiceImpl implements AffinityGroupLoaderServic
 
         affinityGroupRepository.save(affinityGroups);
 
+        // Map each item that belongs to an affinity group
         List<AffinityGroupItem> affinityGroupItems = itemMetadataWrappers.stream()
             .flatMap(wrapper -> wrapper.getItem().getBlueprintReferences().stream()
                 .filter(ref -> affinityGroupBpElements.containsKey(ref.getIdRef()))

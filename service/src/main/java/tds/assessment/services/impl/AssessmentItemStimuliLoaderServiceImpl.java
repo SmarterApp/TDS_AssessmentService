@@ -182,7 +182,8 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
                         .withIrtC((float) irtC)
                         .withIrtModel(item.getItemScoreDimension().getMeasurementModel())
                         .withNotForScoring(false)
-                        .withClString(itemWrapper.isAdaptive() ? createClString(item, keyToStrands) : null)
+                        // A semi-colon delimited list of the targets/content levels
+                        .withTargetString(itemWrapper.isAdaptive() ? createClString(item, keyToStrands) : null)
                         .withFtWeight(1)
                         .withTestCohort(DEFAULT_COHORT)
                         .withBVector(bVector)
@@ -201,7 +202,7 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
         // Get every value of the itemMetadataWrapperMap and convert it to the content level, based on the mapping to the blueprint element strand key
         List<ItemContentLevel> itemContentLevels = itemMetadataWrappers.stream()
             .flatMap(itemWrapper -> itemWrapper.getItem().getBlueprintReferences().stream()
-                .flatMap(bpref -> getTargetChain(bpref.getIdRef()))
+                .flatMap(bpref -> getTargetChain(bpref.getIdRef())) // the target chain is a stream of all target/content levels
                 .map(keyToStrands::get)
                 .filter(bp -> CLAIM_AND_TARGET_TYPES.contains(bp.getType()) || bp.getType().equalsIgnoreCase(AFFINITY_GROUP))
                 .map(bp ->
@@ -228,6 +229,7 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
 
     @Override
     public void loadAdminStimuli(final TestPackage testPackage) {
+        // Iterate over every item group in the test package and find every item group/stimuli pairing, and then map it to a TblAdminStimulus
         List<TblAdminStimulus> tblAdminStimuli = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                 .flatMap(segment -> {
@@ -332,6 +334,7 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
 
     @Override
     public void loadLinkItemsToStimuli(final TestPackage testPackage) {
+        // Iterate over every item group and create a TblSEtOfItemStimulus representing a relationship between items and stimuli
         List<TblSetOfItemStimulus> tblSetOfAdminItemStimuli = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                 .flatMap(segment -> {
@@ -365,7 +368,7 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
     private boolean containsTarget(final List<BlueprintReference> blueprintReferences, final Map<String, TblStrand> keyToStrands) {
         // Check if any of the blueprint references refer to a target
         return blueprintReferences.stream()
-            .anyMatch(bpRef -> Arrays.asList(CONTENT_LEVEL, TARGET).contains(keyToStrands.get(bpRef.getIdRef()).getType()));
+            .anyMatch(bpRef -> TARGET_TYPES.contains(keyToStrands.get(bpRef.getIdRef()).getType()));
     }
 
     private Stream<String> getTargetChain(final String leafId) {
