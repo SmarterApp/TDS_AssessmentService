@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.assessment.model.itembank.AffinityGroup;
-import tds.assessment.model.itembank.AffinityGroupIdentity;
 import tds.assessment.model.itembank.AffinityGroupItem;
 import tds.assessment.model.itembank.AffinityGroupItemIdentity;
 import tds.assessment.repositories.loader.AffinityGroupItemRepository;
@@ -32,6 +31,8 @@ import tds.assessment.services.AffinityGroupLoaderService;
 import tds.testpackage.model.BlueprintElement;
 import tds.testpackage.model.Property;
 import tds.testpackage.model.TestPackage;
+
+import static tds.assessment.model.BlueprintElementTypes.AFFINITY_GROUP;
 
 @Service
 public class AffinityGroupLoaderServiceImpl implements AffinityGroupLoaderService {
@@ -46,10 +47,10 @@ public class AffinityGroupLoaderServiceImpl implements AffinityGroupLoaderServic
     }
 
     @Override
-    public void loadAffinityGroups(final TestPackage testPackage, final Map<String, ItemMetadataWrapper> itemIdToItemMetadata) {
+    public void loadAffinityGroups(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers) {
         // No need for recursive searching since affinitygroups are always at the root level
         Map<String, BlueprintElement> affinityGroupBpElements = testPackage.getBlueprint().stream()
-            .filter(bpElement -> bpElement.getType().equalsIgnoreCase("affinitygroup"))
+            .filter(bpElement -> bpElement.getType().equalsIgnoreCase(AFFINITY_GROUP))
             .collect(Collectors.toMap(BlueprintElement::getId, Function.identity()));
 
         List<AffinityGroup> affinityGroups = testPackage.getAssessments().stream()
@@ -58,16 +59,13 @@ public class AffinityGroupLoaderServiceImpl implements AffinityGroupLoaderServic
                     .filter(segBpElement -> affinityGroupBpElements.containsKey(segBpElement.getIdRef()))
                     .map(segBpElement -> {
                             final Map<String, String> itemSelectionProperties = segBpElement.itemSelection().stream()
-                                .collect(Collectors.toMap(p -> p.getName().toString().toLowerCase(), Property::getValue));
+                                .collect(Collectors.toMap(p -> p.getName().toLowerCase(), Property::getValue));
 
-                            return new AffinityGroup.Builder()
-                                .withAffiniyGroupId(new AffinityGroupIdentity(segment.getKey(), segBpElement.getIdRef()))
+                            return new AffinityGroup.Builder(segment.getKey(), segBpElement.getIdRef())
                                 .withMinItems(segBpElement.getMinExamItems())
                                 .withMaxItems(segBpElement.getMaxExamItems())
                                 // Begin optional properties with defaults
-                                .withStrictMax(itemSelectionProperties.containsKey("isstrictmax")
-                                    ? Boolean.parseBoolean(itemSelectionProperties.get("isstrictmax"))
-                                    : false)
+                                .withStrictMax(itemSelectionProperties.containsKey("isstrictmax") && Boolean.parseBoolean(itemSelectionProperties.get("isstrictmax")))
                                 .withWeight(itemSelectionProperties.containsKey("bpweight")
                                     ? Float.parseFloat(itemSelectionProperties.get("bpweight"))
                                     : null)
@@ -100,11 +98,11 @@ public class AffinityGroupLoaderServiceImpl implements AffinityGroupLoaderServic
 
         affinityGroupRepository.save(affinityGroups);
 
-        List<AffinityGroupItem> affinityGroupItems = itemIdToItemMetadata.values().stream()
+        List<AffinityGroupItem> affinityGroupItems = itemMetadataWrappers.stream()
             .flatMap(wrapper -> wrapper.getItem().getBlueprintReferences().stream()
                 .filter(ref -> affinityGroupBpElements.containsKey(ref.getIdRef()))
                 .map(ref -> new AffinityGroupItem(
-                    new AffinityGroupItemIdentity(wrapper.getSegmentKey(), ref.getIdRef(), wrapper.getItemKey())))
+                    new AffinityGroupItemIdentity(wrapper.getSegmentKey(), ref.getIdRef(), wrapper.getItem().getKey())))
             )
             .collect(Collectors.toList());
 

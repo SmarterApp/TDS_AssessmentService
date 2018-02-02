@@ -15,6 +15,15 @@ package tds.assessment.services;
 
 import tds.testpackage.model.TestPackage;
 
+/**
+ * An interface for a service responsible for loading form data into the item bank
+ */
 public interface AssessmentFormLoaderService {
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TestForm}s and {@link tds.assessment.model.itembank.TestFormItem}s
+     * present in the test package into the item bank
+     *
+     * @param testPackage The test package containing the form data to load
+     */
     void loadAdminForms(final TestPackage testPackage);
 }

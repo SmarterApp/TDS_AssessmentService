@@ -18,10 +18,26 @@ import java.util.Map;
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.testpackage.model.TestPackage;
 
+/**
+ * An interface for a service responsible for loading item selection data into the item bank
+ */
 public interface AssessmentItemSelectionLoaderService {
+    /**
+     * Loads scoring measurement seed data into the item bank
+     */
     void loadScoringSeedData();
 
+    /**
+     * Loads {@link tds.assessment.model.itembank.ItemMeasurementParameter}s into the item bank
+     *
+     * @param itemIdToItemMetadata As mapping of all item wrappers to their item keys in the test package
+     */
     void loadAdminItemMeasurementParameters(final Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
 
-    void loadItemSelectionParm(final TestPackage testPackage);
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TblItemSelectionParameter}s into the item bank
+     *
+     * @param testPackage The test package containing the item and selection parameter mappings
+     */
+    void loadItemSelectionParams(final TestPackage testPackage);
 }

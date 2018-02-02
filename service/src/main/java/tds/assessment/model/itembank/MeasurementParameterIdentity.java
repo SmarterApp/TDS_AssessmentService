@@ -26,6 +26,12 @@ public class MeasurementParameterIdentity implements Serializable {
     @NotNull
     private int parameterNumber;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private MeasurementParameterIdentity() {
+    }
+
     public MeasurementParameterIdentity(final int measurementModelKey, final int parameterNumber) {
         this.measurementModelKey = measurementModelKey;
         this.parameterNumber = parameterNumber;

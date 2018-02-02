@@ -15,26 +15,27 @@ package tds.assessment.model.itembank;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Embeddable
-public class TblAdminStimulusIdentifier implements Serializable {
-    @NotNull
+public class TblSetOfItemStimulusIdentity implements Serializable {
+    private String itemKey;
     private String stimulusKey;
-
-    @NotNull
     private String segmentKey;
 
     /**
-     * Empty constructor for frameworks
+     * private constructor for frameworks
      */
-    private TblAdminStimulusIdentifier() {
-    }
+    private TblSetOfItemStimulusIdentity() {}
 
-    public TblAdminStimulusIdentifier(final String stimulusKey, final String segmentKey) {
+    public TblSetOfItemStimulusIdentity(final String itemKey, final String stimulusKey, final String segmentKey) {
+        this.itemKey = itemKey;
         this.stimulusKey = stimulusKey;
         this.segmentKey = segmentKey;
+    }
+
+    public void setItemKey(final String itemKey) {
+        this.itemKey = itemKey;
     }
 
     public void setStimulusKey(final String stimulusKey) {
@@ -43,6 +44,11 @@ public class TblAdminStimulusIdentifier implements Serializable {
 
     public void setSegmentKey(final String segmentKey) {
         this.segmentKey = segmentKey;
+    }
+
+    @Column(name = "_fk_item")
+    public String getItemKey() {
+        return itemKey;
     }
 
     @Column(name = "_fk_stimulus")
@@ -60,15 +66,17 @@ public class TblAdminStimulusIdentifier implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final TblAdminStimulusIdentifier that = (TblAdminStimulusIdentifier) o;
+        final TblSetOfItemStimulusIdentity that = (TblSetOfItemStimulusIdentity) o;
 
+        if (!itemKey.equals(that.itemKey)) return false;
         if (!stimulusKey.equals(that.stimulusKey)) return false;
         return segmentKey.equals(that.segmentKey);
     }
 
     @Override
     public int hashCode() {
-        int result = stimulusKey.hashCode();
+        int result = itemKey.hashCode();
+        result = 31 * result + stimulusKey.hashCode();
         result = 31 * result + segmentKey.hashCode();
         return result;
     }

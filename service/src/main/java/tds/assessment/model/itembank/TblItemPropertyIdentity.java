@@ -15,13 +15,11 @@ package tds.assessment.model.itembank;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.UUID;
 
 @Embeddable
-public class TblItemPropertiesIdentifier implements Serializable {
+public class TblItemPropertyIdentity implements Serializable {
     @NotNull
     private String itemId;
 
@@ -34,7 +32,13 @@ public class TblItemPropertiesIdentifier implements Serializable {
     @NotNull
     private String segmentKey;
 
-    public TblItemPropertiesIdentifier(final String itemId, final String name, final String value, final String segmentKey) {
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblItemPropertyIdentity() {
+    }
+
+    public TblItemPropertyIdentity(final String itemId, final String name, final String value, final String segmentKey) {
         this.itemId = itemId;
         this.name = name;
         this.value = value;
@@ -82,7 +86,7 @@ public class TblItemPropertiesIdentifier implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final TblItemPropertiesIdentifier that = (TblItemPropertiesIdentifier) o;
+        final TblItemPropertyIdentity that = (TblItemPropertyIdentity) o;
 
         if (!itemId.equals(that.itemId)) return false;
         if (!name.equals(that.name)) return false;

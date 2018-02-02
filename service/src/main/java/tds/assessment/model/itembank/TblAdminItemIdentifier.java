@@ -26,6 +26,12 @@ public class TblAdminItemIdentifier implements Serializable{
     @NotNull
     private String segmentKey;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblAdminItemIdentifier() {
+    }
+
     public TblAdminItemIdentifier(final String itemId, final String segmentKey) {
         this.itemId = itemId;
         this.segmentKey = segmentKey;

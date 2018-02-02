@@ -18,6 +18,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A row representing a segment or an assessment. Multi-segmented tests will typically have n + 1
+ * (where n = the number of segments) rows, as the other row will represent a "virtual" assessment
+ */
 @Entity
 @Table(name = "tblsetofadminsubjects", schema = "itembank")
 public class TblAdminSubject {
@@ -66,6 +70,12 @@ public class TblAdminSubject {
     private String bpMetricFunction;
     private String testType;
     private String contract;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblAdminSubject() {
+    }
 
     public static final class Builder {
         private String key;

@@ -43,11 +43,22 @@ import tds.assessment.repositories.loader.TestCohortRepository;
 import tds.assessment.repositories.loader.TestFormItemRepository;
 import tds.assessment.repositories.loader.TestFormRepository;
 
+/**
+ * A row representing a scoring algorithm measurement model
+ *
+ * Note: As of 2/01/2018 - these models are provided via seed data, and are not part of the test package
+ */
 @Entity
 @Table(name = "measurementmodel", schema = "itembank")
 public class MeasurementModel {
     private int modelNumber;
     private String modelName;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private MeasurementModel() {
+    }
 
     public MeasurementModel(final int modelNumber, final String modelName) {
         this.modelNumber = modelNumber;

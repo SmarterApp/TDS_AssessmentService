@@ -19,6 +19,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * An object encapsulating client/publisher metadata
+ */
 @Entity
 @Table(name = "tblclient", schema = "itembank")
 public class Client {
@@ -26,6 +29,12 @@ public class Client {
     private long key;
     private String name;
     private String homePath;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private Client() {
+    }
 
     public Client(final int key, final String name, final String homePath) {
         this.key = key;

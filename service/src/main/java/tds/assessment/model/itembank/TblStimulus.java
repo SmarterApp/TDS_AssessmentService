@@ -18,6 +18,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A row representing generic stimuli metadata (not specific to any segment/assessment)
+ */
 @Entity
 @Table(name = "tblstimulus", schema = "itembank")
 public class TblStimulus {
@@ -27,6 +30,12 @@ public class TblStimulus {
     private String fileName;
     private Long version;
     private String id; // For hibernate compatibility - not used
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblStimulus() {
+    }
 
     private TblStimulus(Builder builder) {
         key = builder.key;

@@ -25,7 +25,7 @@ public interface ItemBankDataQueryRepository {
      * @param clientName The name of the {@link tds.assessment.model.itembank.Client}
      * @return The {@link tds.assessment.model.itembank.Client} if one exists
      */
-    Optional<Client> findClient(final String clientName);
+    Optional<Client>  findClient(final String clientName);
 
     /**
      * @return The current max form key + 1

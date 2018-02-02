@@ -18,7 +18,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
-
+/**
+ * A row representing parameters for item selection rules for specific segments
+ */
 @Entity
 @Table(name = "tblitemselectionparm", schema = "itembank")
 public class TblItemSelectionParameter {
@@ -28,6 +30,12 @@ public class TblItemSelectionParameter {
     private String name;
     private String value;
     private String label;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblItemSelectionParameter() {
+    }
 
     public TblItemSelectionParameter(final String segmentKey, final String segmentId, final String name, final String value) {
         this.segmentKey = segmentKey;

@@ -25,19 +25,25 @@ public class ItemMeasurementParameterIdentity implements Serializable {
     private UUID itemScoreDimensionKey;
 
     @NotNull
-    private int measurementParmaeterKey;
+    private int measurementParameterKey;
 
-    public ItemMeasurementParameterIdentity(final UUID itemScoreDimensionKey, final int measurementParmaeterKey) {
+    /**
+     * Empty constructor for frameworks
+     */
+    private ItemMeasurementParameterIdentity() {
+    }
+
+    public ItemMeasurementParameterIdentity(final UUID itemScoreDimensionKey, final int measurementParameterKey) {
         this.itemScoreDimensionKey = itemScoreDimensionKey;
-        this.measurementParmaeterKey = measurementParmaeterKey;
+        this.measurementParameterKey = measurementParameterKey;
     }
 
     private void setItemScoreDimensionKey(final UUID itemScoreDimensionKey) {
         this.itemScoreDimensionKey = itemScoreDimensionKey;
     }
 
-    private void setMeasurementParmaeterKey(final int measurementParmaeterKey) {
-        this.measurementParmaeterKey = measurementParmaeterKey;
+    private void setMeasurementParameterKey(final int measurementParameterKey) {
+        this.measurementParameterKey = measurementParameterKey;
     }
 
     @Column(name = "_fk_itemscoredimension", columnDefinition = "VARBINARY(16)")
@@ -46,8 +52,8 @@ public class ItemMeasurementParameterIdentity implements Serializable {
     }
 
     @Column(name = "_fk_measurementparameter")
-    public int getMeasurementParmaeterKey() {
-        return measurementParmaeterKey;
+    public int getMeasurementParameterKey() {
+        return measurementParameterKey;
     }
 
     @Override
@@ -57,14 +63,14 @@ public class ItemMeasurementParameterIdentity implements Serializable {
 
         final ItemMeasurementParameterIdentity that = (ItemMeasurementParameterIdentity) o;
 
-        if (measurementParmaeterKey != that.measurementParmaeterKey) return false;
+        if (measurementParameterKey != that.measurementParameterKey) return false;
         return itemScoreDimensionKey.equals(that.itemScoreDimensionKey);
     }
 
     @Override
     public int hashCode() {
         int result = itemScoreDimensionKey.hashCode();
-        result = 31 * result + measurementParmaeterKey;
+        result = 31 * result + measurementParameterKey;
         return result;
     }
 }

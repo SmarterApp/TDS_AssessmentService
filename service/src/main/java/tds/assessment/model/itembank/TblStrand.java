@@ -19,6 +19,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * A row representing a many-to-many link between "strands" and segments
+ */
 @Entity
 @Table(name = "tblstrand", schema = "itembank")
 public class TblStrand {
@@ -31,6 +34,12 @@ public class TblStrand {
     private Long version;
     private String type;
     private boolean leafTarget;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblStrand() {
+    }
 
     private TblStrand(Builder builder) {
         subjectKey = builder.subjectKey;

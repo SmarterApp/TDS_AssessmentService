@@ -18,6 +18,9 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * A row representing a linking all items to their respective segments
+ */
 @Entity
 @Table(name = "tblsetofadminitems", schema = "itembank")
 public class TblAdminItem {
@@ -49,6 +52,12 @@ public class TblAdminItem {
     private String irt2C;
     private String irt2Model;
     private float ftWeight;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblAdminItem() {
+    }
 
     public static final class Builder {
         private TblAdminItemIdentifier tblAdminItemIdentifier;

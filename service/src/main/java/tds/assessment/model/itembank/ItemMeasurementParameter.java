@@ -19,11 +19,20 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
 
+/**
+ * A parameter for adaptive algorithm and scoring related item measurements
+ */
 @Entity
 @Table(name = "itemmeasurementparameter", schema = "itembank")
 public class ItemMeasurementParameter {
     private ItemMeasurementParameterIdentity itemMeasurementParameterIdentity;
     private float parameterValue;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private ItemMeasurementParameter() {
+    }
 
     public ItemMeasurementParameter(final UUID itemScoreDimensionKey, final int measurementParmaeterKey, final float parameterValue) {
         this.itemMeasurementParameterIdentity = new ItemMeasurementParameterIdentity(itemScoreDimensionKey, measurementParmaeterKey);

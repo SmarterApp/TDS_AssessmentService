@@ -108,19 +108,19 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
             isA(Client.class), eq(mockTestPackage.getVersion()));
         verify(assessmentItemBankLoaderService).loadTblStimuli(mockTestPackage);
         verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
-        verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(Map.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
-        verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(Map.class));
+        verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(List.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
+        verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(List.class));
         verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));
         verify(assessmentSegmentLoaderService).loadAdminSubjects(mockTestPackage, "SBAC_PT-MATH");
         verify(assessmentSegmentLoaderService).loadTestGrades(mockTestPackage);
         verify(assessmentSegmentLoaderService).loadTestCohorts(mockTestPackage);
-        verify(assessmentItemSelectionLoaderService).loadItemSelectionParm(mockTestPackage);
+        verify(assessmentItemSelectionLoaderService).loadItemSelectionParams(mockTestPackage);
         verify(assessmentItemStimuliLoaderService).loadAdminStrands(mockTestPackage, mockTblStrandMap);
-        verify(assessmentItemStimuliLoaderService).loadAdminItems(eq(mockTestPackage), isA(Map.class), eq(mockTblStrandMap));
+        verify(assessmentItemStimuliLoaderService).loadAdminItems(eq(mockTestPackage), isA(List.class), eq(mockTblStrandMap));
         verify(assessmentItemSelectionLoaderService).loadAdminItemMeasurementParameters(isA(Map.class));
         verify(assessmentItemStimuliLoaderService).loadAdminStimuli(mockTestPackage);
         verify(assessmentFormLoaderService).loadAdminForms(mockTestPackage);
-        verify(affinityGroupLoaderService).loadAffinityGroups(eq(mockTestPackage), isA(Map.class));
+        verify(affinityGroupLoaderService).loadAffinityGroups(eq(mockTestPackage), isA(List.class));
     }
 
     @Test
@@ -143,19 +143,19 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
             isA(Client.class), eq(mockTestPackage.getVersion()));
         verify(assessmentItemBankLoaderService).loadTblStimuli(mockTestPackage);
         verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
-        verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(Map.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
-        verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(Map.class));
+        verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(List.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
+        verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(List.class));
         verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));
         verify(assessmentSegmentLoaderService).loadAdminSubjects(mockTestPackage, "SBAC_PT-MATH");
         verify(assessmentSegmentLoaderService).loadTestGrades(mockTestPackage);
         verify(assessmentSegmentLoaderService).loadTestCohorts(mockTestPackage);
-        verify(assessmentItemSelectionLoaderService).loadItemSelectionParm(mockTestPackage);
+        verify(assessmentItemSelectionLoaderService).loadItemSelectionParams(mockTestPackage);
         verify(assessmentItemStimuliLoaderService).loadAdminStrands(mockTestPackage, mockTblStrandMap);
-        verify(assessmentItemStimuliLoaderService).loadAdminItems(eq(mockTestPackage), isA(Map.class), eq(mockTblStrandMap));
+        verify(assessmentItemStimuliLoaderService).loadAdminItems(eq(mockTestPackage), isA(List.class), eq(mockTblStrandMap));
         verify(assessmentItemSelectionLoaderService).loadAdminItemMeasurementParameters(isA(Map.class));
         verify(assessmentItemStimuliLoaderService).loadAdminStimuli(mockTestPackage);
         verify(assessmentFormLoaderService).loadAdminForms(mockTestPackage);
-        verify(affinityGroupLoaderService).loadAffinityGroups(eq(mockTestPackage), isA(Map.class));
+        verify(affinityGroupLoaderService).loadAffinityGroups(eq(mockTestPackage), isA(List.class));
     }
 
     @Test

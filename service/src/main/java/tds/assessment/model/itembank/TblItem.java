@@ -29,6 +29,13 @@ public class TblItem {
     private String filePath;
     private String fileName;
     private Long version;
+    private String itemId; //always empty string
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblItem() {
+    }
 
     private TblItem(Builder builder) {
         key = String.format("%s-%s", builder.bankKey, builder.id);
@@ -39,6 +46,8 @@ public class TblItem {
         filePath = builder.filePath;
         fileName = builder.fileName;
         version = builder.version;
+        itemId = "";
+
     }
 
     public static final class Builder {
@@ -128,6 +137,11 @@ public class TblItem {
         return scorePoints;
     }
 
+    @Column(name = "itemid")
+    public String getItemId() {
+        return itemId;
+    }
+
     @Id
     @Column(name = "_key")
     public String getKey() {
@@ -165,5 +179,9 @@ public class TblItem {
 
     private void setVersion(final Long version) {
         this.version = version;
+    }
+
+    public void setItemId(final String itemId) {
+        this.itemId = itemId;
     }
 }

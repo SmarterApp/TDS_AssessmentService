@@ -23,15 +23,45 @@ import tds.testpackage.model.BlueprintElement;
 import tds.testpackage.model.TestPackage;
 
 /**
- * A service responsible for loading general item bank data
+ * An interface for a service responsible for loading general item bank data
  */
 public interface AssessmentItemBankLoaderService {
+    /**
+     * Loads the given test package's {@link tds.assessment.model.itembank.TblSubject} into the item bank
+     *
+     * @param testPackage The test package to load
+     * @param client      The {@link tds.assessment.model.itembank.Client} object containing publisher metadata
+     * @param subjectKey  The human-readable subject key value
+     */
     void loadSubject(final TestPackage testPackage, final Client client, final String subjectKey);
 
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TblStimulus} into the item bank
+     *
+     * @param testPackage The test package containing the stimuli to load
+     */
     void loadTblStimuli(final TestPackage testPackage);
 
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TblItem}s into the item bank
+     *
+     * @param testPackage          Test package containing the items to load
+     * @param itemMetadataWrappers A flattened list of {@link tds.testpackage.model.Item}s, along with some additional important
+     *                             metadata
+     */
+    void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers);
+
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TblStrand}s into the item bank
+     *
+     * @param blueprintElements A list of all (nested) {@link tds.testpackage.model.BlueprintElement}s
+     * @param subjectKey        The human-readable subject key value
+     * @param client            The {@link tds.assessment.model.itembank.Client} object containing publisher metadata
+     * @param version           The version of the {@link tds.testpackage.model.TestPackage}
+     * @return
+     */
     Map<String, TblStrand> loadStrands(final List<BlueprintElement> blueprintElements, final String subjectKey,
                                        final Client client, final String version);
 
-    void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers);
+
 }

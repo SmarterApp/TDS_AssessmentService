@@ -29,6 +29,12 @@ public class TblSetOfItemStrandIdentity implements Serializable {
     @NotNull
     private String segmentKey;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblSetOfItemStrandIdentity() {
+    }
+
     public TblSetOfItemStrandIdentity(final String itemId, final String strandKey, final String segmentKey) {
         this.itemId = itemId;
         this.strandKey = strandKey;

@@ -19,6 +19,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
+/**
+ * A row linking each assessment's grade levels. Assessments with multiple grades will result in multiple rows
+ */
 @Entity
 @Table(name = "setoftestgrades", schema = "itembank")
 public class SetOfTestGrades {
@@ -27,6 +30,12 @@ public class SetOfTestGrades {
     private String key;
     private String grade;
     private boolean requireEnrollment;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private SetOfTestGrades() {
+    }
 
     public SetOfTestGrades(final String id, final String key, final String grade) {
         this.id = id;

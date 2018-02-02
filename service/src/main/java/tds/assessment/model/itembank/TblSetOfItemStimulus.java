@@ -18,42 +18,37 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-/**
- * A row representing a form cohort - used for linking certain forms to other forms during multi-segmented fixed-form assessments
- */
 @Entity
-@Table(name = "testcohort", schema = "itembank")
-public class TestCohort {
-    private static final float DEFAULT_ITEM_RATIO = 1.0F;
-    private TestCohortIdentity testCohortIdentity;
-    private float itemRatio;
+@Table(name = "tblsetofitemstimuli", schema = "itembank")
+public class TblSetOfItemStimulus {
+    private TblSetOfItemStimulusIdentity tblSetOfItemStimulusIdentity;
+    private Long version;
 
     /**
-     * Empty constructor for frameworks
+     * private constructor for frameworks
      */
-    private TestCohort() {
-    }
+    private TblSetOfItemStimulus() {}
 
-    public TestCohort(final String segmentKey) {
-        this.testCohortIdentity = new TestCohortIdentity(segmentKey);
-        this.itemRatio = DEFAULT_ITEM_RATIO;
-    }
-
-    public void setTestCohortIdentity(final TestCohortIdentity testCohortIdentity) {
-        this.testCohortIdentity = testCohortIdentity;
-    }
-
-    public void setItemRatio(final float itemRatio) {
-        this.itemRatio = itemRatio;
-    }
-
-    @Column(name = "itemratio")
-    public float getItemRatio() {
-        return itemRatio;
+    public TblSetOfItemStimulus(final String itemKey, final String stimulusKey, final String segmentKey, final Long version) {
+        this.tblSetOfItemStimulusIdentity = new TblSetOfItemStimulusIdentity(itemKey, stimulusKey, segmentKey);
+        this.version = version;
     }
 
     @EmbeddedId
-    public TestCohortIdentity getTestCohortIdentity() {
-        return testCohortIdentity;
+    public TblSetOfItemStimulusIdentity getTblSetOfItemStimulusIdentity() {
+        return tblSetOfItemStimulusIdentity;
+    }
+
+    public void setTblSetOfItemStimulusIdentity(final TblSetOfItemStimulusIdentity tblSetOfItemStimulusIdentity) {
+        this.tblSetOfItemStimulusIdentity = tblSetOfItemStimulusIdentity;
+    }
+
+    @Column(name = "loadconfig")
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(final Long version) {
+        this.version = version;
     }
 }

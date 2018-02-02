@@ -13,11 +13,21 @@
 
 package tds.assessment.services;
 
-import java.util.Map;
+import java.util.List;
 
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.testpackage.model.TestPackage;
 
+/**
+ * An interface for a service responsible for handling the loading of {@link tds.assessment.model.itembank.AffinityGroup}s
+ */
 public interface AffinityGroupLoaderService {
-    void loadAffinityGroups(final TestPackage testPackage, final Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
+    /**
+     * Loads all {@link tds.assessment.model.itembank.AffinityGroup}s present in the test package into the item bank
+     *
+     * @param testPackage          The test package to load
+     * @param itemMetadataWrappers A flattened list of {@link tds.testpackage.model.Item}s, along with some additional important
+     *                             metadata
+     */
+    void loadAffinityGroups(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers);
 }

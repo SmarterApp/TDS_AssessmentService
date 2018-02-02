@@ -41,7 +41,6 @@ import tds.assessment.repositories.loader.MeasurementModelRepository;
 import tds.assessment.repositories.loader.MeasurementParameterRepository;
 import tds.assessment.repositories.loader.TblItemSelectionParameterRepository;
 import tds.assessment.services.AssessmentItemSelectionLoaderService;
-import tds.common.Algorithm;
 import tds.testpackage.model.TestPackage;
 
 @Service
@@ -79,9 +78,9 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
      * These measurement models and parameters are hardcoded and inserted in the load_measurementparameters stored procedure
      */
     private final Set<MeasurementModel> measurementModels = ImmutableSet.of(
-        new MeasurementModel(1, "IRT3pln"),
+        new MeasurementModel(1, "IRT3PLN"),
         new MeasurementModel(2, "IRTPCL"),
-        new MeasurementModel(3, "raw"),
+        new MeasurementModel(3, "RAW"),
         new MeasurementModel(4, "IRT3PL"),
         new MeasurementModel(5, "IRTGPC")
     );
@@ -149,22 +148,23 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
         // <ModelName>-<ParamName> -> Parameter key/num
         Map<String, Integer> modelToMeasurementParameterMap = measurementParameters.stream()
             .collect(Collectors.toMap(
-                param -> measurementModelKeys.inverse().get(param.getMeasurementParameterIdentity().getMeasurementModelKey()) + "-" + param.getParameterName(),
+                param -> measurementModelKeys.inverse().get(param.getMeasurementParameterIdentity().getMeasurementModelKey()).toUpperCase() + "-" + param.getParameterName(),
                 param -> param.getMeasurementParameterIdentity().getParameterNumber())
             );
 
         // Create a map for quick look up of the item dimensions
         Map<String, ItemScoreDimension> itemScoreDimensionsMap = itemIdToItemMetadata.values().stream()
             .map(wrapper -> new ItemScoreDimension.Builder()
-                    .withDimension(wrapper.getItem().getItemScoreDimension().getDimension().orElse(null))
+                    .withDimension(wrapper.getItem().getItemScoreDimension().getDimension().orElse(""))
+                    .withRecodeRule("")
                     .withScorePoints(wrapper.getItem().getItemScoreDimension().getScorePoints())
                     .withWeight((float) wrapper.getItem().getItemScoreDimension().getWeight())
                     .withKey(UUID.randomUUID())
                     .withSegmentKey(wrapper.getSegmentKey())
-                    .withItemId(wrapper.getItemKey())
-                    .withMeasurementModelKey(measurementModelKeys.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel()))
+                    .withItemId(wrapper.getItem().getKey())
+                    .withMeasurementModelKey(measurementModelKeys.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase()))
                     .build()
-            ).collect(Collectors.toMap(dimension -> dimension.getItemId(), Function.identity()));
+            ).collect(Collectors.toMap(ItemScoreDimension::getItemId, Function.identity()));
 
         itemScoreDimensionsRepository.save(itemScoreDimensionsMap.values());
 
@@ -176,19 +176,18 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
                     // This part is tricky - we need to get the foreign key of the parameter - which is not keyable based on on only the parameter name.
                     // This is because parameter keys can be different for different measurement model/param name combinations. For example, the param name "b1"
                     // has a param number of "1" for the IRTPCL model, while the number is "2" for the IRTGPC model. Lets look up based on model name and param num
-                    new ItemMeasurementParameter(itemScoreDimensionsMap.get(wrapper.getItemKey()).getKey(),
-                        modelToMeasurementParameterMap.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel() + "-" + param.getMeasurementParameter()),
+                    new ItemMeasurementParameter(itemScoreDimensionsMap.get(wrapper.getItem().getKey()).getKey(),
+                        modelToMeasurementParameterMap.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase() + "-" + param.getMeasurementParameter()),
                         (float) param.getValue())
                 )
             )
             .collect(Collectors.toList());
 
         itemMeasurementParameterRepository.save(itemMeasurementParameters);
-        //TODO: Update the bvector for each tblsetofadminitem - Not sure if we'll be able to use the bvector function as we are working within a transaction here
     }
 
     @Override
-    public void loadItemSelectionParm(final TestPackage testPackage) {
+    public void loadItemSelectionParams(final TestPackage testPackage) {
         // Get all the item selection parameters for CAT segments that are not in the known "algorithm property names" list
         final List<TblItemSelectionParameter> parameters = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream())

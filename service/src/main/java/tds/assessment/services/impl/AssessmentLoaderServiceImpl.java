@@ -29,7 +29,6 @@ import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.assessment.model.itembank.Client;
 import tds.assessment.model.itembank.TblStrand;
-import tds.assessment.model.itembank.TestForm;
 import tds.assessment.repositories.ItemBankDataCommandRepository;
 import tds.assessment.repositories.ItemBankDataQueryRepository;
 import tds.assessment.services.AffinityGroupLoaderService;
@@ -46,8 +45,6 @@ import tds.testpackage.model.TestPackage;
 @Service
 public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
     private static final Logger log = LoggerFactory.getLogger(AssessmentLoaderServiceImpl.class);
-
-
 
     private final AssessmentItemBankLoaderService assessmentItemBankLoaderService;
     private final AssessmentItemSelectionLoaderService assessmentItemSelectionLoaderService;
@@ -86,7 +83,7 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
      */
     @Override
     @Transactional
-    public Optional<ValidationError> loadTestPackage(final String testPackageName, final TestPackage testPackage) {
+    public Optional<ValidationError>  loadTestPackage(final String testPackageName, final TestPackage testPackage) {
         try {
             assessmentItemSelectionLoaderService.loadScoringSeedData();
 
@@ -97,6 +94,7 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
             final String subjectKey = client.getName() + '-' + testPackage.getSubject();
             // Contains  all items and other item metadata specified in the test package
             final Map<String, ItemMetadataWrapper> itemIdToItemMetadata = mapItemsToItemMetadata(testPackage);
+            final List<ItemMetadataWrapper> itemMetadata = Lists.newArrayList(itemIdToItemMetadata.values());
 
             /* load_subject() */
             assessmentItemBankLoaderService.loadSubject(testPackage, client, subjectKey);
@@ -108,14 +106,17 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
             assessmentItemBankLoaderService.loadTblStimuli(testPackage);
 
             /* load_items() */
-            assessmentItemBankLoaderService.loadTblItems(testPackage, Lists.newArrayList(itemIdToItemMetadata.values()));
+            assessmentItemBankLoaderService.loadTblItems(testPackage, itemMetadata);
 
             /* load_linkitemtostrands() */
-            assessmentItemStimuliLoaderService.loadLinkItemsToStrands(itemIdToItemMetadata, keyToStrands, Long.parseLong(testPackage.getVersion()));
+            assessmentItemStimuliLoaderService.loadLinkItemsToStrands(itemMetadata, keyToStrands, Long.parseLong(testPackage.getVersion()));
+
+            /* load_linkitemstostimuli() */
+            assessmentItemStimuliLoaderService.loadLinkItemsToStimuli(testPackage);
 
             /* load_itemproperties() */
-            //TODO: Implement this once we get some more info from SBAC/AIR on other item properties
-            assessmentItemStimuliLoaderService.loadItemProperties(itemIdToItemMetadata);
+            //TODO: Revisit this once we get an answer from AIR as to whether other item properties need to be persisted
+            assessmentItemStimuliLoaderService.loadItemProperties(itemMetadata);
 
             /* load_testadmin() */
             assessmentSegmentLoaderService.loadTestAdmin(testPackage, client);
@@ -130,13 +131,13 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
             assessmentSegmentLoaderService.loadTestCohorts(testPackage);
 
             /* load_itemselectionparm() */
-            assessmentItemSelectionLoaderService.loadItemSelectionParm(testPackage);
+            assessmentItemSelectionLoaderService.loadItemSelectionParams(testPackage);
             
             /* load_adminstrands() */
             assessmentItemStimuliLoaderService.loadAdminStrands(testPackage, keyToStrands);
 
             /* load_adminitems() */
-            assessmentItemStimuliLoaderService.loadAdminItems(testPackage, itemIdToItemMetadata, keyToStrands);
+            assessmentItemStimuliLoaderService.loadAdminItems(testPackage, itemMetadata, keyToStrands);
 
             /* load_adminitemmeasurementparms() */
             assessmentItemSelectionLoaderService.loadAdminItemMeasurementParameters(itemIdToItemMetadata);
@@ -148,11 +149,11 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
             assessmentFormLoaderService.loadAdminForms(testPackage);
 
             /* load_affinitygroups */
-            affinityGroupLoaderService.loadAffinityGroups(testPackage, itemIdToItemMetadata);
+            affinityGroupLoaderService.loadAffinityGroups(testPackage, itemMetadata);
 
         } catch (Exception e) {
-            final String error = String.format("An error occurred while loading the test package %s. Message: %s",
-                testPackageName, e.getMessage());
+            final String error = String.format("An error occurred while loading the test package %s. Message: %s, Stack trace: %s",
+                testPackageName, e.getMessage(), e);
             log.error(error);
             return Optional.of(new ValidationError("TDS-Load", error));
         }
@@ -167,20 +168,20 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
                         return segment.segmentForms().stream()
                             .flatMap(form -> form.itemGroups().stream()
                                 .flatMap(itemGroup -> itemGroup.items().stream()
-                                    .map(item -> new ItemMetadataWrapper(item, testPackage.getBankKey(), segment.getKey(),
-                                        itemGroup.getId(), false))
+                                    .map(item -> new ItemMetadataWrapper(item, assessment.getGrades(), segment.getKey(),
+                                        itemGroup.getKey(), false))
                                 )
                             );
                     } else if (segment.getAlgorithmType().contains("adaptive")) {
                         return segment.pool().stream()
                             .flatMap(itemGroup -> itemGroup.items().stream()
-                                .map(item -> new ItemMetadataWrapper(item, testPackage.getBankKey(), segment.getKey(),
-                                    itemGroup.getId(), true))
+                                .map(item -> new ItemMetadataWrapper(item, assessment.getGrades(), segment.getKey(),
+                                    itemGroup.getKey(), true))
                             );
                     } else {
                         throw new TestPackageLoaderException("Unrecognized selection algorithm");
                     }
                 }
-            )).collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getId(), itemWrapper -> itemWrapper));
+            )).collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper));
     }
 }

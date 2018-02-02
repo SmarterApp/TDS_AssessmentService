@@ -18,11 +18,20 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * A row linking each item to one-to-many "strands"
+ */
 @Entity
 @Table(name = "tblsetofitemstrands")
 public class TblSetOfItemStrand {
     private TblSetOfItemStrandIdentity tblSetOfItemStrandIdentity;
     private Long version;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblSetOfItemStrand() {
+    }
 
     public TblSetOfItemStrand(final String itemId, final String strandKey, final String segmentKey, final Long version) {
         this.tblSetOfItemStrandIdentity = new TblSetOfItemStrandIdentity(itemId, strandKey, segmentKey);

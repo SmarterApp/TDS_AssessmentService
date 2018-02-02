@@ -18,12 +18,23 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * A row containing known measurement parameters for each scoring {@link tds.assessment.model.itembank.MeasurementModel}
+ *
+ * Note: As of 02/01/2018, these parameters are only provided via seed data
+ */
 @Entity
 @Table(name = "measurementparameter", schema = "itembank")
 public class MeasurementParameter {
     private MeasurementParameterIdentity measurementParameterIdentity;
     private String parameterName;
     private String parameterDescription;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private MeasurementParameter() {
+    }
 
     public MeasurementParameter(final int measurementModelKey, final int parameterNumber, final String parameterName, final String parameterDescription) {
         this.measurementParameterIdentity = new MeasurementParameterIdentity(measurementModelKey, parameterNumber);

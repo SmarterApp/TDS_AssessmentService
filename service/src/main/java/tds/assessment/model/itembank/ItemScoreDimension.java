@@ -19,6 +19,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
+/**
+ * An object containing item scoring related metadata
+ */
 @Entity
 @Table(name = "itemscoredimension", schema = "itembank")
 public class ItemScoreDimension {
@@ -30,6 +33,12 @@ public class ItemScoreDimension {
     private String segmentKey;
     private String itemId;
     private int measurementModelKey;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private ItemScoreDimension() {
+    }
 
     public static final class Builder {
         private String dimension;

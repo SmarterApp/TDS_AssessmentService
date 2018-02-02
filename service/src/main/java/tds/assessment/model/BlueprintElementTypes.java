@@ -11,23 +11,24 @@
  * and limitations under the license.
  **************************************************************************************************/
 
-package tds.assessment.services;
+package tds.assessment.model;
 
-import java.util.Optional;
+import com.google.common.collect.ImmutableSet;
 
-import tds.common.ValidationError;
-import tds.testpackage.model.TestPackage;
+import java.util.Set;
 
 /**
- * An interface for a service responsible for loading an entire {@link tds.testpackage.model.TestPackage} into the item bank
+ * Represents all TDS-recognized blueprint element types
  */
-public interface AssessmentLoaderService {
-    /**
-     * Loads a {@link tds.testpackage.model.TestPackage} into the item bank
-     *
-     * @param testPackageName The test package name (typically the file name, without the file extension)
-     * @param testPackage     The test package to load
-     * @return An error that occurred during the loading of the test package, if one occurs
-     */
-    Optional<ValidationError> loadTestPackage(final String testPackageName, final TestPackage testPackage);
+public interface BlueprintElementTypes {
+    String STRAND = "strand";
+    String CONTENT_LEVEL = "contentlevel";
+    String TARGET = "target";
+    String CLAIM = "claim";
+    String SOCK = "sock";
+    String AFFINITY_GROUP = "affinitygroup";
+
+    Set<String> CLAIM_AND_TARGET_TYPES = ImmutableSet.of(STRAND, CONTENT_LEVEL, TARGET, CLAIM);
+    Set<String> CLAIM_TYPES = ImmutableSet.of(STRAND, CLAIM);
+    Set<String> TARGET_TYPES = ImmutableSet.of(CONTENT_LEVEL, TARGET);
 }

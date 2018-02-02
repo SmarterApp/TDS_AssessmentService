@@ -18,12 +18,21 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * A row representing an item in a {@link tds.assessment.model.itembank.TestForm}
+ */
 @Entity
 @Table(name = "testformitem", schema = "itembank")
 public class TestFormItem {
     private TestFormItemIdentity testFormItemIdentity;
     private long formItsKey;
     private boolean active;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TestFormItem() {
+    }
 
     public static final class Builder {
         private TestFormItemIdentity testFormItemIdentity;

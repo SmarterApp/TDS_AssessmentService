@@ -13,6 +13,7 @@
 
 package tds.assessment.services.impl;
 
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import tds.assessment.model.itembank.Client;
+import tds.assessment.model.itembank.TblItem;
 import tds.assessment.model.itembank.TblStimulus;
 import tds.assessment.model.itembank.TblStrand;
 import tds.assessment.model.itembank.TblSubject;
@@ -59,6 +61,9 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
 
     @Captor
     private ArgumentCaptor<List<TblStimulus>> tblStimuliArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<List<TblItem>> tblItemsArgumentCaptor;
 
     @Before
     public void setup() {
@@ -131,5 +136,26 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
         assertThat(retTblStimulus.getFilePath()).isEqualTo("stim-187-3688/");
         assertThat(retTblStimulus.getFileName()).isEqualTo("stim-187-3688.xml");
         assertThat(retTblStimulus.getVersion()).isEqualTo(Long.parseLong(mockTestPackage.getVersion()));
+    }
+
+    @Test
+    public void shouldLoadTblItem() {
+        service.loadTblItems(mockTestPackage, Lists.newArrayList(mockItemMetadataMap.values()));
+        verify(tblItemRepository).save(tblItemsArgumentCaptor.capture());
+
+        List<TblItem> savedTblitems = tblItemsArgumentCaptor.getValue();
+        assertThat(savedTblitems).hasSize(20);
+
+        TblItem savedItem = savedTblitems.stream()
+            .filter(item -> item.getId() == 2029)
+            .findFirst().get();
+
+        assertThat(savedItem.getBankKey()).isEqualTo(187);
+        assertThat(savedItem.getKey()).isEqualTo("187-2029");
+        assertThat(savedItem.getItemType()).isEqualTo("GI");
+        assertThat(savedItem.getScorePoints()).isEqualTo(1);
+        assertThat(savedItem.getFilePath()).isEqualTo("item-187-2029/");
+        assertThat(savedItem.getFileName()).isEqualTo("item-187-2029.xml");
+        assertThat(savedItem.getVersion()).isEqualTo(8185);
     }
 }

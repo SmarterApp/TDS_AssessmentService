@@ -67,7 +67,7 @@ public class ItemBankDataQueryRepositoryImpl implements ItemBankDataQueryReposit
     public long generateFormKey() {
         final String SQL =
             "SELECT \n" +
-                "   MAX(_efk_itskey) + 1 \n" +
+                "   COALESCE(MAX(_efk_itskey) + 1, 100) \n" +
                 "FROM \n" +
                 "   testform";
 

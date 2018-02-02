@@ -29,6 +29,9 @@ import tds.common.ValidationError;
 import tds.common.web.resources.NoContentResponseResource;
 import tds.testpackage.model.TestPackage;
 
+/**
+ * Controller for loading assessments
+ */
 @RestController
 public class AssessmentLoaderController {
     private final AssessmentLoaderService service;
@@ -38,15 +41,14 @@ public class AssessmentLoaderController {
         this.service = assessmentLoaderService;
     }
 
-    @PostMapping(value = "/assessments/{testPackageName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/assessments/{testPackageName}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<NoContentResponseResource> createAssessment(@PathVariable final String testPackageName,
                                                                @RequestBody final TestPackage testPackage) {
         Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, testPackage);
 
-        if (maybeError.isPresent()) {
-            //TODO: Error here
-        }
+        return maybeError
+            .map(validationError -> new ResponseEntity<>(new NoContentResponseResource(validationError), HttpStatus.UNPROCESSABLE_ENTITY))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.CREATED));
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

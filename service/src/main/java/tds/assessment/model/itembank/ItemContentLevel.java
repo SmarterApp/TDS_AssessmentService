@@ -22,6 +22,12 @@ import javax.persistence.Table;
 public class ItemContentLevel {
     private ItemContentLevelIdentity itemContentLevelIdentity;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private ItemContentLevel() {
+    }
+
     public ItemContentLevel(final String segmentKey, final String itemId, final String contentLevel) {
         this.itemContentLevelIdentity = new ItemContentLevelIdentity(segmentKey, itemId, contentLevel);
     }

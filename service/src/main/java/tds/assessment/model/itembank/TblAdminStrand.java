@@ -18,6 +18,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A row linking each "strand" (which really corresponds to all claims/targets [strands/contentlevels])
+ * to one-to-many specific segments
+ */
 @Entity
 @Table(name = "tbladminstrand", schema = "itembank")
 public class TblAdminStrand {
@@ -39,6 +43,12 @@ public class TblAdminStrand {
     private Float precisionTargetMetWeight;
     private Float precisionTargetNotMetWeight;
     private Float abilityWeight;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblAdminStrand() {
+    }
 
     public static final class Builder {
         private String key;

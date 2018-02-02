@@ -21,14 +21,21 @@ import java.io.Serializable;
 @Embeddable
 public class TestCohortIdentity implements Serializable {
 
-    private static final int DEFAULT_COHORT = 1;
-    private String cohort; //Unused as default is always provided - only here for Hibernate compatibility
+    public static final int DEFAULT_COHORT = 1;
+    private int cohort; //Unused as default is always provided - only here for Hibernate compatibility
 
     @NotNull
     private String segmentKey;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private TestCohortIdentity() {
+    }
+
     public TestCohortIdentity(final String segmentKey) {
         this.segmentKey = segmentKey;
+        cohort = DEFAULT_COHORT;
     }
 
     @Column(name = "_fk_adminsubject")
@@ -41,10 +48,10 @@ public class TestCohortIdentity implements Serializable {
     }
 
     public int getCohort() {
-        return DEFAULT_COHORT;
+        return cohort;
     }
 
-    public void setCohort(final String cohort) {
+    public void setCohort(final int cohort) {
         this.cohort = cohort;
     }
 
@@ -60,6 +67,8 @@ public class TestCohortIdentity implements Serializable {
 
     @Override
     public int hashCode() {
-        return segmentKey.hashCode();
+        int result = cohort;
+        result = 31 * result + (segmentKey != null ? segmentKey.hashCode() : 0);
+        return result;
     }
 }

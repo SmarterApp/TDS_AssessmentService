@@ -31,6 +31,12 @@ public class TestFormItemIdentity implements Serializable {
     @NotNull
     private String formKey;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private TestFormItemIdentity() {
+    }
+
     public TestFormItemIdentity(final int itemPosition, final String segmentKey, final String itemId, final String formKey) {
         this.itemPosition = itemPosition;
         this.segmentKey = segmentKey;

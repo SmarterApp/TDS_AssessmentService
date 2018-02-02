@@ -18,6 +18,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A row representing a form in a segment
+ */
 @Entity
 @Table(name = "testform", schema = "itembank")
 public class TestForm {
@@ -30,6 +33,12 @@ public class TestForm {
     private Long version;
     private Long updateVersion;
     private String cohort;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TestForm() {
+    }
 
     public static final class Builder {
         private String segmentKey;

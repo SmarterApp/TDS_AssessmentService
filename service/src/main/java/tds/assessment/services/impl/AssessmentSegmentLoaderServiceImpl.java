@@ -48,23 +48,18 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
     private static final String DEFAULT_START_INFO = "1";
     private static final String DEFAULT_SLOPE = "1";
     private static final String DEFAULT_INTERCEPT = "1";
-    private static final Integer DEFAULT_FT_START_POS = null;
-    private static final Integer DEFAULT_FT_END_POS = null;
     private static final String DEFAULT_BLUEPRINT_WEIGHT = "5.0";
     private static final String DEFAULT_ABILITY_WEIGHT = "1";
     private static final String DEFAULT_CSET1_SIZE = "20";
     private static final String DEFAULT_CSET2_RANDOM = "1";
     private static final String DEFAULT_CSET2_INITIAL_RANDOM = "5";
-    private static final String DEFAULT_COMPUTE_ABILITY_ESTIMATES = "1";
+    private static final String DEFAULT_COMPUTE_ABILITY_ESTIMATES = "true";
     private static final String DEFAULT_ITEM_WEIGHT = "5";
     private static final String DEFAULT_ABILITY_OFFSET = "0.0";
     private static final String DEFAULT_CSET1_ORDER = "ABILITY";
     private static final String DEFAULT_RC_ABILITY_WEIGHT = "1";
-    private static final Float DEFAULT_PRECISION_TARGET = null;
     private static final String DEFAULT_PRECISION_TARGET_MET_WEIGHT = "1";
     private static final String DEFAULT_PRECISION_TARGET_NOT_MET_WEIGHT = "1";
-    private static final Float DEFAULT_ADAPTIVE_CUT = null;
-    private static final Float DEFAULT_TOO_CLOSESES = null;
     private static final String DEFAULT_TERMINATION_FLAGS = "false";
 
     private final TblSetOfAdminSubjectsRepository tblSetOfAdminSubjectsRepository;
@@ -100,16 +95,10 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
     @Override
     public void loadTestGrades(final TestPackage testPackage) {
         for (Assessment asssessment : testPackage.getAssessments()) {
-            final List<SetOfTestGrades> testGrades = new ArrayList<>();
-
-            for (Grade grade : asssessment.getGrades()) {
-                testGrades.add(new SetOfTestGrades(asssessment.getId(), asssessment.getKey(), grade.getValue()));
-            }
-
-            asssessment.getSegments().stream()
+            final List<SetOfTestGrades> testGrades = asssessment.getSegments().stream()
                 .flatMap(segment -> asssessment.getGrades().stream())
                 .map(grade -> new SetOfTestGrades(asssessment.getId(), asssessment.getKey(), grade.getValue()))
-                .forEach(testGrades::add);
+                .collect(Collectors.toList());
 
             setOfTestGradesRepository.save(testGrades);
         }
@@ -137,7 +126,6 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
     public void loadAdminSubjects(final TestPackage testPackage, final String subjectKey) {
         for (Assessment assessment : testPackage.getAssessments()) {
             // If the segment is multisegmented, <num of segments> + 1 inserts into the admin subjects table (one "virtual" row)
-            boolean isSegmented = assessment.getSegments().size() > 1;
             List<TblAdminSubject> adminSubjects = new ArrayList<>();
 
             /**
@@ -145,7 +133,7 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
              * a "minitems" value of 3, and "maxitems" value of 4, and seg2 has a "minitems" value of 1 and a "maxitems" value of 1,
              * the "virtual" row will contain minitems = 4 and maxitems = 5
              */
-            if (isSegmented) {
+            if (assessment.isSegmented()) {
                 // These four variables will hold the total counts of min/max items for all combined segments in the assessment
                 int minItemCount = 0;
                 int maxItemCount = 0;
@@ -166,8 +154,8 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
 
                     // Create a map to access the properties by name. Lowercasing the key to prevent casing issues
                     final Map<String, String> itemSelectionProperties = segmentBpElement.itemSelection().stream()
-                        .collect(Collectors.toMap(p -> p.getName().toString().toLowerCase(), Property::getValue));
-                    //TODO: Refactor this out
+                        .collect(Collectors.toMap(p -> p.getName().toLowerCase(), Property::getValue));
+
                     adminSubjects.add(new TblAdminSubject.Builder()
                         .withKey(segment.getKey())
                         .withClientName(testPackage.getPublisher())
@@ -181,13 +169,13 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                         .withIntercept(Float.parseFloat(itemSelectionProperties.getOrDefault("intercept", DEFAULT_INTERCEPT)))
                         .withFieldTestStartPos(itemSelectionProperties.containsKey("ftstartpos")
                             ? Integer.parseInt(itemSelectionProperties.get("ftstartpos"))
-                            : DEFAULT_FT_START_POS)
+                            : null)
                         .withFieldTestEndPos(itemSelectionProperties.containsKey("ftendpos")
                             ? Integer.parseInt(itemSelectionProperties.get("ftendpos"))
-                            : DEFAULT_FT_END_POS)
+                            : null)
                         .withFieldTestMinItems(segmentBpElement.minFieldTestItems())
                         .withFieldTestMaxItems(segmentBpElement.maxFieldTestItems())
-                        .withSelectionAlgorithm(segment.getAlgorithmType()) //TODO: We may need to map this to "fixedform" or "adaptive2"
+                        .withSelectionAlgorithm(segment.getAlgorithmType().equals("adaptive") ? Algorithm.ADAPTIVE_2.getType() : segment.getAlgorithmType())
                         .withBlueprintWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("blueprintweight", DEFAULT_BLUEPRINT_WEIGHT)))
                         .withAbilityWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("abilityweight", DEFAULT_ABILITY_WEIGHT)))
                         .withCSet1Size(Integer.parseInt(itemSelectionProperties.getOrDefault("cset1size", DEFAULT_CSET1_SIZE)))
@@ -205,17 +193,17 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                         .withRcAbilityWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("rcabilityweight", DEFAULT_RC_ABILITY_WEIGHT)))
                         .withPrecisionTarget(itemSelectionProperties.containsKey("precisiontarget")
                             ? Float.parseFloat(itemSelectionProperties.get("precisiontarget"))
-                            : DEFAULT_PRECISION_TARGET)
+                            : null)
                         .withPrecisionTargetMetWeight(Float.parseFloat(
                             itemSelectionProperties.getOrDefault("precisiontargetmetweight", DEFAULT_PRECISION_TARGET_MET_WEIGHT)))
                         .withPrecisionTargetNotMetWeight(Float.parseFloat(
                             itemSelectionProperties.getOrDefault("precisiontargetnotmetweight", DEFAULT_PRECISION_TARGET_NOT_MET_WEIGHT)))
                         .withAdaptiveCut(itemSelectionProperties.containsKey("adaptivecut")
                             ? Float.parseFloat(itemSelectionProperties.get("adaptivecut"))
-                            : DEFAULT_ADAPTIVE_CUT)
+                            : null)
                         .withTooCloseses(itemSelectionProperties.containsKey("toocloseses")
                             ? Float.parseFloat(itemSelectionProperties.get("toocloseses"))
-                            : DEFAULT_TOO_CLOSESES)
+                            : null)
                         .withTerminationOverallInfo(Boolean.parseBoolean(itemSelectionProperties.getOrDefault("terminationoverallinfo", DEFAULT_TERMINATION_FLAGS)))
                         .withTerminationRCInfo(Boolean.parseBoolean(itemSelectionProperties.getOrDefault("terminationrcinfo", DEFAULT_TERMINATION_FLAGS)))
                         .withTerminationMinCount(Boolean.parseBoolean(itemSelectionProperties.getOrDefault("terminationmincount", DEFAULT_TERMINATION_FLAGS)))
@@ -240,11 +228,11 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                     .withMaxItems(maxItemCount)
                     .withSlope(Float.parseFloat(DEFAULT_SLOPE))
                     .withIntercept(Float.parseFloat(DEFAULT_INTERCEPT))
-                    .withFieldTestStartPos(DEFAULT_FT_START_POS)
-                    .withFieldTestEndPos(DEFAULT_FT_END_POS)
+                    .withFieldTestStartPos(null)
+                    .withFieldTestEndPos(null)
                     .withFieldTestMinItems(fieldTestMinItemCount)
                     .withFieldTestMaxItems(fieldTestMaxItemCount)
-                    .withSelectionAlgorithm("virtual")
+                    .withSelectionAlgorithm(Algorithm.VIRTUAL.getType())
                     .withBlueprintWeight(Float.parseFloat(DEFAULT_BLUEPRINT_WEIGHT))
                     .withAbilityWeight(Float.parseFloat(DEFAULT_ABILITY_WEIGHT))
                     .withCSet1Size(Integer.parseInt(DEFAULT_CSET1_SIZE))
@@ -258,11 +246,11 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                     .withAbilityOffset(Float.parseFloat(DEFAULT_ABILITY_OFFSET))
                     .withCSet1Order(DEFAULT_CSET1_ORDER)
                     .withRcAbilityWeight(Float.parseFloat(DEFAULT_RC_ABILITY_WEIGHT))
-                    .withPrecisionTarget(DEFAULT_PRECISION_TARGET)
+                    .withPrecisionTarget(null)
                     .withPrecisionTargetMetWeight(Float.parseFloat(DEFAULT_PRECISION_TARGET_MET_WEIGHT))
                     .withPrecisionTargetNotMetWeight(Float.parseFloat(DEFAULT_PRECISION_TARGET_NOT_MET_WEIGHT))
-                    .withAdaptiveCut(DEFAULT_ADAPTIVE_CUT)
-                    .withTooCloseses(DEFAULT_TOO_CLOSESES)
+                    .withAdaptiveCut(null)
+                    .withTooCloseses(null)
                     .withTerminationOverallInfo(Boolean.parseBoolean(DEFAULT_TERMINATION_FLAGS))
                     .withTerminationRCInfo(Boolean.parseBoolean(DEFAULT_TERMINATION_FLAGS))
                     .withTerminationMinCount(Boolean.parseBoolean(DEFAULT_TERMINATION_FLAGS))
@@ -272,7 +260,7 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                     .withTestType(testPackage.getType())
                     .build()
                 );
-            } else {
+            } else { // Not segmented
                 Segment segment = assessment.getSegments().get(0);
                 final SegmentBlueprintElement segmentBpElement = segment.segmentBlueprint().stream()
                     .filter(bp -> bp.getIdRef().equals(segment.getId())) // get the actual segment blueprint (not any child claims/targets)
@@ -282,8 +270,8 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
 
                 // Create a map to access the properties by name. Lowercasing the key to prevent casing issues
                 final Map<String, String> itemSelectionProperties = segmentBpElement.itemSelection().stream()
-                    .collect(Collectors.toMap(p -> p.getName().toString().toLowerCase(), Property::getValue));
-                //TODO: Refactor this out
+                    .collect(Collectors.toMap(p -> p.getName().toLowerCase(), Property::getValue));
+
                 adminSubjects.add(new TblAdminSubject.Builder()
                     .withKey(segment.getKey())
                     .withClientName(testPackage.getPublisher())
@@ -297,19 +285,18 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                     .withIntercept(Float.parseFloat(itemSelectionProperties.getOrDefault("intercept", DEFAULT_INTERCEPT)))
                     .withFieldTestStartPos(itemSelectionProperties.containsKey("ftstartpos")
                         ? Integer.parseInt(itemSelectionProperties.get("ftstartpos"))
-                        : DEFAULT_FT_START_POS)
+                        : null)
                     .withFieldTestEndPos(itemSelectionProperties.containsKey("ftendpos")
                         ? Integer.parseInt(itemSelectionProperties.get("ftendpos"))
-                        : DEFAULT_FT_END_POS)
+                        : null)
                     .withFieldTestMinItems(segmentBpElement.minFieldTestItems())
                     .withFieldTestMaxItems(segmentBpElement.maxFieldTestItems())
-                    .withSelectionAlgorithm(segment.getAlgorithmType()) //TODO: We may need to map this to "fixedform" or "adaptive2"
+                    .withSelectionAlgorithm(segment.getAlgorithmType().equals("adaptive") ? Algorithm.ADAPTIVE_2.getType() : segment.getAlgorithmType())
                     .withBlueprintWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("blueprintweight", DEFAULT_BLUEPRINT_WEIGHT)))
                     .withAbilityWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("abilityweight", DEFAULT_ABILITY_WEIGHT)))
                     .withCSet1Size(Integer.parseInt(itemSelectionProperties.getOrDefault("cset1size", DEFAULT_CSET1_SIZE)))
                     .withCSet2Random(Integer.parseInt(itemSelectionProperties.getOrDefault("cset2random", DEFAULT_CSET2_RANDOM)))
                     .withCSet2InitialRandom(Integer.parseInt(itemSelectionProperties.getOrDefault("cset2initialrandom", DEFAULT_CSET2_INITIAL_RANDOM)))
-                    .withTestPosition(segment.position())
                     .withSegmented(false)
                     .withComputeAbilityEstimates(
                         Boolean.parseBoolean(itemSelectionProperties.getOrDefault("computeabilityestimates", DEFAULT_COMPUTE_ABILITY_ESTIMATES)))
@@ -320,17 +307,17 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                     .withRcAbilityWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("rcabilityweight", DEFAULT_RC_ABILITY_WEIGHT)))
                     .withPrecisionTarget(itemSelectionProperties.containsKey("precisiontarget")
                         ? Float.parseFloat(itemSelectionProperties.get("precisiontarget"))
-                        : DEFAULT_PRECISION_TARGET)
+                        : null)
                     .withPrecisionTargetMetWeight(Float.parseFloat(
                         itemSelectionProperties.getOrDefault("precisiontargetmetweight", DEFAULT_PRECISION_TARGET_MET_WEIGHT)))
                     .withPrecisionTargetNotMetWeight(Float.parseFloat(
                         itemSelectionProperties.getOrDefault("precisiontargetnotmetweight", DEFAULT_PRECISION_TARGET_NOT_MET_WEIGHT)))
                     .withAdaptiveCut(itemSelectionProperties.containsKey("adaptivecut")
                         ? Float.parseFloat(itemSelectionProperties.get("adaptivecut"))
-                        : DEFAULT_ADAPTIVE_CUT)
+                        : null)
                     .withTooCloseses(itemSelectionProperties.containsKey("toocloseses")
                         ? Float.parseFloat(itemSelectionProperties.get("toocloseses"))
-                        : DEFAULT_TOO_CLOSESES)
+                        : null)
                     .withTerminationOverallInfo(Boolean.parseBoolean(itemSelectionProperties.getOrDefault("terminationoverallinfo", DEFAULT_TERMINATION_FLAGS)))
                     .withTerminationRCInfo(Boolean.parseBoolean(itemSelectionProperties.getOrDefault("terminationrcinfo", DEFAULT_TERMINATION_FLAGS)))
                     .withTerminationMinCount(Boolean.parseBoolean(itemSelectionProperties.getOrDefault("terminationmincount", DEFAULT_TERMINATION_FLAGS)))

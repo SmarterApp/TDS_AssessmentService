@@ -13,6 +13,9 @@
 
 package tds.assessment.model;
 
+import java.util.List;
+
+import tds.testpackage.model.Grade;
 import tds.testpackage.model.Item;
 
 /**
@@ -21,15 +24,15 @@ import tds.testpackage.model.Item;
 public class ItemMetadataWrapper {
     private Item item;
     private String segmentKey;
-    private int bankKey;
     private String groupId;
     private boolean adaptive;
+    private List<Grade> grades;
 
-    public ItemMetadataWrapper(final tds.testpackage.model.Item item, final int bankKey, final String segmentKey, final String groupId,
+    public ItemMetadataWrapper(final tds.testpackage.model.Item item, final List<Grade> grades, final String segmentKey, final String groupId,
                                final boolean adaptive) {
         this.item = item;
         this.segmentKey = segmentKey;
-        this.bankKey = bankKey;
+        this.grades = grades;
         this.groupId = groupId;
         this.adaptive = adaptive;
     }
@@ -42,15 +45,15 @@ public class ItemMetadataWrapper {
         return segmentKey;
     }
 
-    public String getItemKey() {
-        return String.format("%s-%s", bankKey, item.getId());
-    }
-
     public String getGroupId() {
         return groupId;
     }
 
     public boolean isAdaptive() {
         return adaptive;
+    }
+
+    public List<Grade> getGrades() {
+        return grades;
     }
 }

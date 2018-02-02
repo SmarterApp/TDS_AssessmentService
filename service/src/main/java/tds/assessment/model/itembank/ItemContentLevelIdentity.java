@@ -29,6 +29,12 @@ public class ItemContentLevelIdentity implements Serializable {
     @NotNull
     private String contentLevel;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private ItemContentLevelIdentity() {
+    }
+
     public ItemContentLevelIdentity(final String segmentKey, final String itemId, final String contentLevel) {
         this.segmentKey = segmentKey;
         this.itemId = itemId;

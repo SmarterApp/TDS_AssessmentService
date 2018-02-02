@@ -20,7 +20,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import tds.assessment.exceptions.TestPackageLoaderException;
+import tds.assessment.model.ItemMetadataWrapper;
+import tds.assessment.model.itembank.ItemScoreDimension;
+import tds.common.Algorithm;
+import tds.testpackage.model.BlueprintReference;
+import tds.testpackage.model.Grade;
+import tds.testpackage.model.Item;
+import tds.testpackage.model.ItemGroup;
+import tds.testpackage.model.ItemScoreParameter;
 import tds.testpackage.model.TestPackage;
 
 public class AssessmentLoaderServiceBaseTest {
@@ -29,6 +45,8 @@ public class AssessmentLoaderServiceBaseTest {
 
     protected TestPackage mockTestPackage;
 
+    protected Map<String, ItemMetadataWrapper> mockItemMetadataMap;
+
     @Before
     public void deserializeTestPackage() throws IOException {
         final XmlMapper xmlMapper = new XmlMapper();
@@ -36,5 +54,31 @@ public class AssessmentLoaderServiceBaseTest {
 
         mockTestPackage = xmlMapper.readValue(this.getClass().getResourceAsStream("/V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml"),
             TestPackage.class);
+
+        mockItemMetadataMap = mapItemsToItemMetadata();
+    }
+
+    private Map<String, ItemMetadataWrapper> mapItemsToItemMetadata() {
+        return mockTestPackage.getAssessments().stream().flatMap(
+            assessment -> assessment.getSegments().stream().flatMap(segment -> {
+                    if (segment.getAlgorithmType().equals(Algorithm.FIXED_FORM.getType())) {
+                        return segment.segmentForms().stream()
+                            .flatMap(form -> form.itemGroups().stream()
+                                .flatMap(itemGroup -> itemGroup.items().stream()
+                                    .map(item -> new ItemMetadataWrapper(item, assessment.getGrades(), segment.getKey(),
+                                        itemGroup.getKey(), false))
+                                )
+                            );
+                    } else if (segment.getAlgorithmType().contains("adaptive")) {
+                        return segment.pool().stream()
+                            .flatMap(itemGroup -> itemGroup.items().stream()
+                                .map(item -> new ItemMetadataWrapper(item, assessment.getGrades(), segment.getKey(),
+                                    itemGroup.getKey(), true))
+                            );
+                    } else {
+                        throw new TestPackageLoaderException("Unrecognized selection algorithm");
+                    }
+                }
+            )).collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper));
     }
 }

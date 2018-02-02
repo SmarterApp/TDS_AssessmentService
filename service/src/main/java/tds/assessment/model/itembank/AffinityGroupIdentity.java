@@ -26,6 +26,12 @@ public class AffinityGroupIdentity implements Serializable {
     @NotNull
     private String groupId;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private AffinityGroupIdentity() {
+    }
+
     public AffinityGroupIdentity(final String segmentKey, final String groupId) {
         this.segmentKey = segmentKey;
         this.groupId = groupId;

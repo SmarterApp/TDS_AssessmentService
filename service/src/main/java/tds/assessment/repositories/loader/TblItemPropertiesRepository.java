@@ -11,23 +11,14 @@
  * and limitations under the license.
  **************************************************************************************************/
 
-package tds.assessment.services;
+package tds.assessment.repositories.loader;
 
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import tds.common.ValidationError;
-import tds.testpackage.model.TestPackage;
+import tds.assessment.model.itembank.TblItemProperty;
+import tds.assessment.model.itembank.TblItemPropertyIdentity;
 
-/**
- * An interface for a service responsible for loading an entire {@link tds.testpackage.model.TestPackage} into the item bank
- */
-public interface AssessmentLoaderService {
-    /**
-     * Loads a {@link tds.testpackage.model.TestPackage} into the item bank
-     *
-     * @param testPackageName The test package name (typically the file name, without the file extension)
-     * @param testPackage     The test package to load
-     * @return An error that occurred during the loading of the test package, if one occurs
-     */
-    Optional<ValidationError> loadTestPackage(final String testPackageName, final TestPackage testPackage);
+@Repository
+public interface TblItemPropertiesRepository extends JpaRepository<TblItemProperty, TblItemPropertyIdentity> {
 }

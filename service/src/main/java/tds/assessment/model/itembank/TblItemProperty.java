@@ -18,23 +18,32 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * A row representing generic item metadata (not linked to any specific segment or assessment)
+ */
 @Entity
 @Table(name = "tblitemprops", schema = "itembank")
-public class TblItemProperties {
-    private TblItemPropertiesIdentifier tblItemPropertiesIdentifier;
+public class TblItemProperty {
+    private TblItemPropertyIdentity tblItemPropertyIdentity;
     private boolean active;
 
-    public TblItemProperties(final String itemId, final String name, final String value, final String segmentKey, final boolean active) {
-        this.tblItemPropertiesIdentifier = new TblItemPropertiesIdentifier(itemId, name, value, segmentKey);
-        this.active = active;
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblItemProperty() {
+    }
+
+    public TblItemProperty(final String itemId, final String name, final String value, final String segmentKey) {
+        this.tblItemPropertyIdentity = new TblItemPropertyIdentity(itemId, name, value, segmentKey);
+        this.active = true;
     }
 
     public void setActive(final boolean active) {
         this.active = active;
     }
 
-    public void setTblItemPropertiesIdentifier(final TblItemPropertiesIdentifier tblItemPropertiesIdentifier) {
-        this.tblItemPropertiesIdentifier = tblItemPropertiesIdentifier;
+    public void setTblItemPropertyIdentity(final TblItemPropertyIdentity tblItemPropertyIdentity) {
+        this.tblItemPropertyIdentity = tblItemPropertyIdentity;
     }
 
     @Column(name = "isactive")
@@ -43,7 +52,7 @@ public class TblItemProperties {
     }
 
     @EmbeddedId
-    public TblItemPropertiesIdentifier getTblItemPropertiesIdentifier() {
-        return tblItemPropertiesIdentifier;
+    public TblItemPropertyIdentity getTblItemPropertyIdentity() {
+        return tblItemPropertyIdentity;
     }
 }

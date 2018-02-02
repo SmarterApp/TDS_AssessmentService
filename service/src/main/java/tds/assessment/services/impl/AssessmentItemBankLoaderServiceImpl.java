@@ -40,13 +40,14 @@ import tds.assessment.services.AssessmentItemBankLoaderService;
 import tds.common.Algorithm;
 import tds.testpackage.model.BlueprintElement;
 import tds.testpackage.model.Item;
+import tds.testpackage.model.ItemGroup;
 import tds.testpackage.model.Stimulus;
 import tds.testpackage.model.TestPackage;
 
+import static tds.assessment.model.BlueprintElementTypes.CLAIM_AND_TARGET_TYPES;
+
 @Service
 public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLoaderService {
-    private final static Set<String> CLAIMS_AND_TARGET_TYPES =
-        ImmutableSet.of("claim", "target", "strand", "contentlevel");
     private final TblSubjectRepository tblSubjectRepository;
     private final TblItemRepository tblItemRepository;
     private final TblStimuliRepository tblStimuliRepository;
@@ -81,13 +82,13 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
                     return segment.segmentForms().stream()
                         .flatMap(form -> form.itemGroups().stream()
                             .filter(itemGroup -> itemGroup.getStimulus().isPresent())
-                            .map(itemGroup -> itemGroup.getStimulus())
+                            .map(ItemGroup::getStimulus)
                             .map(stimulus -> mapStimuliToTblStimuli(bankKey, version, stimulus)));
 
                 } else if (segment.getAlgorithmType().contains("adaptive")) {
                     return segment.pool().stream()
                         .filter(itemGroup -> itemGroup.getStimulus().isPresent())
-                        .map(itemGroup -> itemGroup.getStimulus())
+                        .map(ItemGroup::getStimulus)
                         .map(stimulus -> mapStimuliToTblStimuli(bankKey, version, stimulus));
                 } else {
                     throw new TestPackageLoaderException("Unrecognized selection algorithm");
@@ -121,29 +122,17 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
         tblItemRepository.save(items);
     }
 
-    private List<TblStrand> loadBlueprintElementsHelper(final List<BlueprintElement> blueprintElements,
+    private void loadBlueprintElementsHelper(final List<BlueprintElement> blueprintElements,
                                                         final List<TblStrand> tblStrands,
                                                         final Client client,
                                                         final String parentKey,
                                                         final String subjectKey,
                                                         final String version,
                                                         final int treeLevel) {
-        /**
-         * BIG TODO:
-         *  The code below assumes each blueprint element id will contain it's hierarchy embedded, as is the case in legacy.
-         *  We are still waiting on feedback from SmarterBalanced, PCG, and AIR on what these blueprint elements should actually
-         *  look like.
-         *
-         *  We need to check whether the content level/target names will contain the entire hierarchy embedded into each string.
-         *  For example, in the legacy test specification packages, the strand with the key "SBAC_PT-4|OA|D|NA|NA" contains the
-         *  parent keys of its hierarchy embedded within the key (delimited by pipes '|'). If this is not the case, and we should infer the
-         *  string based on the name of the parent keys programmatically, the logic below will need to be updated
-         */
-
         // Recursively create the tblStrands we will insert into the database
         for (BlueprintElement bpElement : blueprintElements) {
             // For claims and targets, the convention is to prepend the client name to the id
-            final String key = CLAIMS_AND_TARGET_TYPES.contains(bpElement.getType())
+            final String key = CLAIM_AND_TARGET_TYPES.contains(bpElement.getType())
                 ? client.getName() + '-' + bpElement.getId()
                 : bpElement.getId();
 
@@ -181,8 +170,6 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
                     tblStrands, client, key, subjectKey, version, treeLevel + 1);
             }
         }
-
-        return tblStrands;
     }
 
     private static TblItem mapItemToTblItem(final int bankKey, final String version, final Item item) {

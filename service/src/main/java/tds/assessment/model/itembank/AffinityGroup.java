@@ -19,6 +19,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A representation of an "affinity group" blueprint element present in a test package
+ */
 @Entity
 @Table(name = "affinitygroup", schema = "itembank")
 public class AffinityGroup {
@@ -36,6 +39,12 @@ public class AffinityGroup {
     private Float precisionTargetMetWeight;
     private Float precisionTargetNotMetWeight;
 
+    /**
+     * Empty constructor for frameworks
+     */
+    private AffinityGroup() {
+    }
+
     public static final class Builder {
         private AffinityGroupIdentity affinityGroupId;
         private int minItems;
@@ -51,12 +60,8 @@ public class AffinityGroup {
         private Float precisionTargetMetWeight;
         private Float precisionTargetNotMetWeight;
 
-        public Builder() {
-        }
-
-        public Builder withAffiniyGroupId(AffinityGroupIdentity affiniyGroupId) {
-            this.affinityGroupId = affinityGroupId;
-            return this;
+        public Builder(String segmentKey, String groupId) {
+            this.affinityGroupId = new AffinityGroupIdentity(segmentKey, groupId);
         }
 
         public Builder withMinItems(int minItems) {

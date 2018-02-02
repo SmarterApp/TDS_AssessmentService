@@ -18,6 +18,9 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * A row linking each stimuli to its respective segment
+ */
 @Entity
 @Table(name = "tbladminstimulus", schema = "itembank")
 public class TblAdminStimulus {
@@ -27,6 +30,12 @@ public class TblAdminStimulus {
     private Long version;
     private Long updateVersion;
     private String groupId;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblAdminStimulus() {
+    }
 
     public static final class Builder {
         private TblAdminStimulusIdentifier tblAdminStimulusIdentifier;

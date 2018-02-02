@@ -29,6 +29,13 @@ public class TblTestAdmin {
     private Long version;
     private Long updateVersion;
     private String description;
+    private String season;
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private TblTestAdmin() {
+    }
 
     private TblTestAdmin(final Builder builder) {
         this.academicYear = builder.academicYear;
@@ -37,6 +44,7 @@ public class TblTestAdmin {
         this.version = builder.version;
         this.updateVersion = builder.updateVersion;
         this.description = builder.key + TEST_ADMIN_DESCRIPTION;
+        this.season = "";
     }
 
     public static final class Builder {
@@ -109,6 +117,10 @@ public class TblTestAdmin {
         return description;
     }
 
+    public String getSeason() {
+        return season;
+    }
+
     /* Note: NEVER USE THESE SETTERS - They are only for Hibernate compatibility - use the builder */
     private void setAcademicYear(final String academicYear) {
         this.academicYear = academicYear;
@@ -130,7 +142,11 @@ public class TblTestAdmin {
         this.updateVersion = updateVersion;
     }
 
-    public void setDescription(final String description) {
+    private void setDescription(final String description) {
         this.description = description;
+    }
+
+    private void setSeason(final String season) {
+        this.season = season;
     }
 }

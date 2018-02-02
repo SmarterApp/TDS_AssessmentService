@@ -13,22 +13,67 @@
 
 package tds.assessment.services;
 
+import java.util.List;
 import java.util.Map;
 
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.assessment.model.itembank.TblStrand;
 import tds.testpackage.model.TestPackage;
 
+/**
+ * An interface for a service responsible for loading item, stimuli, and strand data into the item bank
+ */
 public interface AssessmentItemStimuliLoaderService {
-    void loadItemProperties(final Map<String, ItemMetadataWrapper> itemIdToItemMetadata);
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TblItemProperty}s into the item bank
+     *
+     * @param itemMetadataWrappers A flattened list of {@link tds.testpackage.model.Item}s, along with some additional important
+     *                             metadata
+     */
+    void loadItemProperties(final List<ItemMetadataWrapper> itemMetadataWrappers);
 
-    void loadAdminItems(final TestPackage testPackage, final Map<String, ItemMetadataWrapper> itemIdToItemMetadata,
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TblAdminItem}s into the item bank
+     *
+     * @param testPackage          The test package containing the items to load
+     * @param itemMetadataWrappers A flattened list of {@link tds.testpackage.model.Item}s, along with some additional important
+     *                             metadata
+     * @param keyToStrands         A mapping of all strand keys to their respective {@link tds.assessment.model.itembank.TblStrand}s
+     */
+    void loadAdminItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers,
                         final Map<String, TblStrand> keyToStrands);
 
-    void loadLinkItemsToStrands(final Map<String, ItemMetadataWrapper> itemMetadataWrapperMap,
+    /**
+     * Loads all item and strand linking {@link tds.assessment.model.itembank.TblSetOfItemStrand}s and
+     * {@link tds.assessment.model.itembank.ItemContentLevel}s into the item bank
+     *
+     * @param itemMetadataWrappers A flattened list of {@link tds.testpackage.model.Item}s, along with some additional important
+     *                             metadata
+     * @param keyToStrands         A mapping of all strand keys to their respective {@link tds.assessment.model.itembank.TblStrand}s
+     * @param version              The version of the test package
+     */
+    void loadLinkItemsToStrands(final List<ItemMetadataWrapper> itemMetadataWrappers,
                                 final Map<String, TblStrand> keyToStrands, final Long version);
 
+    /**
+     * Loads all admin-stimuli linking {@link tds.assessment.model.itembank.TblAdminStimulus} into the item bank
+     *
+     * @param testPackage The test package containing all admin-stimuli links in the {@link tds.testpackage.model.TestPackage}
+     */
     void loadAdminStimuli(final TestPackage testPackage);
 
+    /**
+     * Loads all {@link tds.assessment.model.itembank.TblAdminStrand}s into the item bank
+     *
+     * @param testPackage  The test package containing the admin-strand linkings
+     * @param keyToStrands A mapping of all strand keys to their respective {@link tds.assessment.model.itembank.TblStrand}s
+     */
     void loadAdminStrands(final TestPackage testPackage, final Map<String, TblStrand> keyToStrands);
+
+    /**
+     * Loads all item to strand linking {@link tds.assessment.model.itembank.TblSetOfItemStimulus} into the item bank
+     *
+     * @param testPackage The test package containing all item-to-stimuli links
+     */
+    void loadLinkItemsToStimuli(TestPackage testPackage);
 }

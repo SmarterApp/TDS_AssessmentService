@@ -18,6 +18,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A row representing a subject, with a link to its client/publisher
+ */
 @Entity
 @Table(name = "tblsubject", schema = "itembank")
 public class TblSubject {
@@ -25,6 +28,7 @@ public class TblSubject {
     private String key;
     private long clientKey;
     private Long version;
+    private String grade;
 
     /**
      * Private constructor for frameworks
@@ -37,6 +41,7 @@ public class TblSubject {
         this.key = key;
         this.clientKey = clientKey;
         this.version = version;
+        this.grade = "";
     }
 
     public void setName(final String name) {
@@ -55,8 +60,16 @@ public class TblSubject {
         this.version = version;
     }
 
+    public void setGrade(final String grade) {
+        this.grade = grade;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getGrade() {
+        return grade;
     }
 
     @Id

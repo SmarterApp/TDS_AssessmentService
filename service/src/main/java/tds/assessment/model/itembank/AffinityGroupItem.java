@@ -17,10 +17,20 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * An item belonging to a specific {@link tds.assessment.model.itembank.AffinityGroup}
+ */
 @Entity
 @Table(name = "affinitygroupitem", schema = "itembank")
 public class AffinityGroupItem {
     private AffinityGroupItemIdentity affinityGroupItemIdentity;
+
+
+    /**
+     * Empty constructor for frameworks
+     */
+    private AffinityGroupItem() {
+    }
 
     public AffinityGroupItem(final AffinityGroupItemIdentity affinityGroupItemIdentity) {
         this.affinityGroupItemIdentity = affinityGroupItemIdentity;
