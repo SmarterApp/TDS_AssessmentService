@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * A row representing generic stimuli metadata (not specific to any segment/assessment)
  */
 @Entity
-@Table(name = "tblstimulus", schema = "itembank")
+@Table(name = "tblstimulus", catalog = "itembank")
 public class TblStimulus {
     private long key;
     private long bankKey;

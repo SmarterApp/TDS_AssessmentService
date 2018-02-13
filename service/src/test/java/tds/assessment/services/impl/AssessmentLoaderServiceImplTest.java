@@ -13,156 +13,95 @@
 
 package tds.assessment.services.impl;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
-import tds.assessment.model.itembank.Client;
-import tds.assessment.model.itembank.TblStrand;
-import tds.assessment.repositories.ItemBankDataCommandRepository;
-import tds.assessment.repositories.ItemBankDataQueryRepository;
-import tds.assessment.services.AffinityGroupLoaderService;
-import tds.assessment.services.AssessmentFormLoaderService;
+import tds.assessment.model.itembank.TestForm;
+import tds.assessment.services.AssessmentConfigLoaderService;
 import tds.assessment.services.AssessmentItemBankLoaderService;
-import tds.assessment.services.AssessmentItemSelectionLoaderService;
-import tds.assessment.services.AssessmentItemStimuliLoaderService;
 import tds.assessment.services.AssessmentLoaderService;
-import tds.assessment.services.AssessmentSegmentLoaderService;
+import tds.assessment.services.AssessmentService;
 import tds.common.ValidationError;
+import tds.common.web.exceptions.NotFoundException;
 
-import static io.github.benas.randombeans.api.EnhancedRandom.random;
+import static io.github.benas.randombeans.api.EnhancedRandom.randomListOf;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static tds.assessment.model.itembank.Client.DEFAULT_HOME_PATH;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBaseTest {
     private AssessmentLoaderService service;
 
     @Mock
+    private AssessmentConfigLoaderService assessmentConfigLoaderService;
+
+    @Mock
     private AssessmentItemBankLoaderService assessmentItemBankLoaderService;
 
     @Mock
-    private AssessmentItemSelectionLoaderService assessmentItemSelectionLoaderService;
-
-    @Mock
-    private AssessmentItemStimuliLoaderService assessmentItemStimuliLoaderService;
-
-    @Mock
-    private AssessmentFormLoaderService assessmentFormLoaderService;
-
-    @Mock
-    private AssessmentSegmentLoaderService assessmentSegmentLoaderService;
-
-    @Mock
-    private AffinityGroupLoaderService affinityGroupLoaderService;
-
-    @Mock
-    private ItemBankDataQueryRepository itemBankDataQueryRepository;
-
-    @Mock
-    private ItemBankDataCommandRepository itemBankDataCommandRepository;
+    private AssessmentService assessmentService;
 
     @Before
-    public void setup() throws IOException {
-        service = new AssessmentLoaderServiceImpl(assessmentItemBankLoaderService,
-            affinityGroupLoaderService,
-            assessmentItemSelectionLoaderService,
-            assessmentItemStimuliLoaderService,
-            assessmentFormLoaderService,
-            assessmentSegmentLoaderService,
-            itemBankDataQueryRepository,
-            itemBankDataCommandRepository);
+    public void setup() {
+        service = new AssessmentLoaderServiceImpl(assessmentConfigLoaderService, assessmentItemBankLoaderService, assessmentService);
     }
 
     @Test
-    public void shouldLoadTestPackageNewClient() {
-        Map<String, TblStrand> mockTblStrandMap = ImmutableMap.of("test", random(TblStrand.class));
+    public void shouldLoadAssessmentSuccessfullyFirstTime() {
+        final String testPackageName = "V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml";
+        doThrow(NotFoundException.class).when(assessmentService).removeAssessment(mockTestPackage.getPublisher(), mockTestPackage.getAssessments().get(0).getKey());
 
-        when(itemBankDataQueryRepository.findClient(mockTestPackage.getPublisher())).thenReturn(Optional.empty());
-        when(itemBankDataCommandRepository.insertClient("SBAC_PT")).thenReturn(new Client(1, "SBAC_PT", DEFAULT_HOME_PATH));
-        when(assessmentItemBankLoaderService.loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
-            isA(Client.class), eq(mockTestPackage.getVersion()))).thenReturn(mockTblStrandMap);
-
-        Optional<ValidationError> maybeError = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage);
+        List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
+        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage)).thenReturn(mockTestForms);
+        Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
         assertThat(maybeError).isNotPresent();
 
-        verify(assessmentItemSelectionLoaderService).loadScoringSeedData();
-        verify(itemBankDataQueryRepository).findClient("SBAC_PT");
-        verify(itemBankDataCommandRepository).insertClient(mockTestPackage.getPublisher());
-        verify(assessmentItemBankLoaderService).loadSubject(eq(mockTestPackage), isA(Client.class), eq("SBAC_PT-MATH"));
-        verify(assessmentItemBankLoaderService).loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
-            isA(Client.class), eq(mockTestPackage.getVersion()));
-        verify(assessmentItemBankLoaderService).loadTblStimuli(mockTestPackage);
-        verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
-        verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(List.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
-        verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(List.class));
-        verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));
-        verify(assessmentSegmentLoaderService).loadAdminSubjects(mockTestPackage, "SBAC_PT-MATH");
-        verify(assessmentSegmentLoaderService).loadTestGrades(mockTestPackage);
-        verify(assessmentSegmentLoaderService).loadTestCohorts(mockTestPackage);
-        verify(assessmentItemSelectionLoaderService).loadItemSelectionParams(mockTestPackage);
-        verify(assessmentItemStimuliLoaderService).loadAdminStrands(mockTestPackage, mockTblStrandMap);
-        verify(assessmentItemStimuliLoaderService).loadAdminItems(eq(mockTestPackage), isA(List.class), eq(mockTblStrandMap));
-        verify(assessmentItemSelectionLoaderService).loadAdminItemMeasurementParameters(isA(Map.class));
-        verify(assessmentItemStimuliLoaderService).loadAdminStimuli(mockTestPackage);
-        verify(assessmentFormLoaderService).loadAdminForms(mockTestPackage);
-        verify(affinityGroupLoaderService).loadAffinityGroups(eq(mockTestPackage), isA(List.class));
+        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage);
+        verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
     }
 
     @Test
-    public void shouldLoadTestPackageOldClient() {
-        Map<String, TblStrand> mockTblStrandMap = ImmutableMap.of("test", random(TblStrand.class));
-        Client client = new Client(1, "SBAC_PT", DEFAULT_HOME_PATH);
+    public void shouldClearTestPackageWhenErrorOccurs() {
+        final String testPackageName = "V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml";
 
-        when(itemBankDataQueryRepository.findClient(mockTestPackage.getPublisher())).thenReturn(Optional.of(client));
-        when(assessmentItemBankLoaderService.loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
-            isA(Client.class), eq(mockTestPackage.getVersion()))).thenReturn(mockTblStrandMap);
+        List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
+        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage)).thenReturn(mockTestForms);
+        doThrow(NotFoundException.class).when(assessmentService).removeAssessment(mockTestPackage.getPublisher(), mockTestPackage.getAssessments().get(0).getKey());
+        doThrow(TestPackageLoaderException.class).when(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
 
-        Optional<ValidationError> maybeError = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage);
-        assertThat(maybeError).isNotPresent();
-
-        verify(assessmentItemSelectionLoaderService).loadScoringSeedData();
-        verify(itemBankDataQueryRepository).findClient("SBAC_PT");
-        verify(itemBankDataCommandRepository).insertClient(mockTestPackage.getPublisher());
-        verify(assessmentItemBankLoaderService).loadSubject(eq(mockTestPackage), isA(Client.class), eq("SBAC_PT-MATH"));
-        verify(assessmentItemBankLoaderService).loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
-            isA(Client.class), eq(mockTestPackage.getVersion()));
-        verify(assessmentItemBankLoaderService).loadTblStimuli(mockTestPackage);
-        verify(assessmentItemBankLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
-        verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(List.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
-        verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(List.class));
-        verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));
-        verify(assessmentSegmentLoaderService).loadAdminSubjects(mockTestPackage, "SBAC_PT-MATH");
-        verify(assessmentSegmentLoaderService).loadTestGrades(mockTestPackage);
-        verify(assessmentSegmentLoaderService).loadTestCohorts(mockTestPackage);
-        verify(assessmentItemSelectionLoaderService).loadItemSelectionParams(mockTestPackage);
-        verify(assessmentItemStimuliLoaderService).loadAdminStrands(mockTestPackage, mockTblStrandMap);
-        verify(assessmentItemStimuliLoaderService).loadAdminItems(eq(mockTestPackage), isA(List.class), eq(mockTblStrandMap));
-        verify(assessmentItemSelectionLoaderService).loadAdminItemMeasurementParameters(isA(Map.class));
-        verify(assessmentItemStimuliLoaderService).loadAdminStimuli(mockTestPackage);
-        verify(assessmentFormLoaderService).loadAdminForms(mockTestPackage);
-        verify(affinityGroupLoaderService).loadAffinityGroups(eq(mockTestPackage), isA(List.class));
-    }
-
-    @Test
-    public void shouldReturnValidationErrorForException() {
-        doThrow(new TestPackageLoaderException("An exception")).when(assessmentItemSelectionLoaderService).loadScoringSeedData();
-        Optional<ValidationError> maybeError = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage);
+        Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
         assertThat(maybeError).isPresent();
-        assertThat(maybeError.get().getMessage()).contains("An exception");
+
+        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage);
+        verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
+        verify(assessmentService, times(2)).removeAssessment(mockTestPackage.getPublisher()
+            , mockTestPackage.getAssessments().get(0).getKey());
+    }
+
+    @Test
+    public void shouldDeleteAllAssessmentsIfPresentBeforeLoading() {
+        final String testPackageName = "V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml";
+
+        List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
+        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage)).thenReturn(mockTestForms);
+        Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
+        assertThat(maybeError).isNotPresent();
+
+        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage);
+        verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
+        verify(assessmentService).removeAssessment(mockTestPackage.getPublisher()
+            , mockTestPackage.getAssessments().get(0).getKey());
+        verify(assessmentService).removeAssessment(mockTestPackage.getPublisher()
+            , mockTestPackage.getAssessments().get(1).getKey());
     }
 }

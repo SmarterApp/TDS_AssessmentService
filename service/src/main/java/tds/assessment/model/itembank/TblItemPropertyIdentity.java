@@ -38,7 +38,7 @@ public class TblItemPropertyIdentity implements Serializable {
     private TblItemPropertyIdentity() {
     }
 
-    public TblItemPropertyIdentity(final String itemId, final String name, final String value, final String segmentKey) {
+    TblItemPropertyIdentity(final String itemId, final String name, final String value, final String segmentKey) {
         this.itemId = itemId;
         this.name = name;
         this.value = value;

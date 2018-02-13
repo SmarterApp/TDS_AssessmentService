@@ -33,7 +33,7 @@ public class ItemMeasurementParameterIdentity implements Serializable {
     private ItemMeasurementParameterIdentity() {
     }
 
-    public ItemMeasurementParameterIdentity(final UUID itemScoreDimensionKey, final int measurementParameterKey) {
+    ItemMeasurementParameterIdentity(final UUID itemScoreDimensionKey, final int measurementParameterKey) {
         this.itemScoreDimensionKey = itemScoreDimensionKey;
         this.measurementParameterKey = measurementParameterKey;
     }

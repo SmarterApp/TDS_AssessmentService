@@ -32,7 +32,7 @@ public class AffinityGroupIdentity implements Serializable {
     private AffinityGroupIdentity() {
     }
 
-    public AffinityGroupIdentity(final String segmentKey, final String groupId) {
+    AffinityGroupIdentity(final String segmentKey, final String groupId) {
         this.segmentKey = segmentKey;
         this.groupId = groupId;
     }

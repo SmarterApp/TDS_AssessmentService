@@ -23,7 +23,7 @@ import java.util.UUID;
  * An object containing item scoring related metadata
  */
 @Entity
-@Table(name = "itemscoredimension", schema = "itembank")
+@Table(name = "itemscoredimension", catalog = "itembank")
 public class ItemScoreDimension {
     private String dimension;
     private String recodeRule;

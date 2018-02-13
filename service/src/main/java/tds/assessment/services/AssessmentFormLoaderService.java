@@ -13,6 +13,9 @@
 
 package tds.assessment.services;
 
+import java.util.List;
+
+import tds.assessment.model.itembank.TestForm;
 import tds.testpackage.model.TestPackage;
 
 /**
@@ -24,6 +27,15 @@ public interface AssessmentFormLoaderService {
      * present in the test package into the item bank
      *
      * @param testPackage The test package containing the form data to load
+     * @return The list of saved forms
      */
-    void loadAdminForms(final TestPackage testPackage);
+    List<TestForm> loadAdminForms(final TestPackage testPackage);
+
+    /**
+     * Loads all {@link tds.assessment.model.configs.AssessmentFormProperties} for each segment form in the test package
+     *
+     * @param testPackage The test package containing the form property data to load
+     * @param testForms   A list of {@link tds.assessment.model.itembank.TestForm}s present in the test package
+     */
+    void loadAssessmentFormProperties(final TestPackage testPackage, final List<TestForm> testForms);
 }

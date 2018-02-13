@@ -22,7 +22,7 @@ import java.util.UUID;
  * A row representing parameters for item selection rules for specific segments
  */
 @Entity
-@Table(name = "tblitemselectionparm", schema = "itembank")
+@Table(name = "tblitemselectionparm", catalog = "itembank")
 public class TblItemSelectionParameter {
     private UUID key;
     private String segmentKey;

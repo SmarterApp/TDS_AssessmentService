@@ -35,15 +35,15 @@ import tds.assessment.model.itembank.TblItemProperty;
 import tds.assessment.model.itembank.TblSetOfItemStimulus;
 import tds.assessment.model.itembank.TblSetOfItemStrand;
 import tds.assessment.model.itembank.TblStrand;
-import tds.assessment.repositories.loader.ItemContentLevelRepository;
-import tds.assessment.repositories.loader.TblAdminStimuliRepository;
-import tds.assessment.repositories.loader.TblAdminStrandsRepository;
-import tds.assessment.repositories.loader.TblItemPropertiesRepository;
-import tds.assessment.repositories.loader.TblSetOfAdminItemsRepository;
-import tds.assessment.repositories.loader.TblSetOfItemStimuliRepository;
-import tds.assessment.repositories.loader.TblSetOfItemStrandsRepository;
-import tds.assessment.repositories.loader.TblStrandRepository;
-import tds.assessment.services.AssessmentItemBankLoaderService;
+import tds.assessment.repositories.loader.itembank.ItemContentLevelRepository;
+import tds.assessment.repositories.loader.itembank.TblAdminStimuliRepository;
+import tds.assessment.repositories.loader.itembank.TblAdminStrandsRepository;
+import tds.assessment.repositories.loader.itembank.TblItemPropertiesRepository;
+import tds.assessment.repositories.loader.itembank.TblSetOfAdminItemsRepository;
+import tds.assessment.repositories.loader.itembank.TblSetOfItemStimuliRepository;
+import tds.assessment.repositories.loader.itembank.TblSetOfItemStrandsRepository;
+import tds.assessment.repositories.loader.itembank.TblStrandRepository;
+import tds.assessment.services.AssessmentItemBankGenericDataLoaderService;
 import tds.assessment.services.AssessmentItemStimuliLoaderService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +54,7 @@ public class AssessmentItemStimuliLoaderServiceImplTest extends AssessmentLoader
     private AssessmentItemStimuliLoaderService service;
 
     // Only used to get keyToStrands map - this service is tested separately
-    private AssessmentItemBankLoaderService itemBankLoaderService;
+    private AssessmentItemBankGenericDataLoaderService itemBankLoaderService;
 
     @Mock
     private TblAdminStrandsRepository tblAdminStrandsRepository;
@@ -108,7 +108,7 @@ public class AssessmentItemStimuliLoaderServiceImplTest extends AssessmentLoader
         service = new AssessmentItemStimuliLoaderServiceImpl(tblAdminStrandsRepository, tblAdminStimuliRepository,
             itemContentLevelRepository, tblSetOfAdminItemsRepository, tblSetOfItemStrandsRepository, tblItemPropertiesRepository, tblSetOfItemStimuliRepository);
 
-        itemBankLoaderService = new AssessmentItemBankLoaderServiceImpl(null, null, null, tblStrandRepository);
+        itemBankLoaderService = new AssessmentItemBankGenericDataLoaderServiceImpl(null, null, null, tblStrandRepository);
         keyToStrands = itemBankLoaderService.loadStrands(mockTestPackage.getBlueprint(),
             "SBAC_PT-MATH", new Client(0, "SBAC_PT", null), "8185");
     }
@@ -148,7 +148,7 @@ public class AssessmentItemStimuliLoaderServiceImplTest extends AssessmentLoader
         assertThat(savedAdminItems).hasSize(20);
 
         TblAdminItem singleItem = savedAdminItems.stream()
-            .filter(item -> item.getTblAdminItemIdentifier().getItemId().equals("187-2029"))
+            .filter(item -> item.getTblAdminItemIdentity().getItemId().equals("187-2029"))
             .findFirst().get();
 
         assertThat(singleItem.getGroupKey()).isEqualTo("I-187-2029_A");
@@ -174,7 +174,7 @@ public class AssessmentItemStimuliLoaderServiceImplTest extends AssessmentLoader
         assertThat(singleItem.getFtWeight()).isEqualTo(1);
 
         TblAdminItem groupedItem = savedAdminItems.stream()
-            .filter(item -> item.getTblAdminItemIdentifier().getItemId().equals("187-1432"))
+            .filter(item -> item.getTblAdminItemIdentity().getItemId().equals("187-1432"))
             .findFirst().get();
 
         assertThat(groupedItem.getGroupKey()).isEqualTo("G-187-3688-0_A");
@@ -226,8 +226,8 @@ public class AssessmentItemStimuliLoaderServiceImplTest extends AssessmentLoader
         assertThat(adminStimuli).hasSize(1);
 
         TblAdminStimulus stimulus = adminStimuli.get(0);
-        assertThat(stimulus.getTblAdminStimulusIdentifier().getStimulusKey()).isEqualTo("187-3688");
-        assertThat(stimulus.getTblAdminStimulusIdentifier().getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-IRP-Perf-MATH-11-2017-2018");
+        assertThat(stimulus.getTblAdminStimulusIdentity().getStimulusKey()).isEqualTo("187-3688");
+        assertThat(stimulus.getTblAdminStimulusIdentity().getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-IRP-Perf-MATH-11-2017-2018");
         assertThat(stimulus.getNumItemsRequired()).isEqualTo(-1);
         assertThat(stimulus.getMaxItems()).isEqualTo(-1);
         assertThat(stimulus.getVersion()).isEqualTo(8185);

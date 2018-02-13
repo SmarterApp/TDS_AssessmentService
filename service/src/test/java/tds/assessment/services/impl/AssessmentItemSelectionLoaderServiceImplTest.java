@@ -31,11 +31,11 @@ import java.util.stream.Collectors;
 import tds.assessment.model.itembank.ItemMeasurementParameter;
 import tds.assessment.model.itembank.ItemScoreDimension;
 import tds.assessment.model.itembank.TblItemSelectionParameter;
-import tds.assessment.repositories.loader.ItemMeasurementParameterRepository;
-import tds.assessment.repositories.loader.ItemScoreDimensionsRepository;
-import tds.assessment.repositories.loader.MeasurementModelRepository;
-import tds.assessment.repositories.loader.MeasurementParameterRepository;
-import tds.assessment.repositories.loader.TblItemSelectionParameterRepository;
+import tds.assessment.repositories.loader.itembank.ItemMeasurementParameterRepository;
+import tds.assessment.repositories.loader.itembank.ItemScoreDimensionsRepository;
+import tds.assessment.repositories.loader.itembank.MeasurementModelRepository;
+import tds.assessment.repositories.loader.itembank.MeasurementParameterRepository;
+import tds.assessment.repositories.loader.itembank.TblItemSelectionParameterRepository;
 import tds.assessment.services.AssessmentItemSelectionLoaderService;
 
 import static org.assertj.core.api.Assertions.assertThat;

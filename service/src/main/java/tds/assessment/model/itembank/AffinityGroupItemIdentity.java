@@ -35,7 +35,7 @@ public class AffinityGroupItemIdentity implements Serializable {
     private AffinityGroupItemIdentity() {
     }
 
-    public AffinityGroupItemIdentity(final String segmentKey, final String affinityGroupId, final String itemId) {
+    AffinityGroupItemIdentity(final String segmentKey, final String affinityGroupId, final String itemId) {
         this.segmentKey = segmentKey;
         this.affinityGroupId = affinityGroupId;
         this.itemId = itemId;

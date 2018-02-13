@@ -22,9 +22,9 @@ import javax.persistence.Table;
  * A row linking each stimuli to its respective segment
  */
 @Entity
-@Table(name = "tbladminstimulus", schema = "itembank")
+@Table(name = "tbladminstimulus", catalog = "itembank")
 public class TblAdminStimulus {
-    private TblAdminStimulusIdentifier tblAdminStimulusIdentifier;
+    private TblAdminStimulusIdentity tblAdminStimulusIdentity;
     private int numItemsRequired;
     private int maxItems;
     private Long version;
@@ -38,7 +38,7 @@ public class TblAdminStimulus {
     }
 
     public static final class Builder {
-        private TblAdminStimulusIdentifier tblAdminStimulusIdentifier;
+        private TblAdminStimulusIdentity tblAdminStimulusIdentity;
         private int numItemsRequired;
         private int maxItems;
         private Long version;
@@ -46,7 +46,7 @@ public class TblAdminStimulus {
         private String groupId;
 
         public Builder(String stimulusKey, String segmentKey) {
-            this.tblAdminStimulusIdentifier = new TblAdminStimulusIdentifier(stimulusKey, segmentKey);
+            this.tblAdminStimulusIdentity = new TblAdminStimulusIdentity(stimulusKey, segmentKey);
         }
 
         public Builder withNumItemsRequired(int numItemsRequired) {
@@ -78,7 +78,7 @@ public class TblAdminStimulus {
             TblAdminStimulus tblAdminStimulus = new TblAdminStimulus();
             tblAdminStimulus.maxItems = this.maxItems;
             tblAdminStimulus.numItemsRequired = this.numItemsRequired;
-            tblAdminStimulus.tblAdminStimulusIdentifier = this.tblAdminStimulusIdentifier;
+            tblAdminStimulus.tblAdminStimulusIdentity = this.tblAdminStimulusIdentity;
             tblAdminStimulus.groupId = this.groupId;
             tblAdminStimulus.version = this.version;
             tblAdminStimulus.updateVersion = this.updateVersion;
@@ -87,8 +87,8 @@ public class TblAdminStimulus {
     }
 
     @EmbeddedId
-    public TblAdminStimulusIdentifier getTblAdminStimulusIdentifier() {
-        return tblAdminStimulusIdentifier;
+    public TblAdminStimulusIdentity getTblAdminStimulusIdentity() {
+        return tblAdminStimulusIdentity;
     }
 
     @Column(name = "numitemsrequired")
@@ -117,8 +117,8 @@ public class TblAdminStimulus {
     }
 
     /* Note: NEVER USE THESE SETTERS - They are only for Hibernate compatibility - use the builder */
-    private void setTblAdminStimulusIdentifier(final TblAdminStimulusIdentifier tblAdminStimulusIdentifier) {
-        this.tblAdminStimulusIdentifier = tblAdminStimulusIdentifier;
+    private void setTblAdminStimulusIdentity(final TblAdminStimulusIdentity tblAdminStimulusIdentity) {
+        this.tblAdminStimulusIdentity = tblAdminStimulusIdentity;
     }
 
     private void setNumItemsRequired(final int numItemsRequired) {

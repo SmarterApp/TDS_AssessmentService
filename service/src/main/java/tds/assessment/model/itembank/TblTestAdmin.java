@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tbltestadmin", schema = "itembank")
+@Table(name = "tbltestadmin", catalog = "itembank")
 public class TblTestAdmin {
     // A constant string added to the end of each client name in the testadmin table
     private static final String TEST_ADMIN_DESCRIPTION = " administration";

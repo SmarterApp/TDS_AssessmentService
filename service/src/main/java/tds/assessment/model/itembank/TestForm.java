@@ -17,14 +17,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * A row representing a form in a segment
  */
 @Entity
-@Table(name = "testform", schema = "itembank")
+@Table(name = "testform", catalog = "itembank")
 public class TestForm {
     private String segmentKey;
+    private String segmentId;
     private long key; // this refers to both "_efk_itsbank" and "_efk_itskey"
     private long itsKey; // not used - hibernate compatibility only. "key" property should be used
     private String formId;
@@ -42,6 +44,7 @@ public class TestForm {
 
     public static final class Builder {
         private String segmentKey;
+        private String segmentId;
         private long key; // this refers to both "_efk_itsbank" and "_efk_itskey"
         private String formId;
         private String language;
@@ -55,6 +58,11 @@ public class TestForm {
 
         public Builder withSegmentKey(String segmentKey) {
             this.segmentKey = segmentKey;
+            return this;
+        }
+
+        public Builder withSegmentId(String segmentId) {
+            this.segmentId = segmentId;
             return this;
         }
 
@@ -99,6 +107,7 @@ public class TestForm {
             testForm.key = this.key;
             testForm.formId = this.formId;
             testForm.segmentKey = this.segmentKey;
+            testForm.segmentId = this.segmentId;
             testForm.formKey = this.formKey;
             testForm.updateVersion = this.updateVersion;
             testForm.cohort = this.cohort;
@@ -144,6 +153,10 @@ public class TestForm {
         this.itsKey = itsKey;
     }
 
+    public void setSegmentId(final String segmentId) {
+        this.segmentId = segmentId;
+    }
+
     @Column(name = "_fk_adminsubject")
     public String getSegmentKey() {
         return segmentKey;
@@ -186,5 +199,10 @@ public class TestForm {
 
     public String getCohort() {
         return cohort;
+    }
+
+    @Transient
+    public String getSegmentId() {
+        return segmentId;
     }
 }

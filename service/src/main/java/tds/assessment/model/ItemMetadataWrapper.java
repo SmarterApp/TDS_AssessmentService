@@ -22,11 +22,11 @@ import tds.testpackage.model.Item;
  * A wrapper/helper class to enscapsulate various important pieces of metadata along with an item
  */
 public class ItemMetadataWrapper {
-    private Item item;
-    private String segmentKey;
-    private String groupId;
-    private boolean adaptive;
-    private List<Grade> grades;
+    private final Item item;
+    private final String segmentKey;
+    private final String groupId;
+    private final boolean adaptive;
+    private final List<Grade> grades;
 
     public ItemMetadataWrapper(final tds.testpackage.model.Item item, final List<Grade> grades, final String segmentKey, final String groupId,
                                final boolean adaptive) {

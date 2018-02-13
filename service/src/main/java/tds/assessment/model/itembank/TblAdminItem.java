@@ -22,9 +22,9 @@ import javax.persistence.Table;
  * A row representing a linking all items to their respective segments
  */
 @Entity
-@Table(name = "tblsetofadminitems", schema = "itembank")
+@Table(name = "tblsetofadminitems", catalog = "itembank")
 public class TblAdminItem {
-    private TblAdminItemIdentifier tblAdminItemIdentifier;
+    private TblAdminItemIdentity tblAdminItemIdentity;
     private String groupKey;
     private String groupId;
     private int itemPosition;
@@ -60,7 +60,7 @@ public class TblAdminItem {
     }
 
     public static final class Builder {
-        private TblAdminItemIdentifier tblAdminItemIdentifier;
+        private TblAdminItemIdentity tblAdminItemIdentity;
         private String groupId;
         private int itemPosition;
         private boolean fieldTest;
@@ -89,7 +89,7 @@ public class TblAdminItem {
         private float ftWeight;
 
         public Builder(String itemId, String segmentKey) {
-            this.tblAdminItemIdentifier = new TblAdminItemIdentifier(itemId, segmentKey);
+            this.tblAdminItemIdentity = new TblAdminItemIdentity(itemId, segmentKey);
         }
 
         public Builder withGroupId(String groupId) {
@@ -224,7 +224,7 @@ public class TblAdminItem {
 
         public TblAdminItem build() {
             TblAdminItem tblAdminItem = new TblAdminItem();
-            tblAdminItem.tblAdminItemIdentifier = this.tblAdminItemIdentifier;
+            tblAdminItem.tblAdminItemIdentity = this.tblAdminItemIdentity;
             tblAdminItem.updatedVersion = this.updatedVersion;
             tblAdminItem.irtA = this.irtA;
             tblAdminItem.irtC = this.irtC;
@@ -257,8 +257,8 @@ public class TblAdminItem {
     }
 
     @EmbeddedId
-    public TblAdminItemIdentifier getTblAdminItemIdentifier() {
-        return tblAdminItemIdentifier;
+    public TblAdminItemIdentity getTblAdminItemIdentity() {
+        return tblAdminItemIdentity;
     }
 
     @Column(name = "groupid")
@@ -397,8 +397,8 @@ public class TblAdminItem {
     }
 
     /* Note: NEVER USE THESE SETTERS - They are only for Hibernate compatibility - use the builder */
-    private void setTblAdminItemIdentifier(final TblAdminItemIdentifier tblAdminItemIdentifier) {
-        this.tblAdminItemIdentifier = tblAdminItemIdentifier;
+    private void setTblAdminItemIdentity(final TblAdminItemIdentity tblAdminItemIdentity) {
+        this.tblAdminItemIdentity = tblAdminItemIdentity;
     }
 
     private void setGroupId(final String groupId) {

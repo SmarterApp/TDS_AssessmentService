@@ -28,10 +28,9 @@ import java.util.Set;
 
 import tds.assessment.model.itembank.AffinityGroup;
 import tds.assessment.model.itembank.AffinityGroupItem;
-import tds.assessment.repositories.loader.AffinityGroupItemRepository;
-import tds.assessment.repositories.loader.AffinityGroupRepository;
+import tds.assessment.repositories.loader.itembank.AffinityGroupItemRepository;
+import tds.assessment.repositories.loader.itembank.AffinityGroupRepository;
 import tds.assessment.services.AffinityGroupLoaderService;
-import tds.testpackage.model.Item;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;

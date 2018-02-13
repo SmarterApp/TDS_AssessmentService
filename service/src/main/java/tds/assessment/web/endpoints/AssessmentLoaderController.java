@@ -42,8 +42,8 @@ public class AssessmentLoaderController {
     }
 
     @PostMapping(value = "/assessments/{testPackageName}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<NoContentResponseResource> createAssessment(@PathVariable final String testPackageName,
-                                                               @RequestBody final TestPackage testPackage) {
+    ResponseEntity<NoContentResponseResource> loadTestPackage(@PathVariable final String testPackageName,
+                                                              @RequestBody final TestPackage testPackage) {
         Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, testPackage);
 
         return maybeError

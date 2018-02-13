@@ -23,7 +23,7 @@ import java.util.UUID;
  * A parameter for adaptive algorithm and scoring related item measurements
  */
 @Entity
-@Table(name = "itemmeasurementparameter", schema = "itembank")
+@Table(name = "itemmeasurementparameter", catalog = "itembank")
 public class ItemMeasurementParameter {
     private ItemMeasurementParameterIdentity itemMeasurementParameterIdentity;
     private float parameterValue;

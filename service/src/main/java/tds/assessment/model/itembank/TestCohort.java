@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * A row representing a form cohort - used for linking certain forms to other forms during multi-segmented fixed-form assessments
  */
 @Entity
-@Table(name = "testcohort", schema = "itembank")
+@Table(name = "testcohort", catalog = "itembank")
 public class TestCohort {
     private static final float DEFAULT_ITEM_RATIO = 1.0F;
     private TestCohortIdentity testCohortIdentity;

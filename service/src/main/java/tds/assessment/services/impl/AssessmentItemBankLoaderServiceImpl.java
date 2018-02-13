@@ -13,190 +13,156 @@
 
 package tds.assessment.services.impl;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.assessment.model.itembank.Client;
-import tds.assessment.model.itembank.TblItem;
-import tds.assessment.model.itembank.TblStimulus;
 import tds.assessment.model.itembank.TblStrand;
-import tds.assessment.model.itembank.TblSubject;
-import tds.assessment.repositories.loader.TblItemRepository;
-import tds.assessment.repositories.loader.TblStimuliRepository;
-import tds.assessment.repositories.loader.TblStrandRepository;
-import tds.assessment.repositories.loader.TblSubjectRepository;
+import tds.assessment.model.itembank.TestForm;
+import tds.assessment.repositories.loader.itembank.ItemBankDataCommandRepository;
+import tds.assessment.repositories.loader.itembank.ItemBankDataQueryRepository;
+import tds.assessment.services.AffinityGroupLoaderService;
+import tds.assessment.services.AssessmentFormLoaderService;
+import tds.assessment.services.AssessmentItemBankGenericDataLoaderService;
 import tds.assessment.services.AssessmentItemBankLoaderService;
+import tds.assessment.services.AssessmentItemSelectionLoaderService;
+import tds.assessment.services.AssessmentItemStimuliLoaderService;
+import tds.assessment.services.AssessmentSegmentLoaderService;
 import tds.common.Algorithm;
-import tds.testpackage.model.BlueprintElement;
-import tds.testpackage.model.Item;
-import tds.testpackage.model.ItemGroup;
-import tds.testpackage.model.Stimulus;
 import tds.testpackage.model.TestPackage;
-
-import static tds.assessment.model.BlueprintElementTypes.CLAIM_AND_TARGET_TYPES;
 
 @Service
 public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLoaderService {
-    private final TblSubjectRepository tblSubjectRepository;
-    private final TblItemRepository tblItemRepository;
-    private final TblStimuliRepository tblStimuliRepository;
-    private final TblStrandRepository tblStrandRepository;
+    private final AssessmentItemBankGenericDataLoaderService assessmentItemBankGenericDataLoaderService;
+    private final AssessmentItemSelectionLoaderService assessmentItemSelectionLoaderService;
+    private final AssessmentItemStimuliLoaderService assessmentItemStimuliLoaderService;
+    private final AssessmentFormLoaderService assessmentFormLoaderService;
+    private final AssessmentSegmentLoaderService assessmentSegmentLoaderService;
+    private final AffinityGroupLoaderService affinityGroupLoaderService;
+    private final ItemBankDataQueryRepository itemBankDataQueryRepository;
+    private final ItemBankDataCommandRepository itemBankDataCommandRepository;
 
     @Autowired
-    public AssessmentItemBankLoaderServiceImpl(final TblSubjectRepository tblSubjectRepository,
-                                               final TblItemRepository tblItemRepository,
-                                               final TblStimuliRepository tblStimuliRepository,
-                                               final TblStrandRepository tblStrandRepository) {
-        this.tblSubjectRepository = tblSubjectRepository;
-        this.tblStimuliRepository = tblStimuliRepository;
-        this.tblItemRepository = tblItemRepository;
-        this.tblStrandRepository = tblStrandRepository;
-
+    public AssessmentItemBankLoaderServiceImpl(final AssessmentItemBankGenericDataLoaderService assessmentItemBankGenericDataLoaderService,
+                                               final AssessmentItemSelectionLoaderService assessmentItemSelectionLoaderService,
+                                               final AssessmentItemStimuliLoaderService assessmentItemStimuliLoaderService,
+                                               final AssessmentFormLoaderService assessmentFormLoaderService,
+                                               final AssessmentSegmentLoaderService assessmentSegmentLoaderService,
+                                               final AffinityGroupLoaderService affinityGroupLoaderService,
+                                               final ItemBankDataQueryRepository itemBankDataQueryRepository,
+                                               final ItemBankDataCommandRepository itemBankDataCommandRepository) {
+        this.assessmentItemBankGenericDataLoaderService = assessmentItemBankGenericDataLoaderService;
+        this.assessmentItemSelectionLoaderService = assessmentItemSelectionLoaderService;
+        this.assessmentItemStimuliLoaderService = assessmentItemStimuliLoaderService;
+        this.assessmentFormLoaderService = assessmentFormLoaderService;
+        this.assessmentSegmentLoaderService = assessmentSegmentLoaderService;
+        this.affinityGroupLoaderService = affinityGroupLoaderService;
+        this.itemBankDataQueryRepository = itemBankDataQueryRepository;
+        this.itemBankDataCommandRepository = itemBankDataCommandRepository;
     }
 
     @Override
-    public void loadSubject(final TestPackage testPackage, final Client client, final String subjectKey) {
-        final TblSubject tblSubject = new TblSubject(testPackage.getSubject(), subjectKey, client.getKey(), Long.parseLong(testPackage.getVersion()));
-        tblSubjectRepository.save(tblSubject);
+    public List<TestForm> loadTestPackage(final String testPackageName, final TestPackage testPackage) {
+        assessmentItemSelectionLoaderService.loadScoringSeedData();
+
+        //Find client if exists. If not, we need to create one
+        final Client client = itemBankDataQueryRepository.findClient(testPackage.getPublisher())
+            .orElseGet(() ->itemBankDataCommandRepository.insertClient(testPackage.getPublisher())); // Insert returns Client
+
+        final String subjectKey = client.getName() + '-' + testPackage.getSubject();
+        // Contains  all items and other item metadata specified in the test package
+        final Map<String, ItemMetadataWrapper> itemIdToItemMetadata = mapItemsToItemMetadata(testPackage);
+        final List<ItemMetadataWrapper> itemMetadata = Lists.newArrayList(itemIdToItemMetadata.values());
+
+        /* load_subject() */
+        assessmentItemBankGenericDataLoaderService.loadSubject(testPackage, client, subjectKey);
+
+        /* load_strands() */
+        final Map<String, TblStrand> keyToStrands = assessmentItemBankGenericDataLoaderService.loadStrands(testPackage.getBlueprint(), subjectKey, client, testPackage.getVersion());
+
+        /* load_stimulus() */
+        assessmentItemBankGenericDataLoaderService.loadTblStimuli(testPackage);
+
+        /* load_items() */
+        assessmentItemBankGenericDataLoaderService.loadTblItems(testPackage, itemMetadata);
+
+        /* load_linkitemtostrands() */
+        assessmentItemStimuliLoaderService.loadLinkItemsToStrands(itemMetadata, keyToStrands, Long.parseLong(testPackage.getVersion()));
+
+        /* load_linkitemstostimuli() */
+        assessmentItemStimuliLoaderService.loadLinkItemsToStimuli(testPackage);
+
+        /* load_itemproperties() */
+        //TODO: Revisit this once we get an answer from AIR as to whether other item properties need to be persisted
+        assessmentItemStimuliLoaderService.loadItemProperties(itemMetadata);
+
+        /* load_testadmin() */
+        assessmentSegmentLoaderService.loadTestAdmin(testPackage, client);
+
+        /* load_adminsubjects() */
+        assessmentSegmentLoaderService.loadAdminSubjects(testPackage, subjectKey);
+
+        /* load_testgrades() */
+        assessmentSegmentLoaderService.loadTestGrades(testPackage);
+
+        /* load_testcohorts() */
+        assessmentSegmentLoaderService.loadTestCohorts(testPackage);
+
+        /* load_itemselectionparm() */
+        assessmentItemSelectionLoaderService.loadItemSelectionParams(testPackage);
+
+        /* load_adminstrands() */
+        assessmentItemStimuliLoaderService.loadAdminStrands(testPackage, keyToStrands);
+
+        /* load_adminitems() */
+        assessmentItemStimuliLoaderService.loadAdminItems(testPackage, itemMetadata, keyToStrands);
+
+        /* load_adminitemmeasurementparms() */
+        assessmentItemSelectionLoaderService.loadAdminItemMeasurementParameters(itemIdToItemMetadata);
+
+        /* load_adminstimuli() */
+        assessmentItemStimuliLoaderService.loadAdminStimuli(testPackage);
+
+        /* load_adminforms() and load_adminformitems() */
+        List<TestForm> testForms = assessmentFormLoaderService.loadAdminForms(testPackage);
+
+        /* load_affinitygroups */
+        affinityGroupLoaderService.loadAffinityGroups(testPackage, itemMetadata);
+
+        return testForms;
     }
 
-    @Override
-    public void loadTblStimuli(final TestPackage testPackage) {
-        final int bankKey = testPackage.getBankKey();
-        final String version = testPackage.getVersion();
-        // Creates a flat list of all stimuli in the test package
-        List<TblStimulus> stimuli = testPackage.getAssessments().stream().flatMap(
+
+    private static Map<String, ItemMetadataWrapper> mapItemsToItemMetadata(final TestPackage testPackage) {
+        return testPackage.getAssessments().stream().flatMap(
             assessment -> assessment.getSegments().stream().flatMap(segment -> {
-                if (segment.getAlgorithmType().equalsIgnoreCase(Algorithm.FIXED_FORM.getType())) {
-                    return segment.segmentForms().stream()
-                        .flatMap(form -> form.itemGroups().stream()
-                            .filter(itemGroup -> itemGroup.getStimulus().isPresent())
-                            .map(ItemGroup::getStimulus)
-                            .map(stimulus -> mapStimuliToTblStimuli(bankKey, version, stimulus)));
-
-                } else if (segment.getAlgorithmType().contains("adaptive")) {
-                    return segment.pool().stream()
-                        .filter(itemGroup -> itemGroup.getStimulus().isPresent())
-                        .map(ItemGroup::getStimulus)
-                        .map(stimulus -> mapStimuliToTblStimuli(bankKey, version, stimulus));
-                } else {
-                    throw new TestPackageLoaderException("Unrecognized selection algorithm");
+                    if (segment.getAlgorithmType().equals(Algorithm.FIXED_FORM.getType())) {
+                        return segment.segmentForms().stream()
+                            .flatMap(form -> form.itemGroups().stream()
+                                .flatMap(itemGroup -> itemGroup.items().stream()
+                                    .map(item -> new ItemMetadataWrapper(item, assessment.getGrades(), segment.getKey(),
+                                        itemGroup.getKey(), false))
+                                )
+                            );
+                    } else if (segment.getAlgorithmType().contains("adaptive")) {
+                        return segment.pool().stream()
+                            .flatMap(itemGroup -> itemGroup.items().stream()
+                                .map(item -> new ItemMetadataWrapper(item, assessment.getGrades(), segment.getKey(),
+                                    itemGroup.getKey(), true))
+                            );
+                    } else {
+                        throw new TestPackageLoaderException("Unrecognized selection algorithm");
+                    }
                 }
-            })
-        ).collect(Collectors.toList());
-
-        tblStimuliRepository.save(stimuli);
-    }
-
-
-    @Override
-    public Map<String, TblStrand> loadStrands(final List<BlueprintElement> blueprintElements, final String subjectKey,
-                                              final Client client, final String version) {
-        final List<TblStrand> tblStrands = new ArrayList<>();
-        final int treeLevel = 1;
-        // Begin the recursive call with at the root level (with a null parentKey)
-        loadBlueprintElementsHelper(blueprintElements, tblStrands, client, null, subjectKey, version, treeLevel);
-        tblStrandRepository.save(tblStrands);
-
-        return tblStrands.stream()
-            .collect(Collectors.toMap(TblStrand::getName, Function.identity()));
-    }
-
-    @Override
-    public void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers) {
-        // We have the flat list of items - we simply need to map them to a "tblitem"
-        List<TblItem> items = itemMetadataWrappers.stream()
-            .map(itemWrapper -> mapItemToTblItem(testPackage.getBankKey(), testPackage.getVersion(), itemWrapper.getItem()))
-            .collect(Collectors.toList());
-
-        tblItemRepository.save(items);
-    }
-
-    private void loadBlueprintElementsHelper(final List<BlueprintElement> blueprintElements,
-                                                        final List<TblStrand> tblStrands,
-                                                        final Client client,
-                                                        final String parentKey,
-                                                        final String subjectKey,
-                                                        final String version,
-                                                        final int treeLevel) {
-        // Recursively create the TblStrands we will insert into the database
-        for (BlueprintElement bpElement : blueprintElements) {
-            // For claims and targets, the convention is to prepend the client name to the id
-            final String key = CLAIM_AND_TARGET_TYPES.contains(bpElement.getType())
-                ? client.getName() + '-' + bpElement.getId()
-                : bpElement.getId();
-
-            // Leaf node - Let's create the strand out of this blueprint element and add it to the list we will persist
-            if (bpElement.blueprintElements().size() == 0) {
-                TblStrand tblStrand = new TblStrand.Builder()
-                    .withName(bpElement.getId())
-                    .withParentKey(parentKey)
-                    .withKey(key)
-                    .withClientKey(client.getKey())
-                    .withTreeLevel(treeLevel)
-                    .withVersion(Long.parseLong(version))
-                    .withType(bpElement.getType())
-                    .withSubjectKey(subjectKey)
-                    // this is important - we want to flag this as a "leaf" target node for use later in the loading process
-                    .withLeafTarget(true)
-                    .build();
-                tblStrands.add(tblStrand);
-            } else {
-                TblStrand tblStrand = new TblStrand.Builder()
-                    .withName(bpElement.getId())
-                    .withParentKey(parentKey)
-                    .withKey(key)
-                    .withClientKey(client.getKey())
-                    .withTreeLevel(treeLevel)
-                    .withVersion(Long.parseLong(version))
-                    .withType(bpElement.getType())
-                    .withSubjectKey(subjectKey)
-                    .withLeafTarget(false)
-                    .build();
-                tblStrands.add(tblStrand);
-
-                // Recursively load each blueprint element
-                loadBlueprintElementsHelper(bpElement.blueprintElements(),
-                    tblStrands, client, key, subjectKey, version, treeLevel + 1);
-            }
-        }
-    }
-
-    private static TblItem mapItemToTblItem(final int bankKey, final String version, final Item item) {
-        final String fileName = String.format("item-%s-%s.xml", bankKey, item.getId());
-        final String filePath = String.format("item-%s-%s/", bankKey, item.getId());
-
-        return new TblItem.Builder()
-            .withId(Integer.parseInt(item.getId()))
-            .withItemType(item.getType())
-            .withBankKey(bankKey)
-            .withVersion(Long.parseLong(version))
-            .withScorePoints(item.getItemScoreDimension().getScorePoints())
-            .withFileName(fileName)
-            .withFilePath(filePath)
-            .build();
-    }
-
-    private static TblStimulus mapStimuliToTblStimuli(final int bankKey, final String version, final Optional<Stimulus> stimulus) {
-        final String fileName = String.format("stim-%s-%s.xml", bankKey, stimulus.get().getId());
-        final String filePath = String.format("stim-%s-%s/", bankKey, stimulus.get().getId());
-        return new TblStimulus.Builder()
-            .withKey(Integer.parseInt(stimulus.get().getId()))
-            .withBankKey(bankKey)
-            .withVersion(Long.parseLong(version))
-            .withFileName(fileName)
-            .withFilePath(filePath)
-            .build();
+            )).collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper));
     }
 }

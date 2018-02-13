@@ -19,7 +19,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tblsetofitemstimuli", schema = "itembank")
+@Table(name = "tblsetofitemstimuli", catalog = "itembank")
 public class TblSetOfItemStimulus {
     private TblSetOfItemStimulusIdentity tblSetOfItemStimulusIdentity;
     private Long version;

@@ -33,7 +33,7 @@ public class TestCohortIdentity implements Serializable {
     private TestCohortIdentity() {
     }
 
-    public TestCohortIdentity(final String segmentKey) {
+    TestCohortIdentity(final String segmentKey) {
         this.segmentKey = segmentKey;
         cohort = DEFAULT_COHORT;
     }

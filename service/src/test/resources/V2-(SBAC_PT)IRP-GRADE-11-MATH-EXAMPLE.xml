@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TestPackage xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:noNamespaceSchemaLocation="file:/Users/emunoz/Downloads/v2-test-package-schema/v2-test-package.xsd"
-             publisher="SBAC_PT" publishDate="2015-08-19T18:13:51.0" subject="MATH" type="summative" version="8185" bankKey="187" academicYear="2017-2018">
+<TestPackage publisher="SBAC_PT" publishDate="2015-08-19T18:13:51.0" subject="MATH" type="summative" version="8185" bankKey="187" academicYear="2017-2018">
     <Blueprint>
         <BlueprintElement id="SBAC-IRP-COMBINED-MATH-11" type="combined">
             <Scoring>
@@ -661,9 +658,7 @@
                     <ItemGroup id="1899">
                         <Item id="1899" type="EQ" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -680,9 +675,7 @@
                     <ItemGroup id="1915">
                         <Item id="1915" type="MI" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -698,9 +691,7 @@
                     <ItemGroup id="1916">
                         <Item id="1916" type="EQ" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -717,9 +708,7 @@
                     <ItemGroup id="1926">
                         <Item id="1926" type="MS" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -737,9 +726,7 @@
                     <ItemGroup id="1927">
                         <Item id="1927" type="TI" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -758,9 +745,7 @@
                     <ItemGroup id="1929">
                         <Item id="1929" type="EQ" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -777,9 +762,7 @@
                     <ItemGroup id="1930">
                         <Item id="1930" type="EQ" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -796,9 +779,7 @@
                     <ItemGroup id="1936">
                         <Item id="1936" type="MI" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -814,9 +795,7 @@
                     <ItemGroup id="1948">
                         <Item id="1948" type="GI" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -833,9 +812,7 @@
                     <ItemGroup id="1956">
                         <Item id="1956" type="MC" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -852,9 +829,7 @@
                     <ItemGroup id="1969">
                         <Item id="1969" type="GI" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -871,9 +846,7 @@
                     <ItemGroup id="1997">
                         <Item id="1997" type="MI" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -891,9 +864,7 @@
                     <ItemGroup id="1998">
                         <Item id="1998" type="MC" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -909,9 +880,7 @@
                     <ItemGroup id="1999">
                         <Item id="1999" type="EQ" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -928,9 +897,7 @@
                     <ItemGroup id="2005">
                         <Item id="2005" type="MC" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -946,9 +913,7 @@
                     <ItemGroup id="2006">
                         <Item id="2006" type="MS" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -965,9 +930,7 @@
                     <ItemGroup id="2029">
                         <Item id="2029" type="GI" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -984,9 +947,7 @@
                     <ItemGroup id="2032">
                         <Item id="2032" type="EQ" >
                             <Presentations>
-                                <Presentation>
-                                    ENU
-                                </Presentation>
+                                <Presentation code="ENU"/>
                             </Presentations>
                             <BlueprintReferences>
                                 <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -1048,13 +1009,13 @@
                 <SegmentForms>
                     <SegmentForm id="IRP::MathG11::Perf::SP15" cohort="Default">
                         <Presentations>
-                            <Presentation>ENU</Presentation>
+                            <Presentation code="ENU"/>
                         </Presentations>
                         <ItemGroup id="3688">
                             <Stimulus id="3688" />
-                            <Item id="1434" type="GI" position="1">
+                            <Item id="1434" type="GI">
                                 <Presentations>
-                                    <Presentation>ENU</Presentation>
+                                    <Presentation code="ENU"/>
                                 </Presentations>
                                 <BlueprintReferences>
                                     <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>
@@ -1066,9 +1027,9 @@
                                     <ItemScoreParameter measurementParameter="c" value="0.000000000000000e+000" />
                                 </ItemScoreDimension>
                             </Item>
-                            <Item id="1432" type="ER" position="2">
+                            <Item id="1432" type="ER">
                                 <Presentations>
-                                    <Presentation>ENU</Presentation>
+                                    <Presentation code="ENU"/>
                                 </Presentations>
                                 <BlueprintReferences>
                                     <BlueprintReference idRef="SBAC-IRP-CAT-MATH-11"/>

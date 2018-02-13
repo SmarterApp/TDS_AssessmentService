@@ -18,7 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "aa_itemcl", schema = "itembank")
+@Table(name = "aa_itemcl", catalog = "itembank")
 public class ItemContentLevel {
     private ItemContentLevelIdentity itemContentLevelIdentity;
 

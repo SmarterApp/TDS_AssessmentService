@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tblitem", schema = "itembank")
+@Table(name = "tblitem", catalog = "itembank")
 public class TblItem {
     private String key;
     private long id;

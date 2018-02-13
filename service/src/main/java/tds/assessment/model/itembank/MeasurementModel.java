@@ -18,38 +18,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import tds.assessment.repositories.ItemBankDataCommandRepository;
-import tds.assessment.repositories.ItemBankDataQueryRepository;
-import tds.assessment.repositories.loader.AffinityGroupItemRepository;
-import tds.assessment.repositories.loader.AffinityGroupRepository;
-import tds.assessment.repositories.loader.ItemContentLevelRepository;
-import tds.assessment.repositories.loader.ItemMeasurementParameterRepository;
-import tds.assessment.repositories.loader.ItemScoreDimensionsRepository;
-import tds.assessment.repositories.loader.MeasurementModelRepository;
-import tds.assessment.repositories.loader.MeasurementParameterRepository;
-import tds.assessment.repositories.loader.SetOfTestGradesRepository;
-import tds.assessment.repositories.loader.TblAdminStimuliRepository;
-import tds.assessment.repositories.loader.TblAdminStrandsRepository;
-import tds.assessment.repositories.loader.TblItemRepository;
-import tds.assessment.repositories.loader.TblItemSelectionParameterRepository;
-import tds.assessment.repositories.loader.TblSetOfAdminItemsRepository;
-import tds.assessment.repositories.loader.TblSetOfAdminSubjectsRepository;
-import tds.assessment.repositories.loader.TblSetOfItemStrandsRepository;
-import tds.assessment.repositories.loader.TblStimuliRepository;
-import tds.assessment.repositories.loader.TblStrandRepository;
-import tds.assessment.repositories.loader.TblSubjectRepository;
-import tds.assessment.repositories.loader.TblTestAdminRepository;
-import tds.assessment.repositories.loader.TestCohortRepository;
-import tds.assessment.repositories.loader.TestFormItemRepository;
-import tds.assessment.repositories.loader.TestFormRepository;
-
 /**
  * A row representing a scoring algorithm measurement model
  *
  * Note: As of 2/01/2018 - these models are provided via seed data, and are not part of the test package
  */
 @Entity
-@Table(name = "measurementmodel", schema = "itembank")
+@Table(name = "measurementmodel", catalog = "itembank")
 public class MeasurementModel {
     private int modelNumber;
     private String modelName;

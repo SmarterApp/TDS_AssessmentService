@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * A row representing an item in a {@link tds.assessment.model.itembank.TestForm}
  */
 @Entity
-@Table(name = "testformitem", schema = "itembank")
+@Table(name = "testformitem", catalog = "itembank")
 public class TestFormItem {
     private TestFormItemIdentity testFormItemIdentity;
     private long formItsKey;

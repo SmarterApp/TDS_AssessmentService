@@ -24,7 +24,7 @@ import javax.persistence.Table;
  * Note: As of 02/01/2018, these parameters are only provided via seed data
  */
 @Entity
-@Table(name = "measurementparameter", schema = "itembank")
+@Table(name = "measurementparameter", catalog = "itembank")
 public class MeasurementParameter {
     private MeasurementParameterIdentity measurementParameterIdentity;
     private String parameterName;

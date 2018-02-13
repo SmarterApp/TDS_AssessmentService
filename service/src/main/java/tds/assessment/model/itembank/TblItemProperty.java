@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * A row representing generic item metadata (not linked to any specific segment or assessment)
  */
 @Entity
-@Table(name = "tblitemprops", schema = "itembank")
+@Table(name = "tblitemprops", catalog = "itembank")
 public class TblItemProperty {
     private TblItemPropertyIdentity tblItemPropertyIdentity;
     private boolean active;

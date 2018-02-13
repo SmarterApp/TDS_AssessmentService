@@ -23,7 +23,7 @@ import java.util.UUID;
  * A row linking each assessment's grade levels. Assessments with multiple grades will result in multiple rows
  */
 @Entity
-@Table(name = "setoftestgrades", schema = "itembank")
+@Table(name = "setoftestgrades", catalog = "itembank")
 public class SetOfTestGrades {
     private UUID gradeKey;
     private String id;
@@ -32,7 +32,7 @@ public class SetOfTestGrades {
     private boolean requireEnrollment;
 
     /**
-     * Empty constructor for frameworks
+     * Private constructor for frameworks
      */
     private SetOfTestGrades() {
     }

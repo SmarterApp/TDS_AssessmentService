@@ -23,7 +23,7 @@ import javax.persistence.Table;
  * An object encapsulating client/publisher metadata
  */
 @Entity
-@Table(name = "tblclient", schema = "itembank")
+@Table(name = "tblclient", catalog = "itembank")
 public class Client {
     public static final String DEFAULT_HOME_PATH = "/usr/local/tomcat/resources/tds/";
     private long key;

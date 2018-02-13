@@ -23,14 +23,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
+import tds.assessment.model.configs.AssessmentFormProperties;
 import tds.assessment.model.itembank.TestForm;
 import tds.assessment.model.itembank.TestFormItem;
-import tds.assessment.repositories.ItemBankDataQueryRepository;
-import tds.assessment.repositories.loader.TestFormItemRepository;
-import tds.assessment.repositories.loader.TestFormRepository;
+import tds.assessment.repositories.loader.configs.AssessmentFormPropertiesRepository;
+import tds.assessment.repositories.loader.itembank.ItemBankDataQueryRepository;
+import tds.assessment.repositories.loader.itembank.TestFormItemRepository;
+import tds.assessment.repositories.loader.itembank.TestFormRepository;
 import tds.assessment.services.AssessmentFormLoaderService;
 
+import static io.github.benas.randombeans.api.EnhancedRandom.randomListOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,16 +51,22 @@ public class AssessmentFormLoaderServiceImplTest extends AssessmentLoaderService
     @Mock
     private ItemBankDataQueryRepository itemBankDataQueryRepository;
 
+    @Mock
+    private AssessmentFormPropertiesRepository assessmentFormPropertiesRepository;
+
     @Captor
     private ArgumentCaptor<List<TestForm>> testFormArgumentCaptor;
 
     @Captor
     private ArgumentCaptor<List<TestFormItem>> testFormItemsArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<List<AssessmentFormProperties>> assessmentFormPropertiesCaptor;
+
     @Before
     public void setup() {
         service = new AssessmentFormLoaderServiceImpl(testFormRepository, testFormItemRepository,
-            itemBankDataQueryRepository);
+            itemBankDataQueryRepository, assessmentFormPropertiesRepository);
     }
 
     @Test
@@ -89,5 +99,21 @@ public class AssessmentFormLoaderServiceImplTest extends AssessmentLoaderService
         assertThat(formItem.getTestFormItemIdentity().getItemPosition()).isEqualTo(1);
         assertThat(formItem.getTestFormItemIdentity().getFormKey()).isEqualTo("187-2112");
         assertThat(formItem.getTestFormItemIdentity().getItemId()).isEqualTo("187-1434");
+    }
+
+    @Test
+    public void shouldLoadAssessmentFormPropertiesSuccessfully() {
+        List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
+        service.loadAssessmentFormProperties(mockTestPackage, mockTestForms);
+        verify(assessmentFormPropertiesRepository).save(assessmentFormPropertiesCaptor.capture());
+        List<AssessmentFormProperties> savedAssessmentFormProperties = assessmentFormPropertiesCaptor.getValue();
+        assertThat(savedAssessmentFormProperties).hasSize(2);
+        AssessmentFormProperties savedFormProperties = savedAssessmentFormProperties.get(0);
+        assertThat(savedFormProperties.getFormId()).isEqualTo(mockTestForms.get(0).getFormId());
+        assertThat(savedFormProperties.getSegmentId()).isEqualTo(mockTestForms.get(0).getSegmentId());
+        assertThat(savedFormProperties.getSegmentKey()).isEqualTo(mockTestForms.get(0).getSegmentKey());
+        assertThat(savedFormProperties.getLanguageCode()).isEqualTo(mockTestForms.get(0).getLanguage());
+        assertThat(savedFormProperties.getAssessmentFormPropertiesIdentity().getClientName()).isEqualTo(mockTestPackage.getPublisher());
+        assertThat(savedFormProperties.getAssessmentFormPropertiesIdentity().getFormKey()).isEqualTo(mockTestForms.get(0).getFormKey());
     }
 }

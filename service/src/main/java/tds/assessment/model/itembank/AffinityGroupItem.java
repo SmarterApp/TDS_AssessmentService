@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * An item belonging to a specific {@link tds.assessment.model.itembank.AffinityGroup}
  */
 @Entity
-@Table(name = "affinitygroupitem", schema = "itembank")
+@Table(name = "affinitygroupitem", catalog = "itembank")
 public class AffinityGroupItem {
     private AffinityGroupItemIdentity affinityGroupItemIdentity;
 
@@ -32,8 +32,8 @@ public class AffinityGroupItem {
     private AffinityGroupItem() {
     }
 
-    public AffinityGroupItem(final AffinityGroupItemIdentity affinityGroupItemIdentity) {
-        this.affinityGroupItemIdentity = affinityGroupItemIdentity;
+    public AffinityGroupItem(final String segmentKey, final String affinityGroupId, final String itemId) {
+        this.affinityGroupItemIdentity = new AffinityGroupItemIdentity(segmentKey, affinityGroupId, itemId);
     }
 
     public void setAffinityGroupItemIdentity(final AffinityGroupItemIdentity affinityGroupItemIdentity) {

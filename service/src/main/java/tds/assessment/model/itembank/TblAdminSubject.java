@@ -23,7 +23,7 @@ import javax.persistence.Table;
  * (where n = the number of segments) rows, as the other row will represent a "virtual" assessment
  */
 @Entity
-@Table(name = "tblsetofadminsubjects", schema = "itembank")
+@Table(name = "tblsetofadminsubjects", catalog = "itembank")
 public class TblAdminSubject {
     private String key;
     private String clientName;

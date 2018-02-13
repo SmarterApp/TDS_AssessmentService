@@ -23,7 +23,7 @@ import javax.persistence.Table;
  * A representation of an "affinity group" blueprint element present in a test package
  */
 @Entity
-@Table(name = "affinitygroup", schema = "itembank")
+@Table(name = "affinitygroup", catalog = "itembank")
 public class AffinityGroup {
     private AffinityGroupIdentity affinityGroupId;
     private int minItems;

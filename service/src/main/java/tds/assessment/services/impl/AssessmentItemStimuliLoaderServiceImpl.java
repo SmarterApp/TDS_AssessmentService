@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,13 +34,13 @@ import tds.assessment.model.itembank.TblItemProperty;
 import tds.assessment.model.itembank.TblSetOfItemStimulus;
 import tds.assessment.model.itembank.TblSetOfItemStrand;
 import tds.assessment.model.itembank.TblStrand;
-import tds.assessment.repositories.loader.ItemContentLevelRepository;
-import tds.assessment.repositories.loader.TblAdminStimuliRepository;
-import tds.assessment.repositories.loader.TblAdminStrandsRepository;
-import tds.assessment.repositories.loader.TblItemPropertiesRepository;
-import tds.assessment.repositories.loader.TblSetOfAdminItemsRepository;
-import tds.assessment.repositories.loader.TblSetOfItemStimuliRepository;
-import tds.assessment.repositories.loader.TblSetOfItemStrandsRepository;
+import tds.assessment.repositories.loader.itembank.ItemContentLevelRepository;
+import tds.assessment.repositories.loader.itembank.TblAdminStimuliRepository;
+import tds.assessment.repositories.loader.itembank.TblAdminStrandsRepository;
+import tds.assessment.repositories.loader.itembank.TblItemPropertiesRepository;
+import tds.assessment.repositories.loader.itembank.TblSetOfAdminItemsRepository;
+import tds.assessment.repositories.loader.itembank.TblSetOfItemStimuliRepository;
+import tds.assessment.repositories.loader.itembank.TblSetOfItemStrandsRepository;
 import tds.assessment.services.AssessmentItemStimuliLoaderService;
 import tds.common.Algorithm;
 import tds.testpackage.model.BlueprintReference;
@@ -54,9 +53,7 @@ import static tds.assessment.model.BlueprintElementTypes.AFFINITY_GROUP;
 import static tds.assessment.model.BlueprintElementTypes.CLAIM;
 import static tds.assessment.model.BlueprintElementTypes.CLAIM_AND_TARGET_TYPES;
 import static tds.assessment.model.BlueprintElementTypes.CLAIM_TYPES;
-import static tds.assessment.model.BlueprintElementTypes.CONTENT_LEVEL;
 import static tds.assessment.model.BlueprintElementTypes.STRAND;
-import static tds.assessment.model.BlueprintElementTypes.TARGET;
 import static tds.assessment.model.BlueprintElementTypes.TARGET_TYPES;
 import static tds.assessment.model.itembank.TestCohortIdentity.DEFAULT_COHORT;
 
@@ -105,7 +102,7 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
 
             item.getPresentations().forEach(lang ->
                 // Add Language properties
-                itemProperties.add(new TblItemProperty(item.getKey(), LANGUAGE_PROP_NAME, lang, wrapper.getSegmentKey())));
+                itemProperties.add(new TblItemProperty(item.getKey(), LANGUAGE_PROP_NAME, lang.getCode(), wrapper.getSegmentKey())));
 
             wrapper.getGrades().forEach(grade ->
                 // Add Grade properties

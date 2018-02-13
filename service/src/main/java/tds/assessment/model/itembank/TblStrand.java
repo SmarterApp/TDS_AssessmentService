@@ -23,7 +23,7 @@ import javax.persistence.Transient;
  * A row representing a many-to-many link between "strands" and segments
  */
 @Entity
-@Table(name = "tblstrand", schema = "itembank")
+@Table(name = "tblstrand", catalog = "itembank")
 public class TblStrand {
     private String subjectKey;
     private String name;

@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * A row representing a subject, with a link to its client/publisher
  */
 @Entity
-@Table(name = "tblsubject", schema = "itembank")
+@Table(name = "tblsubject", catalog = "itembank")
 public class TblSubject {
     private String name;
     private String key;

@@ -35,7 +35,7 @@ public class TblSetOfItemStrandIdentity implements Serializable {
     private TblSetOfItemStrandIdentity() {
     }
 
-    public TblSetOfItemStrandIdentity(final String itemId, final String strandKey, final String segmentKey) {
+    TblSetOfItemStrandIdentity(final String itemId, final String strandKey, final String segmentKey) {
         this.itemId = itemId;
         this.strandKey = strandKey;
         this.segmentKey = segmentKey;

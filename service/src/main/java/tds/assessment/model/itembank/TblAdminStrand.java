@@ -23,7 +23,7 @@ import javax.persistence.Table;
  * to one-to-many specific segments
  */
 @Entity
-@Table(name = "tbladminstrand", schema = "itembank")
+@Table(name = "tbladminstrand", catalog = "itembank")
 public class TblAdminStrand {
     private String key;
     private String segmentKey;

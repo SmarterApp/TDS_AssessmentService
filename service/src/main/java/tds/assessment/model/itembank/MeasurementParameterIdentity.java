@@ -32,7 +32,7 @@ public class MeasurementParameterIdentity implements Serializable {
     private MeasurementParameterIdentity() {
     }
 
-    public MeasurementParameterIdentity(final int measurementModelKey, final int parameterNumber) {
+    MeasurementParameterIdentity(final int measurementModelKey, final int parameterNumber) {
         this.measurementModelKey = measurementModelKey;
         this.parameterNumber = parameterNumber;
     }

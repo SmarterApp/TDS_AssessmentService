@@ -28,7 +28,7 @@ public class TblSetOfItemStimulusIdentity implements Serializable {
      */
     private TblSetOfItemStimulusIdentity() {}
 
-    public TblSetOfItemStimulusIdentity(final String itemKey, final String stimulusKey, final String segmentKey) {
+    TblSetOfItemStimulusIdentity(final String itemKey, final String stimulusKey, final String segmentKey) {
         this.itemKey = itemKey;
         this.stimulusKey = stimulusKey;
         this.segmentKey = segmentKey;

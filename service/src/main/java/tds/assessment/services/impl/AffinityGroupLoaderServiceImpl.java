@@ -25,8 +25,8 @@ import tds.assessment.model.ItemMetadataWrapper;
 import tds.assessment.model.itembank.AffinityGroup;
 import tds.assessment.model.itembank.AffinityGroupItem;
 import tds.assessment.model.itembank.AffinityGroupItemIdentity;
-import tds.assessment.repositories.loader.AffinityGroupItemRepository;
-import tds.assessment.repositories.loader.AffinityGroupRepository;
+import tds.assessment.repositories.loader.itembank.AffinityGroupItemRepository;
+import tds.assessment.repositories.loader.itembank.AffinityGroupRepository;
 import tds.assessment.services.AffinityGroupLoaderService;
 import tds.testpackage.model.BlueprintElement;
 import tds.testpackage.model.Property;
@@ -104,8 +104,7 @@ public class AffinityGroupLoaderServiceImpl implements AffinityGroupLoaderServic
         List<AffinityGroupItem> affinityGroupItems = itemMetadataWrappers.stream()
             .flatMap(wrapper -> wrapper.getItem().getBlueprintReferences().stream()
                 .filter(ref -> affinityGroupBpElements.containsKey(ref.getIdRef()))
-                .map(ref -> new AffinityGroupItem(
-                    new AffinityGroupItemIdentity(wrapper.getSegmentKey(), ref.getIdRef(), wrapper.getItem().getKey())))
+                .map(ref -> new AffinityGroupItem(wrapper.getSegmentKey(), ref.getIdRef(), wrapper.getItem().getKey()))
             )
             .collect(Collectors.toList());
 
