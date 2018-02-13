@@ -29,7 +29,6 @@ import tds.assessment.repositories.loader.configs.ToolTypeRepository;
 import tds.assessment.services.AssessmentToolConfigService;
 import tds.testpackage.model.TestPackage;
 
-import static tds.assessment.services.TestToolDefaultsHelper.TOOL_DEFAULTS_MAP;
 import static tds.assessment.services.TestToolDefaultsHelper.TOOL_OPTION_DEFAULTS_MAP;
 
 @Service
@@ -53,45 +52,43 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
         // First, load the assessment tool types
         List<ToolType> toolTypes = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getTools().stream()
-                .map(tool ->
-                    new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName())
-                        .withArtFieldName(TOOL_DEFAULTS_MAP.get(tool.getName()).getArtFieldName())
-                        .withAllowChange(tool.getAllowChange().isPresent()
-                            ? Boolean.parseBoolean(tool.getAllowChange().get())
-                            : TOOL_DEFAULTS_MAP.get(tool.getName()).isAllowChange())
-                        .withDateEntered(new Timestamp(System.currentTimeMillis()))
-                        .withDependsOnToolType(TOOL_DEFAULTS_MAP.get(tool.getName()).getDependsOnToolType())
-                        .withAllowChange(TOOL_DEFAULTS_MAP.get(tool.getName()).isAllowChange())
-                        .withFunctional(TOOL_DEFAULTS_MAP.get(tool.getName()).isFunctional())
-                        .withRequired(TOOL_DEFAULTS_MAP.get(tool.getName()).isRequired())
-                        .withSelectable(TOOL_DEFAULTS_MAP.get(tool.getName()).isSelectable())
-                        .withSortOrder(tool.getSortOrder().isPresent() ? tool.getSortOrder().get() : 0)
-                        .withStudentControlled(TOOL_DEFAULTS_MAP.get(tool.getName()).isStudentControl())
-                        .withVisible(TOOL_DEFAULTS_MAP.get(tool.getName()).isVisible())
-                        .build()
-                )
+                    .map(tool ->
+                            new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName())
+                                .withArtFieldName(tool.getStudentPackageFieldName())
+                                .withAllowChange(tool.allowChange())
+                                .withDateEntered(new Timestamp(System.currentTimeMillis()))
+                                // TODO: Uncomment this once Tool has been updated with these new flags
+//                        .withStudentControlled(tool.studentControlled())
+//                        .withVisible(tool.visible())
+//                        .withDependsOnToolType(tool.dependsOnToolType())
+//                        .withFunctional(tool.functional())
+//                        .withSelectable(tool.selectable())
+                                .withRequired(tool.required())
+                                .withSortOrder(tool.getSortOrder().isPresent() ? tool.getSortOrder().get() : 0)
+                                .build()
+                    )
             )
             .collect(Collectors.toList());
         // Segment tool types
         List<ToolType> segmentToolTypes = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
-                .flatMap(segment -> segment.tools().stream()
-                    .map(tool ->
-                        new ToolType.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName())
-                            .withArtFieldName(TOOL_DEFAULTS_MAP.get(tool.getName()).getArtFieldName())
-                            .withAllowChange(TOOL_DEFAULTS_MAP.get(tool.getName()).isAllowChange())
-                            .withDateEntered(new Timestamp(System.currentTimeMillis()))
-                            .withDependsOnToolType(TOOL_DEFAULTS_MAP.get(tool.getName()).getDependsOnToolType())
-                            .withAllowChange(TOOL_DEFAULTS_MAP.get(tool.getName()).isAllowChange())
-                            .withFunctional(TOOL_DEFAULTS_MAP.get(tool.getName()).isFunctional())
-                            .withRequired(TOOL_DEFAULTS_MAP.get(tool.getName()).isRequired())
-                            .withSelectable(TOOL_DEFAULTS_MAP.get(tool.getName()).isSelectable())
-                            .withSortOrder(tool.getSortOrder().isPresent() ? tool.getSortOrder().get() : 0)
-                            .withStudentControlled(TOOL_DEFAULTS_MAP.get(tool.getName()).isStudentControl())
-                            .withVisible(TOOL_DEFAULTS_MAP.get(tool.getName()).isVisible())
-                            .build()
+                    .flatMap(segment -> segment.tools().stream()
+                            .map(tool ->
+                                    new ToolType.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName())
+                                        .withArtFieldName(tool.getStudentPackageFieldName())
+                                        .withAllowChange(tool.allowChange())
+                                        .withDateEntered(new Timestamp(System.currentTimeMillis()))
+                                        // TODO: Uncomment this once Tool has been updated with these new flags
+//                            .withStudentControlled(tool.studentControlled())
+//                            .withVisible(tool.visible())
+//                            .withDependsOnToolType(tool.dependsOnToolType())
+//                            .withFunctional(tool.functional())
+//                            .withSelectable(tool.selectable())
+                                        .withRequired(tool.required())
+                                        .withSortOrder(tool.getSortOrder().isPresent() ? tool.getSortOrder().get() : 0)
+                                        .build()
+                            )
                     )
-                )
             )
             .collect(Collectors.toList());
 
@@ -106,8 +103,8 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                         new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName(), option.getCode())
                             .withDefaultValue(option.defaultValue())
                             .withSortOrder(option.getSortOrder())
-                            // TODO: Update these to take overrides instead of defaults if the optional attributes are present
-                            .withAllowCombine(TOOL_DEFAULTS_MAP.get(tool.getName()).isAllowMultipleOptions()) // The "right" on the Tuple is the allowCombine flag
+                            // TODO: Uncomment this once Tool has been updated with these new flags
+                            ////                                .withAllowCombine(tool.allowMultipleOptions())
                             .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
                             .build()
                     )
@@ -117,19 +114,19 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
         // Segment tool options
         List<Tool> segmentTools = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
-                .flatMap(segment -> segment.tools().stream()
-                    .flatMap(tool -> tool.getOptions().stream()
-                        .map(option ->
-                            new Tool.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName(), option.getCode())
-                                .withDefaultValue(option.defaultValue())
-                                .withSortOrder(option.getSortOrder())
-                                // TODO: Update these to take overrides instead of defaults if the optional attributes are present
-                                .withAllowCombine(TOOL_DEFAULTS_MAP.get(tool.getName()).isAllowMultipleOptions()) // The "right" on the Tuple is the allowCombine flag
-                                .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
-                                .build()
-                        )
-                    ))
-                )
+                    .flatMap(segment -> segment.tools().stream()
+                        .flatMap(tool -> tool.getOptions().stream()
+                                .map(option ->
+                                        new Tool.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName(), option.getCode())
+                                            .withDefaultValue(option.defaultValue())
+                                            .withSortOrder(option.getSortOrder())
+                                            // TODO: Uncomment this once Tool has been updated with these new flags
+//                                .withAllowCombine(tool.allowMultipleOptions())
+                                            .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
+                                            .build()
+                                )
+                        ))
+            )
             .collect(Collectors.toList());
 
         tools.addAll(segmentTools);
@@ -174,7 +171,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                             )
                         )
                     ))
-                )
+            )
             .collect(Collectors.toList());
 
         toolDependencies.addAll(segmentToolDependencies);
