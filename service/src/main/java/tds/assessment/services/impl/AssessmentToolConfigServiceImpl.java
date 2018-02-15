@@ -54,15 +54,14 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
             .flatMap(assessment -> assessment.getTools().stream()
                     .map(tool ->
                             new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName())
-                                .withArtFieldName(tool.getStudentPackageFieldName())
+                                .withArtFieldName(tool.studentPackageFieldName())
                                 .withAllowChange(tool.allowChange())
                                 .withDateEntered(new Timestamp(System.currentTimeMillis()))
-                                // TODO: Uncomment this once Tool has been updated with these new flags
-//                        .withStudentControlled(tool.studentControlled())
-//                        .withVisible(tool.visible())
-//                        .withDependsOnToolType(tool.dependsOnToolType())
-//                        .withFunctional(tool.functional())
-//                        .withSelectable(tool.selectable())
+                                .withStudentControlled(tool.studentControl())
+                                .withVisible(tool.visible())
+                                .withDependsOnToolType(tool.dependsOnToolType().isPresent() ? tool.dependsOnToolType().get() : null)
+                                .withFunctional(tool.functional())
+                                .withSelectable(tool.selectable())
                                 .withRequired(tool.required())
                                 .withSortOrder(tool.getSortOrder().isPresent() ? tool.getSortOrder().get() : 0)
                                 .build()
@@ -75,15 +74,14 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                     .flatMap(segment -> segment.tools().stream()
                             .map(tool ->
                                     new ToolType.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName())
-                                        .withArtFieldName(tool.getStudentPackageFieldName())
+                                        .withArtFieldName(tool.studentPackageFieldName())
                                         .withAllowChange(tool.allowChange())
                                         .withDateEntered(new Timestamp(System.currentTimeMillis()))
-                                        // TODO: Uncomment this once Tool has been updated with these new flags
-//                            .withStudentControlled(tool.studentControlled())
-//                            .withVisible(tool.visible())
-//                            .withDependsOnToolType(tool.dependsOnToolType())
-//                            .withFunctional(tool.functional())
-//                            .withSelectable(tool.selectable())
+                                        .withStudentControlled(tool.studentControl())
+                                        .withVisible(tool.visible())
+                                        .withDependsOnToolType(tool.dependsOnToolType().isPresent() ? tool.dependsOnToolType().get() : null)
+                                        .withFunctional(tool.functional())
+                                        .withSelectable(tool.selectable())
                                         .withRequired(tool.required())
                                         .withSortOrder(tool.getSortOrder().isPresent() ? tool.getSortOrder().get() : 0)
                                         .build()
@@ -98,13 +96,12 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
         // Assessment tool options
         List<Tool> tools = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getTools().stream()
-                .flatMap(tool -> tool.getOptions().stream()
+                .flatMap(tool -> tool.options().stream()
                     .map(option ->
                         new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName(), option.getCode())
                             .withDefaultValue(option.defaultValue())
                             .withSortOrder(option.getSortOrder())
-                            // TODO: Uncomment this once Tool has been updated with these new flags
-                            ////                                .withAllowCombine(tool.allowMultipleOptions())
+                            .withAllowCombine(tool.allowMultipleOptions())
                             .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
                             .build()
                     )
@@ -115,13 +112,12 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
         List<Tool> segmentTools = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                     .flatMap(segment -> segment.tools().stream()
-                        .flatMap(tool -> tool.getOptions().stream()
+                        .flatMap(tool -> tool.options().stream()
                                 .map(option ->
                                         new Tool.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName(), option.getCode())
                                             .withDefaultValue(option.defaultValue())
                                             .withSortOrder(option.getSortOrder())
-                                            // TODO: Uncomment this once Tool has been updated with these new flags
-//                                .withAllowCombine(tool.allowMultipleOptions())
+                                            .withAllowCombine(tool.allowMultipleOptions())
                                             .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
                                             .build()
                                 )
@@ -135,7 +131,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
         // Assessment tool dependencies
         List<ToolDependency> toolDependencies = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getTools().stream()
-                .flatMap(tool -> tool.getOptions().stream()
+                .flatMap(tool -> tool.options().stream()
                     .flatMap(option -> option.dependencies().stream()
                         .map(dependency -> new ToolDependency.Builder()
                             .withClientName(testPackage.getPublisher())
@@ -156,7 +152,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
         List<ToolDependency> segmentToolDependencies = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                 .flatMap(segment -> segment.tools().stream()
-                    .flatMap(tool -> tool.getOptions().stream()
+                    .flatMap(tool -> tool.options().stream()
                         .flatMap(option -> option.dependencies().stream()
                             .map(dependency -> new ToolDependency.Builder()
                                 .withClientName(testPackage.getPublisher())
