@@ -13,8 +13,15 @@
 
 package tds.assessment.configuration;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import tds.common.configuration.CacheConfiguration;
 import tds.common.configuration.DataSourceConfiguration;
@@ -34,5 +41,14 @@ import tds.common.web.advice.ExceptionAdvice;
     SecurityConfiguration.class,
     EventLoggerConfiguration.class,
 })
+@EnableTransactionManagement
 public class AssessmentServiceApplicationConfiguration {
+    @Bean("testPackageMapper")
+    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
+        builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        builder.modules(new Jdk8Module(), new JavaTimeModule());
+        return builder;
+    }
 }

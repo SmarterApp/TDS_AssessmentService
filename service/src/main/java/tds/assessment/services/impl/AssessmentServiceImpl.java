@@ -39,6 +39,7 @@ import tds.assessment.repositories.GradesQueryRepository;
 import tds.assessment.repositories.ItemGroupQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
+import tds.assessment.services.AssessmentConfigLoaderService;
 import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
 import tds.common.cache.CacheType;
