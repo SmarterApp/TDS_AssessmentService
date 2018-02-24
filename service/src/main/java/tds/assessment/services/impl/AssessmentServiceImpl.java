@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -117,10 +118,12 @@ class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     @Transactional
-    public void removeAssessment(final String clientName, final String key) {
-        final Assessment assessment = findAssessment(clientName, key)
-            .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
+    public void removeAssessment(final String clientName, final String... keys) {
+        Arrays.asList(keys).forEach(key -> {
+            final Assessment assessment = findAssessment(clientName, key)
+                .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
 
-        assessmentCommandRepository.removeAssessmentData(clientName, assessment);
+            assessmentCommandRepository.removeAssessmentData(clientName, assessment);
+        });
     }
 }

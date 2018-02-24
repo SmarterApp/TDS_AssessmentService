@@ -42,10 +42,10 @@ public interface AssessmentService {
     Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey);
 
     /**
-     * Deletes an {@link tds.assessment.Assessment} with the specified key and client name
+     * Deletes one or more {@link tds.assessment.Assessment} with the specified key(s) and client name
      *
      * @param clientName the client environment identifier
-     * @param key        the key of the {@link tds.assessment.Assessment}
+     * @param keys        the keys of the {@link tds.assessment.Assessment}
      */
-    void removeAssessment(final String clientName, final String key);
+    void removeAssessment(final String clientName, final String... keys);
 }

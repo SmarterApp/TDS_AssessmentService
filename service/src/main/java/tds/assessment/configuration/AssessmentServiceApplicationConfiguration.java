@@ -30,6 +30,7 @@ import tds.common.configuration.JacksonObjectMapperConfiguration;
 import tds.common.configuration.RedisClusterConfiguration;
 import tds.common.configuration.SecurityConfiguration;
 import tds.common.web.advice.ExceptionAdvice;
+import tds.support.tool.TestPackageObjectMapperConfiguration;
 
 @Configuration
 @Import({
@@ -40,15 +41,8 @@ import tds.common.web.advice.ExceptionAdvice;
     CacheConfiguration.class,
     SecurityConfiguration.class,
     EventLoggerConfiguration.class,
+    TestPackageObjectMapperConfiguration.class
 })
 @EnableTransactionManagement
 public class AssessmentServiceApplicationConfiguration {
-    @Bean("testPackageMapper")
-    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
-        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-        builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
-        builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        builder.modules(new Jdk8Module(), new JavaTimeModule());
-        return builder;
-    }
 }
