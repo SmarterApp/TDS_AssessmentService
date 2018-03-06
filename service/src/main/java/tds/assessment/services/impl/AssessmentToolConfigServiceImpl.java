@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.configs.Tool;
 import tds.assessment.model.configs.ToolDependency;
 import tds.assessment.model.configs.ToolType;
@@ -27,6 +29,8 @@ import tds.assessment.repositories.loader.configs.ToolDependenciesRepository;
 import tds.assessment.repositories.loader.configs.ToolRepository;
 import tds.assessment.repositories.loader.configs.ToolTypeRepository;
 import tds.assessment.services.AssessmentToolConfigService;
+import tds.common.Algorithm;
+import tds.testpackage.model.Presentation;
 import tds.testpackage.model.TestPackage;
 
 import static tds.assessment.services.TestToolDefaultsHelper.TOOL_OPTION_DEFAULTS_MAP;
@@ -49,8 +53,41 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
 
     @Override
     public void loadTools(final TestPackage testPackage) {
-        // First, load the assessment tool types
+        // LanguageCode -> Label
+        Map<String, String> languages = testPackage.getAssessments().stream()
+            .flatMap(assessment -> assessment.getSegments().stream()
+                .flatMap(segment -> {
+                    if (segment.getAlgorithmType().equalsIgnoreCase(Algorithm.FIXED_FORM.getType())) {
+                        return segment.segmentForms().stream()
+                            .flatMap(form -> form.itemGroups().stream()
+                                .flatMap(itemGroup -> itemGroup.items().stream()
+                                    .flatMap(item -> item.getPresentations().stream())
+                                )
+                            );
+                    } else if (segment.getAlgorithmType().contains("adaptive")) {
+                        return segment.pool().stream()
+                            .flatMap(itemGroup -> itemGroup.items().stream()
+                                .flatMap(item -> item.getPresentations().stream())
+                            );
+                    } else {
+                        throw new TestPackageLoaderException("Unrecognized selection algorithm");
+                    }
+                })
+            ).collect(Collectors.toMap(Presentation::getCode, Presentation::label, (v1, v2) -> v1)); // ignore duplicates
+
+        // Load the Language tooltype
         List<ToolType> toolTypes = testPackage.getAssessments().stream()
+            .map(assessment -> new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, "Language")
+                .withArtFieldName("TDSAcc-Language")
+                .withRequired(true)
+                .withSelectable(true)
+                .withVisible(true)
+                .withFunctional(true)
+                .build()
+        ).collect(Collectors.toList());
+
+        // Second, load the assessment tool types
+        toolTypes.addAll(testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getTools().stream()
                     .map(tool ->
                             new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName())
@@ -67,7 +104,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                                 .build()
                     )
             )
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
         // Segment tool types
         List<ToolType> segmentToolTypes = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
@@ -127,6 +164,19 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
 
         tools.addAll(segmentTools);
         toolRepository.save(tools);
+
+        // Language tools
+        testPackage.getAssessments().forEach(assessment ->
+            languages.entrySet().forEach(entry ->
+                tools.add(
+                    new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, "Language", entry.getKey())
+                        .withValue(entry.getValue())
+                        .withDefaultValue(entry.getKey().equalsIgnoreCase("ENU"))
+                        .withSortOrder(1)
+                        .build()
+                )
+            )
+        );
 
         // Assessment tool dependencies
         List<ToolDependency> toolDependencies = testPackage.getAssessments().stream()

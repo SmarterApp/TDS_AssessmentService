@@ -20,23 +20,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.ItemMetadataWrapper;
-import tds.assessment.model.itembank.ItemScoreDimension;
 import tds.common.Algorithm;
-import tds.testpackage.model.BlueprintReference;
-import tds.testpackage.model.Grade;
-import tds.testpackage.model.Item;
-import tds.testpackage.model.ItemGroup;
-import tds.testpackage.model.ItemScoreParameter;
 import tds.testpackage.model.TestPackage;
 
 public class AssessmentLoaderServiceBaseTest {
