@@ -40,8 +40,7 @@ import tds.support.tool.TestPackageObjectMapperConfiguration;
     RedisClusterConfiguration.class,
     CacheConfiguration.class,
     SecurityConfiguration.class,
-    EventLoggerConfiguration.class,
-    TestPackageObjectMapperConfiguration.class
+    EventLoggerConfiguration.class
 })
 @EnableTransactionManagement
 public class AssessmentServiceApplicationConfiguration {
