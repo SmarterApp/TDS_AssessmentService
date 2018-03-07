@@ -190,7 +190,7 @@ public class AssessmentItemBankGenericDataLoaderServiceImpl implements Assessmen
     private static TblStimulus mapStimuliToTblStimuli(final int bankKey, final String version, final Optional<Stimulus> stimulus) {
         final String fileName = String.format("stim-%s-%s.xml", bankKey, stimulus.get().getId());
         //TODO: Make this path pattern configurable
-        final String filePath = String.format("Stim-%s-%s/", bankKey, stimulus.get().getId());
+        final String filePath = String.format("stim-%s-%s/", bankKey, stimulus.get().getId());
         return new TblStimulus.Builder()
             .withKey(Integer.parseInt(stimulus.get().getId()))
             .withBankKey(bankKey)

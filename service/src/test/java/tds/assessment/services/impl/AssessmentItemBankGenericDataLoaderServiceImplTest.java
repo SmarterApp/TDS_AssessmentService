@@ -133,7 +133,7 @@ public class AssessmentItemBankGenericDataLoaderServiceImplTest extends Assessme
         assertThat(retTblStimulus.getBankKey()).isEqualTo(187);
         assertThat(retTblStimulus.getKey()).isEqualTo(3688);
         assertThat(retTblStimulus.getId()).isEqualTo("187-3688");
-        assertThat(retTblStimulus.getFilePath()).isEqualTo("Stim-187-3688/");
+        assertThat(retTblStimulus.getFilePath()).isEqualTo("stim-187-3688/");
         assertThat(retTblStimulus.getFileName()).isEqualTo("stim-187-3688.xml");
         assertThat(retTblStimulus.getVersion()).isEqualTo(Long.parseLong(mockTestPackage.getVersion()));
     }
