@@ -82,6 +82,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                 .withRequired(true)
                 .withSelectable(true)
                 .withVisible(true)
+                .withDateEntered(new Timestamp(System.currentTimeMillis()))
                 .withFunctional(true)
                 .build()
         ).collect(Collectors.toList());
