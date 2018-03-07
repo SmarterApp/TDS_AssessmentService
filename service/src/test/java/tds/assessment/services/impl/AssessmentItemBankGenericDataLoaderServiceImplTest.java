@@ -133,7 +133,7 @@ public class AssessmentItemBankGenericDataLoaderServiceImplTest extends Assessme
         assertThat(retTblStimulus.getBankKey()).isEqualTo(187);
         assertThat(retTblStimulus.getKey()).isEqualTo(3688);
         assertThat(retTblStimulus.getId()).isEqualTo("187-3688");
-        assertThat(retTblStimulus.getFilePath()).isEqualTo("stim-187-3688/");
+        assertThat(retTblStimulus.getFilePath()).isEqualTo("Stim-187-3688/");
         assertThat(retTblStimulus.getFileName()).isEqualTo("stim-187-3688.xml");
         assertThat(retTblStimulus.getVersion()).isEqualTo(Long.parseLong(mockTestPackage.getVersion()));
     }
@@ -154,7 +154,7 @@ public class AssessmentItemBankGenericDataLoaderServiceImplTest extends Assessme
         assertThat(savedItem.getKey()).isEqualTo("187-2029");
         assertThat(savedItem.getItemType()).isEqualTo("GI");
         assertThat(savedItem.getScorePoints()).isEqualTo(1);
-        assertThat(savedItem.getFilePath()).isEqualTo("item-187-2029/");
+        assertThat(savedItem.getFilePath()).isEqualTo("Item-187-2029/");
         assertThat(savedItem.getFileName()).isEqualTo("item-187-2029.xml");
         assertThat(savedItem.getVersion()).isEqualTo(8185);
     }
