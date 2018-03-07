@@ -164,7 +164,6 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
             .collect(Collectors.toList());
 
         tools.addAll(segmentTools);
-        toolRepository.save(tools);
 
         // Language tools
         testPackage.getAssessments().forEach(assessment ->
@@ -178,6 +177,8 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                 )
             )
         );
+
+        toolRepository.save(tools);
 
         // Assessment tool dependencies
         List<ToolDependency> toolDependencies = testPackage.getAssessments().stream()
