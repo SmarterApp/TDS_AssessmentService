@@ -89,7 +89,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
 
         // Second, load the assessment tool types
         toolTypes.addAll(testPackage.getAssessments().stream()
-            .flatMap(assessment -> assessment.getTools().stream()
+            .flatMap(assessment -> assessment.tools().stream()
                     .map(tool ->
                             new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName())
                                 .withArtFieldName(tool.studentPackageFieldName())
@@ -133,7 +133,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
 
         // Assessment tool options
         List<Tool> tools = testPackage.getAssessments().stream()
-            .flatMap(assessment -> assessment.getTools().stream()
+            .flatMap(assessment -> assessment.tools().stream()
                 .flatMap(tool -> tool.options().stream()
                     .map(option ->
                         new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName(), option.getCode())
@@ -182,7 +182,7 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
 
         // Assessment tool dependencies
         List<ToolDependency> toolDependencies = testPackage.getAssessments().stream()
-            .flatMap(assessment -> assessment.getTools().stream()
+            .flatMap(assessment -> assessment.tools().stream()
                 .flatMap(tool -> tool.options().stream()
                     .flatMap(option -> option.dependencies().stream()
                         .map(dependency -> new ToolDependency.Builder()

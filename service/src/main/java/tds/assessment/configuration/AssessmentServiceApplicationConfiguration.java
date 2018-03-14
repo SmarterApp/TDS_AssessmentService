@@ -13,14 +13,8 @@
 
 package tds.assessment.configuration;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import tds.common.configuration.CacheConfiguration;
@@ -30,7 +24,6 @@ import tds.common.configuration.JacksonObjectMapperConfiguration;
 import tds.common.configuration.RedisClusterConfiguration;
 import tds.common.configuration.SecurityConfiguration;
 import tds.common.web.advice.ExceptionAdvice;
-import tds.support.tool.TestPackageObjectMapperConfiguration;
 
 @Configuration
 @Import({

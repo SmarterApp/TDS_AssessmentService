@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.assessment.model.itembank.AffinityGroup;
 import tds.assessment.model.itembank.AffinityGroupItem;
-import tds.assessment.model.itembank.AffinityGroupItemIdentity;
 import tds.assessment.repositories.loader.itembank.AffinityGroupItemRepository;
 import tds.assessment.repositories.loader.itembank.AffinityGroupRepository;
 import tds.assessment.services.AffinityGroupLoaderService;
