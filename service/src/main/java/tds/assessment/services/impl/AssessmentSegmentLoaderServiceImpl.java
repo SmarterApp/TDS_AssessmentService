@@ -175,7 +175,7 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
                         .withFieldTestMinItems(segmentBpElement.minFieldTestItems())
                         .withFieldTestMaxItems(segmentBpElement.maxFieldTestItems())
                         .withSelectionAlgorithm(segment.getAlgorithmType().equals("adaptive") ? Algorithm.ADAPTIVE_2.getType() : segment.getAlgorithmType())
-                        .withBlueprintWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("blueprintweight", DEFAULT_BLUEPRINT_WEIGHT)))
+                        .withBlueprintWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("bpweight", DEFAULT_BLUEPRINT_WEIGHT)))
                         .withAbilityWeight(Float.parseFloat(itemSelectionProperties.getOrDefault("abilityweight", DEFAULT_ABILITY_WEIGHT)))
                         .withCSet1Size(Integer.parseInt(itemSelectionProperties.getOrDefault("cset1size", DEFAULT_CSET1_SIZE)))
                         .withCSet2Random(Integer.parseInt(itemSelectionProperties.getOrDefault("cset2random", DEFAULT_CSET2_RANDOM)))
