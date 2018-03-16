@@ -77,7 +77,7 @@ class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    @Cacheable(CacheType.LONG_TERM)
+//    @Cacheable(CacheType.LONG_TERM)
     public Optional<Assessment> findAssessment(final String clientName, final String assessmentKey) {
         Optional<Assessment> maybeAssessment = assessmentQueryRepository.findAssessmentByKey(clientName, assessmentKey);
         List<Form> forms = new ArrayList<>();
