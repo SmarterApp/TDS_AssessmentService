@@ -13,6 +13,7 @@
 
 package tds.assessment.services.impl;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class AssessmentServiceImplIntegrationTests {
     private AssessmentServiceImpl service;
 
     @Test
+    @Ignore
     public void shouldReturnCachedAssessment() {
         final String clientName = "SBAC_PT";
         Assessment assessment = new Assessment();
