@@ -22,8 +22,13 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import tds.assessment.model.itembank.Client;
 import tds.assessment.model.itembank.TblItem;
@@ -38,7 +43,9 @@ import tds.assessment.services.AssessmentItemBankGenericDataLoaderService;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AssessmentItemBankGenericDataLoaderServiceImplTest extends AssessmentLoaderServiceBaseTest {
@@ -140,7 +147,7 @@ public class AssessmentItemBankGenericDataLoaderServiceImplTest extends Assessme
 
     @Test
     public void shouldLoadTblItem() {
-        service.loadTblItems(mockTestPackage, Lists.newArrayList(mockItemMetadataMap.values()));
+        service.loadTblItems(mockTestPackage, Lists.newArrayList(mockItemMetadataMap.values()), new HashSet<>());
         verify(tblItemRepository).save(tblItemsArgumentCaptor.capture());
 
         List<TblItem> savedTblitems = tblItemsArgumentCaptor.getValue();
@@ -157,5 +164,22 @@ public class AssessmentItemBankGenericDataLoaderServiceImplTest extends Assessme
         assertThat(savedItem.getFilePath()).isEqualTo("Item-187-2029/");
         assertThat(savedItem.getFileName()).isEqualTo("item-187-2029.xml");
         assertThat(savedItem.getVersion()).isEqualTo(8185);
+    }
+
+    @Test
+    public void shouldReturnDuplicateItems() {
+        // 187-2029
+        TblItem existingItem = new TblItem.Builder().withId(2029).withBankKey(187).build();
+        when(tblItemRepository.findAll(isA(Iterable.class))).thenReturn(Arrays.asList(existingItem));
+        Set<String> duplicateItemIds = service.findDuplicateItems(mockTestPackage, Lists.newArrayList(mockItemMetadataMap.values()));
+        assertThat(duplicateItemIds).hasSize(1);
+        assertThat(duplicateItemIds).contains("187-2029");
+    }
+
+    @Test
+    public void shouldReturnNoDuplicateItems() {
+        when(tblItemRepository.findAll(isA(Iterable.class))).thenReturn(new ArrayList());
+        Set<String> duplicateItemIds = service.findDuplicateItems(mockTestPackage, Lists.newArrayList(mockItemMetadataMap.values()));
+        assertThat(duplicateItemIds).isEmpty();
     }
 }

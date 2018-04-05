@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
@@ -36,6 +37,7 @@ import tds.assessment.services.AssessmentItemSelectionLoaderService;
 import tds.assessment.services.AssessmentItemStimuliLoaderService;
 import tds.assessment.services.AssessmentSegmentLoaderService;
 import tds.common.Algorithm;
+import tds.support.job.TestPackageLoadJob;
 import tds.testpackage.model.TestPackage;
 
 @Service
@@ -69,7 +71,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
     }
 
     @Override
-    public List<TestForm> loadTestPackage(final String testPackageName, final TestPackage testPackage) {
+    public List<TestForm> loadTestPackage(final String testPackageName, final TestPackage testPackage, final Set<String> duplicateItemIds) {
         assessmentItemSelectionLoaderService.loadScoringSeedData();
 
         //Find client if exists. If not, we need to create one
@@ -91,7 +93,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
         assessmentItemBankGenericDataLoaderService.loadTblStimuli(testPackage);
 
         /* load_items() */
-        assessmentItemBankGenericDataLoaderService.loadTblItems(testPackage, itemMetadata);
+        assessmentItemBankGenericDataLoaderService.loadTblItems(testPackage, itemMetadata, duplicateItemIds);
 
         /* load_linkitemtostrands() */
         assessmentItemStimuliLoaderService.loadLinkItemsToStrands(itemMetadata, keyToStrands, Long.parseLong(testPackage.getVersion()));
@@ -100,7 +102,6 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
         assessmentItemStimuliLoaderService.loadLinkItemsToStimuli(testPackage);
 
         /* load_itemproperties() */
-        //TODO: Revisit this once we get an answer from AIR as to whether other item properties need to be persisted
         assessmentItemStimuliLoaderService.loadItemProperties(itemMetadata);
 
         /* load_testadmin() */
@@ -137,6 +138,11 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
         affinityGroupLoaderService.loadAffinityGroups(testPackage, itemMetadata);
 
         return testForms;
+    }
+
+    public Set<String> findDuplicateItems(final TestPackage testPackage) {
+        Map<String, ItemMetadataWrapper> itemMetadataWrappers = mapItemsToItemMetadata(testPackage);
+        return assessmentItemBankGenericDataLoaderService.findDuplicateItems(testPackage, itemMetadataWrappers.values());
     }
 
 

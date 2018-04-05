@@ -27,6 +27,7 @@ import java.util.Optional;
 import tds.assessment.services.AssessmentLoaderService;
 import tds.common.ValidationError;
 import tds.common.web.resources.NoContentResponseResource;
+import tds.support.job.ErrorSeverity;
 import tds.testpackage.model.TestPackage;
 
 /**
@@ -47,7 +48,9 @@ public class AssessmentLoaderController {
         Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, testPackage);
 
         return maybeError
-            .map(validationError -> new ResponseEntity<>(new NoContentResponseResource(validationError), HttpStatus.UNPROCESSABLE_ENTITY))
+            .map(validationError -> validationError.getCode().equalsIgnoreCase(ErrorSeverity.WARN.name())
+                ? new ResponseEntity<>(new NoContentResponseResource(validationError), HttpStatus.CREATED)
+                : new ResponseEntity<>(new NoContentResponseResource(validationError), HttpStatus.UNPROCESSABLE_ENTITY))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.CREATED));
 
     }
