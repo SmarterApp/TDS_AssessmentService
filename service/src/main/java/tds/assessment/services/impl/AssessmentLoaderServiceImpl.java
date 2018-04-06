@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import tds.assessment.model.itembank.TestForm;
 import tds.assessment.services.AssessmentConfigLoaderService;
@@ -28,6 +29,7 @@ import tds.assessment.services.AssessmentLoaderService;
 import tds.assessment.services.AssessmentService;
 import tds.common.ValidationError;
 import tds.common.web.exceptions.NotFoundException;
+import tds.support.job.ErrorSeverity;
 import tds.testpackage.model.TestPackage;
 
 @Service
@@ -61,8 +63,14 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
         removeTestPackageIfPresent(testPackage);
 
         try {
-            List<TestForm> testForms = assessmentItemBankLoaderService.loadTestPackage(testPackageName, testPackage);
+            Set<String> duplicateItemIds = assessmentItemBankLoaderService.findDuplicateItems(testPackage);
+            List<TestForm> testForms = assessmentItemBankLoaderService.loadTestPackage(testPackageName, testPackage, duplicateItemIds);
             assessmentConfigLoaderService.loadTestPackage(testPackageName, testPackage, testForms);
+
+            if (!duplicateItemIds.isEmpty()) {
+                return Optional.of(new ValidationError(ErrorSeverity.WARN.name(),
+                    String.format("The following items in this test package were not loaded because they already exist in TDS: %s", duplicateItemIds)));
+            }
         } catch (Exception e) {
             removeTestPackageIfPresent(testPackage);
             log.error("An error occurred while loading the test package: , Clearing the test package from TDS", e);

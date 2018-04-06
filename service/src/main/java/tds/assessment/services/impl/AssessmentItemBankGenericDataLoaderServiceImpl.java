@@ -17,11 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.ItemMetadataWrapper;
@@ -112,13 +115,37 @@ public class AssessmentItemBankGenericDataLoaderServiceImpl implements Assessmen
     }
 
     @Override
-    public void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers) {
-        // We have the flat list of items - we simply need to map them to a "tblitem"
+    public void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers, final Set<String> existingItems) {
+        // We have the flat list of items - we simply need to map them to a "tblitem" first
         List<TblItem> items = itemMetadataWrappers.stream()
             .map(itemWrapper -> mapItemToTblItem(testPackage.getBankKey(), testPackage.getVersion(), itemWrapper.getItem()))
             .collect(Collectors.toList());
 
-        tblItemRepository.save(items);
+
+        if (existingItems.isEmpty()) {
+            // If there are no existing items, lets just save all of them
+            tblItemRepository.save(items);
+        } else {
+            // Otherwise, lets filter out the
+            List<TblItem> nonExistingItems = items.stream()
+                .filter(item -> !existingItems.contains(item.getKey()))
+                .collect(Collectors.toList());
+
+            tblItemRepository.save(nonExistingItems);
+        }
+    }
+
+    public Set<String> findDuplicateItems(final TestPackage testPackage, final Collection<ItemMetadataWrapper> itemMetadataWrappers) {
+        List<TblItem> items = itemMetadataWrappers.stream()
+            .map(itemWrapper -> mapItemToTblItem(testPackage.getBankKey(), testPackage.getVersion(), itemWrapper.getItem()))
+            .collect(Collectors.toList());
+        // Get the list of item ids so that we can see if any currently exist in the database
+        List<String> itemIds = items.stream().map(TblItem::getKey).collect(Collectors.toList());
+
+        return StreamSupport.stream(tblItemRepository.findAll(itemIds).spliterator(), false)
+            .map(TblItem::getKey)
+            .collect(Collectors.toSet());
+
     }
 
     private void loadBlueprintElementsHelper(final List<BlueprintElement> blueprintElements,

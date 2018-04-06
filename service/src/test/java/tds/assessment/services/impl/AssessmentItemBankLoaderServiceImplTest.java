@@ -20,9 +20,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.itembank.Client;
@@ -101,7 +103,7 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
         when(assessmentItemBankGenericDataLoaderService.loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
             isA(Client.class), eq(mockTestPackage.getVersion()))).thenReturn(mockTblStrandMap);
 
-        List<TestForm> testForms = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage);
+        List<TestForm> testForms = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage, new HashSet<>());
         assertThat(testForms).isEmpty();
 
         verify(assessmentItemSelectionLoaderService).loadScoringSeedData();
@@ -111,7 +113,7 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
         verify(assessmentItemBankGenericDataLoaderService).loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
             isA(Client.class), eq(mockTestPackage.getVersion()));
         verify(assessmentItemBankGenericDataLoaderService).loadTblStimuli(mockTestPackage);
-        verify(assessmentItemBankGenericDataLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
+        verify(assessmentItemBankGenericDataLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class), isA(Set.class));
         verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(List.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
         verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(List.class));
         verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));
@@ -136,7 +138,7 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
         when(assessmentItemBankGenericDataLoaderService.loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
             isA(Client.class), eq(mockTestPackage.getVersion()))).thenReturn(mockTblStrandMap);
 
-        List<TestForm> testForms = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage);
+        List<TestForm> testForms = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage, new HashSet<>());
         assertThat(testForms).isEmpty();
 
         verify(assessmentItemSelectionLoaderService).loadScoringSeedData();
@@ -146,7 +148,7 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
         verify(assessmentItemBankGenericDataLoaderService).loadStrands(eq(mockTestPackage.getBlueprint()), eq("SBAC_PT-MATH"),
             isA(Client.class), eq(mockTestPackage.getVersion()));
         verify(assessmentItemBankGenericDataLoaderService).loadTblStimuli(mockTestPackage);
-        verify(assessmentItemBankGenericDataLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class));
+        verify(assessmentItemBankGenericDataLoaderService).loadTblItems(eq(mockTestPackage), isA(List.class), isA(Set.class));
         verify(assessmentItemStimuliLoaderService).loadLinkItemsToStrands(isA(List.class), eq(mockTblStrandMap), eq(Long.parseLong(mockTestPackage.getVersion())));
         verify(assessmentItemStimuliLoaderService).loadItemProperties(isA(List.class));
         verify(assessmentSegmentLoaderService).loadTestAdmin(eq(mockTestPackage), isA(Client.class));

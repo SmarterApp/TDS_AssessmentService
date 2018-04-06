@@ -43,7 +43,10 @@ public class AssessmentConfigLoaderServiceImpl implements AssessmentConfigLoader
 
     @Autowired
     public AssessmentConfigLoaderServiceImpl(final AssessmentConfigSeedDataLoaderService assessmentConfigSeedDataLoaderService,
-                                             final AssessmentSegmentConfigLoaderService assessmentSegmentConfigLoaderService, final AssessmentFormLoaderService assessmentFormLoaderService, final AssessmentItemConfigLoaderService assessmentItemConfigLoaderService, final AssessmentToolConfigService assessmentToolConfigService) {
+                                             final AssessmentSegmentConfigLoaderService assessmentSegmentConfigLoaderService,
+                                             final AssessmentFormLoaderService assessmentFormLoaderService,
+                                             final AssessmentItemConfigLoaderService assessmentItemConfigLoaderService,
+                                             final AssessmentToolConfigService assessmentToolConfigService) {
         this.assessmentConfigSeedDataLoaderService = assessmentConfigSeedDataLoaderService;
         this.assessmentSegmentConfigLoaderService = assessmentSegmentConfigLoaderService;
         this.assessmentFormLoaderService = assessmentFormLoaderService;

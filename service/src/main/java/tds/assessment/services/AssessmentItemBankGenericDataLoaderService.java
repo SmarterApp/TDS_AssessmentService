@@ -13,8 +13,10 @@
 
 package tds.assessment.services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import tds.assessment.model.ItemMetadataWrapper;
 import tds.assessment.model.itembank.Client;
@@ -48,8 +50,19 @@ public interface AssessmentItemBankGenericDataLoaderService {
      * @param testPackage          Test package containing the items to load
      * @param itemMetadataWrappers A flattened list of {@link tds.testpackage.model.Item}s, along with some additional important
      *                             metadata
+     * @param existingItems        The item ids in the test package that already exist in the itembank
      */
-    void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers);
+    void loadTblItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers, final Set<String> existingItems);
+
+    /**
+     * Finds the items in the test package that already exist in the TDS itembank database
+     *
+     * @param testPackage          The test package containing the items to check for
+     * @param itemMetadataWrappers A flattened list of {@link tds.testpackage.model.Item}s, along with some additional important
+     *                             metadata
+     * @return The {@link Set} of duplicate item ids
+     */
+    Set<String> findDuplicateItems(final TestPackage testPackage, final Collection<ItemMetadataWrapper> itemMetadataWrappers);
 
     /**
      * Loads all {@link tds.assessment.model.itembank.TblStrand}s into the item bank

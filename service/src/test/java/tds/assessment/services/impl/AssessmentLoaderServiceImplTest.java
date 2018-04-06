@@ -13,14 +13,17 @@
 
 package tds.assessment.services.impl;
 
+import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.itembank.TestForm;
@@ -57,16 +60,33 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
     }
 
     @Test
+    public void shouldReturnWarnForDuplicateIds() {
+        final String testPackageName = "V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml";
+        doThrow(NotFoundException.class).when(assessmentService).removeAssessment(mockTestPackage.getPublisher(), mockTestPackage.getAssessments().get(0).getKey());
+
+        Set<String> existingIds = ImmutableSet.of("187-1234");
+        when(assessmentItemBankLoaderService.findDuplicateItems(mockTestPackage)).thenReturn(existingIds);
+        List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
+        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage, existingIds)).thenReturn(mockTestForms);
+        Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
+        assertThat(maybeError).isPresent();
+        assertThat(maybeError.get().getCode()).isEqualTo("WARN");
+
+        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage, existingIds);
+        verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
+    }
+
+    @Test
     public void shouldLoadAssessmentSuccessfullyFirstTime() {
         final String testPackageName = "V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml";
         doThrow(NotFoundException.class).when(assessmentService).removeAssessment(mockTestPackage.getPublisher(), mockTestPackage.getAssessments().get(0).getKey());
 
         List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
-        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage)).thenReturn(mockTestForms);
+        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage, new HashSet<>())).thenReturn(mockTestForms);
         Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
         assertThat(maybeError).isNotPresent();
 
-        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage);
+        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage, new HashSet<>());
         verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
     }
 
@@ -75,14 +95,14 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
         final String testPackageName = "V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml";
 
         List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
-        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage)).thenReturn(mockTestForms);
+        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage, new HashSet<>())).thenReturn(mockTestForms);
         doThrow(NotFoundException.class).when(assessmentService).removeAssessment(mockTestPackage.getPublisher(), mockTestPackage.getAssessments().get(0).getKey());
         doThrow(TestPackageLoaderException.class).when(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
 
         Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
         assertThat(maybeError).isPresent();
 
-        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage);
+        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage, new HashSet<>());
         verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
         verify(assessmentService, times(2)).removeAssessment(mockTestPackage.getPublisher()
             , mockTestPackage.getAssessments().get(0).getKey());
@@ -93,11 +113,11 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
         final String testPackageName = "V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml";
 
         List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
-        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage)).thenReturn(mockTestForms);
+        when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage, new HashSet<>())).thenReturn(mockTestForms);
         Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
         assertThat(maybeError).isNotPresent();
 
-        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage);
+        verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage, new HashSet<>());
         verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
         verify(assessmentService).removeAssessment(mockTestPackage.getPublisher()
             , mockTestPackage.getAssessments().get(0).getKey());

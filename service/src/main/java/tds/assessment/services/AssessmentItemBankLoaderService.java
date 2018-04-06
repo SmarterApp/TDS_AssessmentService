@@ -14,10 +14,26 @@
 package tds.assessment.services;
 
 import java.util.List;
+import java.util.Set;
 
 import tds.assessment.model.itembank.TestForm;
 import tds.testpackage.model.TestPackage;
 
 public interface AssessmentItemBankLoaderService {
-    List<TestForm> loadTestPackage(final String testPackageName, final TestPackage testPackage);
+    /**
+     * Loads a test package into the itembank database
+     *
+     * @param testPackageName The name of the test package
+     * @param testPackage     The {@link tds.testpackage.model.TestPackage} to load
+     * @return A list of test forms generated from the test packages' segment forms
+     */
+    List<TestForm> loadTestPackage(final String testPackageName, final TestPackage testPackage, final Set<String> duplicateItemIds);
+
+    /**
+     * Finds the items in the test package that already exist in the TDS itembank database
+     *
+     * @param testPackage The test package containing the items to check for
+     * @return The {@link Set} of duplicate item ids
+     */
+    Set<String> findDuplicateItems(final TestPackage testPackage);
 }
