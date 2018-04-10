@@ -162,7 +162,10 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
                     .withKey(UUID.randomUUID())
                     .withSegmentKey(wrapper.getSegmentKey())
                     .withItemId(wrapper.getItem().getKey())
-                    .withMeasurementModelKey(measurementModelKeys.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase()))
+                    .withMeasurementModelKey(
+                        measurementModelKeys.containsKey(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase())
+                        ? measurementModelKeys.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase())
+                        : 0) // Default to 0 if measurement model is not present in the mapping
                     .build()
             ).collect(Collectors.toMap(ItemScoreDimension::getItemId, Function.identity()));
 
