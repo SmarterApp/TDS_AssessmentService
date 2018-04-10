@@ -167,6 +167,6 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
                         throw new TestPackageLoaderException("Unrecognized selection algorithm");
                     }
                 }
-            )).collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper));
+            )).collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper, (a1, a2) -> a1));
     }
 }

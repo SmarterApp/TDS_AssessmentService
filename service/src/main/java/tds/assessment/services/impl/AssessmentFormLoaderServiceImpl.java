@@ -13,9 +13,12 @@
 
 package tds.assessment.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -31,10 +34,13 @@ import tds.assessment.repositories.loader.itembank.TestFormItemRepository;
 import tds.assessment.repositories.loader.itembank.TestFormRepository;
 import tds.assessment.services.AssessmentFormLoaderService;
 import tds.common.Algorithm;
+import tds.testpackage.model.Presentation;
+import tds.testpackage.model.SegmentForm;
 import tds.testpackage.model.TestPackage;
 
 @Service
 public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderService {
+    private static final Logger log = LoggerFactory.getLogger(AssessmentFormLoaderServiceImpl.class);
     private final TestFormRepository testFormRepository;
     private final TestFormItemRepository testFormItemRepository;
     private final ItemBankDataQueryRepository itemBankDataQueryRepository;
@@ -104,7 +110,8 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
 
     private void loadAdminFormItems(final TestPackage testPackage, final List<TestForm> testForms) {
         // formId -> testForm
-        Map<String, TestForm> testFormMap = testForms.stream().collect(Collectors.toMap(TestForm::getFormId, Function.identity()));
+        Map<String, TestForm> testFormMap = testForms.stream()
+            .collect(Collectors.toMap(form -> getFormUniqueId(form), Function.identity()));
 
         // Map each item to its "testform"
         List<TestFormItem> testFormItems = testPackage.getAssessments().stream()
@@ -113,18 +120,37 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                 .flatMap(segment -> segment.segmentForms().stream()
                     .flatMap(form -> form.itemGroups().stream()
                         .flatMap(itemGroup -> itemGroup.items().stream()
-                            .map(formItem ->
-                                new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
-                                    testFormMap.get(form.getId()).getFormKey())
-                                    .withFormItsKey(testFormMap.get(form.getId()).getItsKey())
-                                    .withActive(true)
-                                    .build()
-                            )
+                            .map(formItem -> {
+                                for (Presentation presentation : form.getPresentations()) {
+                                    if (testFormMap.containsKey(getFormUniqueId(form, presentation))) {
+                                        return new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
+                                            testFormMap.get(getFormUniqueId(form, presentation)).getFormKey())
+                                            .withFormItsKey(testFormMap.get(getFormUniqueId(form, presentation)).getItsKey())
+                                            .withActive(true)
+                                            .build();
+                                    }
+                                }
+
+                                log.warn("A testform was declared with an invalid formkey. Make sure that a matching segmentform is present for the testform '{}'",
+                                    form.getId());
+                                return null;
+                            })
                         )
                     )
                 )
             ).collect(Collectors.toList());
 
+        // There tech
+        testFormItems.removeAll(Collections.singleton(null));
+
         testFormItemRepository.save(testFormItems);
+    }
+
+    private String getFormUniqueId(final SegmentForm form, final Presentation presentation) {
+        return form.getId() + form.getCohort() + presentation.getCode();
+    }
+
+    private String getFormUniqueId(final TestForm form) {
+        return form.getFormId() + form.getCohort() + form.getLanguage();
     }
 }
