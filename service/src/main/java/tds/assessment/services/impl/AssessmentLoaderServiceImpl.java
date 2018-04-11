@@ -57,7 +57,7 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
      * @return an error, if one occurs during the creation of the assessment
      */
     @Override
-    public Optional<ValidationError> loadTestPackage(final String testPackageName, final TestPackage testPackage) {
+    public synchronized Optional<ValidationError> loadTestPackage(final String testPackageName, final TestPackage testPackage) {
 
         // Delete assessments if they exist
         removeTestPackageIfPresent(testPackage);
