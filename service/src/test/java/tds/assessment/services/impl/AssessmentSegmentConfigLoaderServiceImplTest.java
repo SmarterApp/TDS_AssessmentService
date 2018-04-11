@@ -128,9 +128,9 @@ public class AssessmentSegmentConfigLoaderServiceImplTest extends AssessmentLoad
         assertThat(savedTestMode.getAlgorithm()).isEqualTo(mockTestPackage.getAssessments().get(0).getSegments().get(0).getAlgorithmType());
         assertThat(savedTestMode.getClientName()).isEqualTo(mockTestPackage.getPublisher());
         assertThat(savedTestMode.getAssessmentId()).isEqualTo(mockTestPackage.getAssessments().get(0).getId());
-        assertThat(savedTestMode.getAssessmentKey()).isEqualTo(mockTestPackage.getAssessments().get(0).getKey());
+        assertThat(savedTestMode.getTestModeIdentity().getAssessmentKey()).isEqualTo(mockTestPackage.getAssessments().get(0).getKey());
         assertThat(savedTestMode.getKey()).isNotNull();
         assertThat(savedTestMode.getMode()).isEqualTo("online");
-        assertThat(savedTestMode.getSessionType()).isEqualTo(0);
+        assertThat(savedTestMode.getTestModeIdentity().getSessionType()).isEqualTo(0);
     }
 }

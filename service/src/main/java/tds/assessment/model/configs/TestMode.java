@@ -14,6 +14,7 @@
 package tds.assessment.model.configs;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -25,14 +26,13 @@ public class TestMode {
     private static final String DEFAULT_MODE = "online";
     private static final int DEFAULT_SESSION_TYPE = 0;
 
+    private TestModeIdentity testModeIdentity;
     private UUID key;
     private String clientName;
     private String assessmentId;
     private String mode;
     private String algorithm;
     private boolean segmented;
-    private int sessionType;
-    private String assessmentKey;
 
     /**
      * Private constructor for frameworks
@@ -48,13 +48,12 @@ public class TestMode {
         private String mode;
         private String algorithm;
         private boolean segmented;
-        private int sessionType;
-        private String assessmentKey;
+        private TestModeIdentity testModeIdentity;
 
-        public Builder() {
+        public Builder(final String assessmentKey) {
             this.key = UUID.randomUUID();
             this.mode = DEFAULT_MODE;
-            this.sessionType = DEFAULT_SESSION_TYPE;
+            this.testModeIdentity = new TestModeIdentity(assessmentKey, DEFAULT_SESSION_TYPE);
         }
 
         public Builder withClientName(String clientName) {
@@ -77,26 +76,24 @@ public class TestMode {
             return this;
         }
 
-        public Builder withAssessmentKey(String assessmentKey) {
-            this.assessmentKey = assessmentKey;
-            return this;
-        }
-
         public TestMode build() {
             TestMode testMode = new TestMode();
+            testMode.testModeIdentity = this.testModeIdentity;
             testMode.clientName = this.clientName;
             testMode.assessmentId = this.assessmentId;
             testMode.key = this.key;
             testMode.algorithm = this.algorithm;
-            testMode.sessionType = this.sessionType;
             testMode.segmented = this.segmented;
             testMode.mode = this.mode;
-            testMode.assessmentKey = this.assessmentKey;
             return testMode;
         }
     }
 
-    @Id
+    @EmbeddedId
+    public TestModeIdentity getTestModeIdentity() {
+        return testModeIdentity;
+    }
+
     @Column(name = "_key", columnDefinition = "VARBINARY(16)")
     public UUID getKey() {
         return key;
@@ -125,15 +122,6 @@ public class TestMode {
         return segmented;
     }
 
-    @Column(name = "sessiontype")
-    public int getSessionType() {
-        return sessionType;
-    }
-
-    @Column(name = "testkey")
-    public String getAssessmentKey() {
-        return assessmentKey;
-    }
 
     private void setKey(final UUID key) {
         this.key = key;
@@ -159,11 +147,7 @@ public class TestMode {
         this.segmented = segmented;
     }
 
-    private void setSessionType(final int sessionType) {
-        this.sessionType = sessionType;
-    }
-
-    private void setAssessmentKey(final String assessmentKey) {
-        this.assessmentKey = assessmentKey;
+    public void setTestModeIdentity(final TestModeIdentity testModeIdentity) {
+        this.testModeIdentity = testModeIdentity;
     }
 }
