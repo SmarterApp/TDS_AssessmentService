@@ -119,14 +119,13 @@ public class AssessmentSegmentConfigLoaderServiceImpl implements AssessmentSegme
     @Override
     public void loadTestMode(final TestPackage testPackage) {
         List<TestMode> testModes = testPackage.getAssessments().stream()
-            .map(assessment -> new TestMode.Builder()
+            .map(assessment -> new TestMode.Builder(assessment.getKey())
                 .withClientName(testPackage.getPublisher())
                 // If the assessment is single-segmented, just get the segment's algorithm
                 .withAlgorithm(assessment.isSegmented()
                     ? Algorithm.VIRTUAL.getType()
                     : assessment.getSegments().get(0).getAlgorithmType())
                 .withAssessmentId(assessment.getId())
-                .withAssessmentKey(assessment.getKey())
                 .withSegmented(assessment.isSegmented())
                 .build())
             .collect(Collectors.toList());
