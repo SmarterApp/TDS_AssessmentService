@@ -82,6 +82,7 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
                     if (++attempt == MAX_RETRY_ATTEMPTS) {
                         throw e;
                     } else {
+                        Thread.sleep(5000);
                         log.warn("An error occurred while attempt to load the test package '{}'. Reattempting (Attempt: {}, Max Retries: {}.",
                             testPackageName, attempt, MAX_RETRY_ATTEMPTS);
                     }
