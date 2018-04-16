@@ -120,21 +120,19 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                 .flatMap(segment -> segment.segmentForms().stream()
                     .flatMap(form -> form.itemGroups().stream()
                         .flatMap(itemGroup -> itemGroup.items().stream()
-                            .map(formItem -> {
-                                for (Presentation presentation : form.getPresentations()) {
+                            .flatMap(formItem -> form.getPresentations().stream().map(presentation -> {
                                     if (testFormMap.containsKey(getFormUniqueId(form, presentation))) {
                                         return new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
                                             testFormMap.get(getFormUniqueId(form, presentation)).getFormKey())
                                             .withFormItsKey(testFormMap.get(getFormUniqueId(form, presentation)).getItsKey())
                                             .withActive(true)
                                             .build();
-                                    }
-                                }
-
-                                log.warn("A testform was declared with an invalid formkey. Make sure that a matching segmentform is present for the testform '{}'",
-                                    form.getId());
-                                return null;
-                            })
+                                    } else
+                                        throw new IllegalStateException(String.format(
+                                            "A testform was declared with an invalid formkey. " +
+                                                "Make sure that a matching segmentform is present for the testform %s", form.getId()));
+                                })
+                            )
                         )
                     )
                 )
