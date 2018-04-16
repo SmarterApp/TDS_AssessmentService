@@ -16,9 +16,11 @@ package tds.assessment.services.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -78,12 +80,12 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
                     }
 
                     return Optional.empty();
-                } catch (PersistenceException e) {
+                } catch (PersistenceException | JpaSystemException e) {
                     if (++attempt == MAX_RETRY_ATTEMPTS) {
                         throw e;
                     } else {
                         Thread.sleep(5000);
-                        log.warn("An error occurred while attempt to load the test package '{}'. Reattempting (Attempt: {}, Max Retries: {}.",
+                        log.error("An error occurred while attempt to load the test package '{}'. Reattempting (Attempt: {}, Max Retries: {}).",
                             testPackageName, attempt, MAX_RETRY_ATTEMPTS);
                     }
                 }
