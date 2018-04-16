@@ -14,6 +14,7 @@
 package tds.assessment.model.itembank;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -25,9 +26,7 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "tblstrand", catalog = "itembank")
 public class TblStrand {
-    private String subjectKey;
-    private String name;
-    private String key;
+    private TblStrandIdentity tblStrandIdentity;
     private String parentKey;
     private long clientKey;
     private int treeLevel;
@@ -42,9 +41,7 @@ public class TblStrand {
     }
 
     private TblStrand(Builder builder) {
-        subjectKey = builder.subjectKey;
-        name = builder.name;
-        key = builder.key;
+        tblStrandIdentity = new TblStrandIdentity(builder.subjectKey, builder.name, builder.key);
         parentKey = builder.parentKey;
         clientKey = builder.clientKey;
         treeLevel = builder.treeLevel;
@@ -117,19 +114,9 @@ public class TblStrand {
         }
     }
 
-    @Column(name = "_fk_subject")
-    public String getSubjectKey() {
-        return subjectKey;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Id
-    @Column(name = "_key")
-    public String getKey() {
-        return key;
+    @EmbeddedId
+    public TblStrandIdentity getTblStrandIdentity() {
+        return tblStrandIdentity;
     }
 
     @Column(name = "_fk_parent")
@@ -162,17 +149,19 @@ public class TblStrand {
         return leafTarget;
     }
 
-    /* Note: NEVER USE THESE SETTERS - They are only for Hibernate compatibility - use the builder */
-    private void setSubjectKey(final String subjectKey) {
-        this.subjectKey = subjectKey;
+    @Transient
+    public String getName() {
+        return tblStrandIdentity.getName();
     }
 
-    private void setName(final String name) {
-        this.name = name;
+    @Transient
+    public String getKey() {
+        return tblStrandIdentity.getKey();
     }
 
-    private void setKey(final String key) {
-        this.key = key;
+    @Transient
+    public String getSubjectKey() {
+        return tblStrandIdentity.getSubjectKey();
     }
 
     private void setParentKey(final String parentKey) {
@@ -197,5 +186,9 @@ public class TblStrand {
 
     private void setLeafTarget(final boolean leafTarget) {
         this.leafTarget = leafTarget;
+    }
+
+    public void setTblStrandIdentity(final TblStrandIdentity tblStrandIdentity) {
+        this.tblStrandIdentity = tblStrandIdentity;
     }
 }

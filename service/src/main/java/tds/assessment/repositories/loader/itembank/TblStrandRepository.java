@@ -17,7 +17,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import tds.assessment.model.itembank.TblStrand;
+import tds.assessment.model.itembank.TblStrandIdentity;
 
 @Repository
-public interface TblStrandRepository extends CrudRepository<TblStrand, String> {
+public interface TblStrandRepository extends CrudRepository<TblStrand, TblStrandIdentity> {
 }

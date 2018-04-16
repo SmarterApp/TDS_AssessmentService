@@ -16,8 +16,11 @@ package tds.assessment.services.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +38,7 @@ import tds.testpackage.model.TestPackage;
 @Service
 public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
     private static final Logger log = LoggerFactory.getLogger(AssessmentLoaderServiceImpl.class);
+    private static int MAX_RETRY_ATTEMPTS = 3;
 
     private final AssessmentConfigLoaderService assessmentConfigLoaderService;
     private final AssessmentItemBankLoaderService assessmentItemBankLoaderService;
@@ -59,17 +63,32 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
     @Override
     public synchronized Optional<ValidationError> loadTestPackage(final String testPackageName, final TestPackage testPackage) {
 
-        // Delete assessments if they exist
-        removeTestPackageIfPresent(testPackage);
+        int attempt = 0;
 
         try {
-            Set<String> duplicateItemIds = assessmentItemBankLoaderService.findDuplicateItems(testPackage);
-            List<TestForm> testForms = assessmentItemBankLoaderService.loadTestPackage(testPackageName, testPackage, duplicateItemIds);
-            assessmentConfigLoaderService.loadTestPackage(testPackageName, testPackage, testForms);
+            while (true) {
+                try {
+                    // Delete assessments if they exist
+                    removeTestPackageIfPresent(testPackage);
+                    Set<String> duplicateItemIds = assessmentItemBankLoaderService.findDuplicateItems(testPackage);
+                    List<TestForm> testForms = assessmentItemBankLoaderService.loadTestPackage(testPackageName, testPackage, duplicateItemIds);
+                    assessmentConfigLoaderService.loadTestPackage(testPackageName, testPackage, testForms);
 
-            if (!duplicateItemIds.isEmpty()) {
-                return Optional.of(new ValidationError(ErrorSeverity.WARN.name(),
-                    String.format("The following items in this test package were not loaded because they already exist in TDS: %s", duplicateItemIds)));
+                    if (!duplicateItemIds.isEmpty()) {
+                        return Optional.of(new ValidationError(ErrorSeverity.WARN.name(),
+                            String.format("The following items in this test package were not loaded because they already exist in TDS: %s", duplicateItemIds)));
+                    }
+
+                    return Optional.empty();
+                } catch (PersistenceException | JpaSystemException e) {
+                    if (++attempt == MAX_RETRY_ATTEMPTS) {
+                        throw e;
+                    } else {
+                        Thread.sleep(5000);
+                        log.error("An error occurred while attempt to load the test package '{}'. Reattempting (Attempt: {}, Max Retries: {}).",
+                            testPackageName, attempt, MAX_RETRY_ATTEMPTS);
+                    }
+                }
             }
         } catch (Exception e) {
             removeTestPackageIfPresent(testPackage);
@@ -78,7 +97,6 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
                 testPackageName, e.getMessage())));
         }
 
-        return Optional.empty();
     }
 
     private void removeTestPackageIfPresent(final TestPackage testPackage) {
