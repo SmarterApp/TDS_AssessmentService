@@ -15,6 +15,7 @@ package tds.assessment.services.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -26,7 +27,6 @@ import java.util.stream.Collectors;
 import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.configs.AccommodationFamily;
 import tds.assessment.model.configs.AssessmentGrade;
-import tds.assessment.model.configs.AssessmentItemType;
 import tds.assessment.model.configs.Client;
 import tds.assessment.model.configs.Grade;
 import tds.assessment.model.configs.Language;
@@ -54,6 +54,7 @@ public class AssessmentConfigSeedDataLoaderServiceImpl implements AssessmentConf
     private final LanguageRepository languageRepository;
     private final AccommodationFamilyRepository accommodationFamilyRepository;
     private final AssessmentGradeRepository assessmentGradeRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public AssessmentConfigSeedDataLoaderServiceImpl(final ClientRepository clientRepository,
@@ -63,7 +64,8 @@ public class AssessmentConfigSeedDataLoaderServiceImpl implements AssessmentConf
                                                      final SubjectRepository subjectRepository,
                                                      final LanguageRepository languageRepository,
                                                      final AccommodationFamilyRepository accommodationFamilyRepository,
-                                                     final AssessmentGradeRepository assessmentGradeRepository) {
+                                                     final AssessmentGradeRepository assessmentGradeRepository,
+                                                     final JdbcTemplate jdbcTemplate) {
         this.clientRepository = clientRepository;
         this.configsDataCommandRepository = configsDataCommandRepository;
         this.timeWindowRepository = timeWindowRepository;
@@ -72,6 +74,7 @@ public class AssessmentConfigSeedDataLoaderServiceImpl implements AssessmentConf
         this.languageRepository = languageRepository;
         this.accommodationFamilyRepository = accommodationFamilyRepository;
         this.assessmentGradeRepository = assessmentGradeRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -88,6 +91,11 @@ public class AssessmentConfigSeedDataLoaderServiceImpl implements AssessmentConf
         // Load the client subject and accommodation family
         subjectRepository.save(new Subject(clientName, testPackage.getSubject()));
         accommodationFamilyRepository.save(new AccommodationFamily(clientName, testPackage.getSubject()));
+
+        // Load default tool dependency seed data
+        testPackage.getAssessments().forEach(assessment ->
+            jdbcTemplate.update("call configs.InsertToolDependencies(?, ?)", testPackage.getPublisher(), assessment.getId())
+        );
     }
 
     @Override

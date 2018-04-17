@@ -75,6 +75,139 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                 })
             ).collect(Collectors.toMap(Presentation::getCode, Presentation::label, (v1, v2) -> v1)); // ignore duplicates
 
+        loadDefaultTools(testPackage);
+        loadTestToolTypes(testPackage);
+        loadTestTools(testPackage, languages);
+        loadToolDependencies(testPackage);
+    }
+
+    private void loadDefaultTools(final TestPackage testPackage) {
+        // Load the Item Menu tool, which should be enabled by default
+        testPackage.getAssessments().forEach(assessment -> {
+            toolTypeRepository.save(
+                new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, "Item Tools Menu")
+                    .withAllowChange(true)
+                    .withArtFieldName("TDSAcc-ITM")
+                    .withFunctional(true)
+                    .withDateEntered(new Timestamp(System.currentTimeMillis()))
+                    .build()
+            );
+
+            toolRepository.save(
+                new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, "Item Tools Menu", "TDS_ITM1")
+                    .withDefaultValue(true)
+                    .withValue("On")
+                    .build()
+            );
+        });
+    }
+
+    private void loadToolDependencies(final TestPackage testPackage) {
+        // Assessment tool dependencies
+        List<ToolDependency> toolDependencies = testPackage.getAssessments().stream()
+            .flatMap(assessment -> assessment.tools().stream()
+                .flatMap(tool -> tool.options().stream()
+                    .flatMap(option -> option.dependencies().stream()
+                        .map(dependency -> new ToolDependency.Builder()
+                            .withClientName(testPackage.getPublisher())
+                            .withContext(assessment.getId())
+                            .withContextType(CONTEXT_TYPE_TEST)
+                            .withIfType(dependency.getIfToolType())
+                            .withIfValue(dependency.getIfToolCode())
+                            .withThenType(tool.getName())
+                            .withThenValue(option.getCode())
+                            .withDefaultValue(dependency.defaultValue())
+                            .build()
+                        )
+                    )
+                ))
+            .collect(Collectors.toList());
+
+        // Segment tool dependencies
+        List<ToolDependency> segmentToolDependencies = testPackage.getAssessments().stream()
+            .flatMap(assessment -> assessment.getSegments().stream()
+                .flatMap(segment -> segment.tools().stream()
+                    .flatMap(tool -> tool.options().stream()
+                        .flatMap(option -> option.dependencies().stream()
+                            .map(dependency -> new ToolDependency.Builder()
+                                .withClientName(testPackage.getPublisher())
+                                .withContext(segment.getId())
+                                .withContextType(CONTEXT_TYPE_SEGMENT)
+                                .withIfType(dependency.getIfToolType())
+                                .withIfValue(dependency.getIfToolCode())
+                                .withThenType(tool.getName())
+                                .withThenValue(option.getCode())
+                                .withDefaultValue(dependency.defaultValue())
+                                .build()
+                            )
+                        )
+                    ))
+            )
+            .collect(Collectors.toList());
+
+        toolDependencies.addAll(segmentToolDependencies);
+
+
+        //TODO: Clear out existing "default" tool accommodations if a dependency is defined explicitly
+//        toolDependencies.forEach(dependency ->
+//            toolDependenciesRepository.deleteByContextAndThenType(dependency.getContext(), dependency.getThenType())
+//        );
+
+        toolDependenciesRepository.save(toolDependencies);
+    }
+
+    private void loadTestTools(final TestPackage testPackage, final Map<String, String> languages) {
+        // Assessment tool options
+        List<Tool> tools = testPackage.getAssessments().stream()
+            .flatMap(assessment -> assessment.tools().stream()
+                .flatMap(tool -> tool.options().stream()
+                    .map(option ->
+                        new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName(), option.getCode())
+                            .withDefaultValue(option.defaultValue())
+                            .withSortOrder(option.getSortOrder())
+                            .withAllowCombine(tool.allowMultipleOptions())
+                            .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
+                            .build()
+                    )
+                ))
+            .collect(Collectors.toList());
+
+        // Segment tool options
+        List<Tool> segmentTools = testPackage.getAssessments().stream()
+            .flatMap(assessment -> assessment.getSegments().stream()
+                    .flatMap(segment -> segment.tools().stream()
+                        .flatMap(tool -> tool.options().stream()
+                                .map(option ->
+                                        new Tool.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName(), option.getCode())
+                                            .withDefaultValue(option.defaultValue())
+                                            .withSortOrder(option.getSortOrder())
+                                            .withAllowCombine(tool.allowMultipleOptions())
+                                            .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
+                                            .build()
+                                )
+                        ))
+            )
+            .collect(Collectors.toList());
+
+        tools.addAll(segmentTools);
+
+        // Language tools
+        testPackage.getAssessments().forEach(assessment ->
+            languages.entrySet().forEach(entry ->
+                tools.add(
+                    new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, "Language", entry.getKey())
+                        .withValue(entry.getValue())
+                        .withDefaultValue(entry.getKey().equalsIgnoreCase("ENU"))
+                        .withSortOrder(1)
+                        .build()
+                )
+            )
+        );
+
+        toolRepository.save(tools);
+    }
+
+    private void loadTestToolTypes(final TestPackage testPackage) {
         // Load the Language tooltype
         List<ToolType> toolTypes = testPackage.getAssessments().stream()
             .map(assessment -> new ToolType.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, "Language")
@@ -130,99 +263,5 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
 
         toolTypes.addAll(segmentToolTypes);
         toolTypeRepository.save(toolTypes);
-
-        // Assessment tool options
-        List<Tool> tools = testPackage.getAssessments().stream()
-            .flatMap(assessment -> assessment.tools().stream()
-                .flatMap(tool -> tool.options().stream()
-                    .map(option ->
-                        new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, tool.getName(), option.getCode())
-                            .withDefaultValue(option.defaultValue())
-                            .withSortOrder(option.getSortOrder())
-                            .withAllowCombine(tool.allowMultipleOptions())
-                            .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
-                            .build()
-                    )
-                ))
-            .collect(Collectors.toList());
-
-        // Segment tool options
-        List<Tool> segmentTools = testPackage.getAssessments().stream()
-            .flatMap(assessment -> assessment.getSegments().stream()
-                    .flatMap(segment -> segment.tools().stream()
-                        .flatMap(tool -> tool.options().stream()
-                                .map(option ->
-                                        new Tool.Builder(testPackage.getPublisher(), segment.getId(), CONTEXT_TYPE_SEGMENT, tool.getName(), option.getCode())
-                                            .withDefaultValue(option.defaultValue())
-                                            .withSortOrder(option.getSortOrder())
-                                            .withAllowCombine(tool.allowMultipleOptions())
-                                            .withValue(TOOL_OPTION_DEFAULTS_MAP.get(option.getCode())) // Fetch the default label (if one exists
-                                            .build()
-                                )
-                        ))
-            )
-            .collect(Collectors.toList());
-
-        tools.addAll(segmentTools);
-
-        // Language tools
-        testPackage.getAssessments().forEach(assessment ->
-            languages.entrySet().forEach(entry ->
-                tools.add(
-                    new Tool.Builder(testPackage.getPublisher(), assessment.getId(), CONTEXT_TYPE_TEST, "Language", entry.getKey())
-                        .withValue(entry.getValue())
-                        .withDefaultValue(entry.getKey().equalsIgnoreCase("ENU"))
-                        .withSortOrder(1)
-                        .build()
-                )
-            )
-        );
-
-        toolRepository.save(tools);
-
-        // Assessment tool dependencies
-        List<ToolDependency> toolDependencies = testPackage.getAssessments().stream()
-            .flatMap(assessment -> assessment.tools().stream()
-                .flatMap(tool -> tool.options().stream()
-                    .flatMap(option -> option.dependencies().stream()
-                        .map(dependency -> new ToolDependency.Builder()
-                            .withClientName(testPackage.getPublisher())
-                            .withContext(assessment.getId())
-                            .withContextType(CONTEXT_TYPE_TEST)
-                            .withIfType(dependency.getIfToolType())
-                            .withIfValue(dependency.getIfToolCode())
-                            .withThenType(tool.getName())
-                            .withThenValue(option.getCode())
-                            .withDefaultValue(dependency.defaultValue())
-                            .build()
-                        )
-                    )
-                ))
-            .collect(Collectors.toList());
-
-        // Segment tool dependencies
-        List<ToolDependency> segmentToolDependencies = testPackage.getAssessments().stream()
-            .flatMap(assessment -> assessment.getSegments().stream()
-                .flatMap(segment -> segment.tools().stream()
-                    .flatMap(tool -> tool.options().stream()
-                        .flatMap(option -> option.dependencies().stream()
-                            .map(dependency -> new ToolDependency.Builder()
-                                .withClientName(testPackage.getPublisher())
-                                .withContext(segment.getId())
-                                .withContextType(CONTEXT_TYPE_SEGMENT)
-                                .withIfType(dependency.getIfToolType())
-                                .withIfValue(dependency.getIfToolCode())
-                                .withThenType(tool.getName())
-                                .withThenValue(option.getCode())
-                                .withDefaultValue(dependency.defaultValue())
-                                .build()
-                            )
-                        )
-                    ))
-            )
-            .collect(Collectors.toList());
-
-        toolDependencies.addAll(segmentToolDependencies);
-        toolDependenciesRepository.save(toolDependencies);
     }
 }

@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Set;
@@ -93,10 +94,13 @@ public class AssessmentConfigSeedDataLoaderServiceImplTest extends AssessmentLoa
     @Captor
     private ArgumentCaptor<Set<Language>> languageArgumentCaptor;
 
+    @Mock
+    JdbcTemplate jdbcTemplate;
+
     @Before
     public void setup() {
         service = new AssessmentConfigSeedDataLoaderServiceImpl(clientRepository, configsDataCommandRepository, timeWindowRepository,
-            gradeRepository, subjectRepository, languageRepository, accommodationFamilyRepository, assessmentGradeRepository);
+            gradeRepository, subjectRepository, languageRepository, accommodationFamilyRepository, assessmentGradeRepository, jdbcTemplate);
     }
 
     @Test
