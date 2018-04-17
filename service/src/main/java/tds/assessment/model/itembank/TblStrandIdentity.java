@@ -21,7 +21,6 @@ import java.util.Objects;
 
 @Embeddable
 public class TblStrandIdentity implements Serializable {
-    private String subjectKey;
     private String name;
     private String key;
 
@@ -29,16 +28,11 @@ public class TblStrandIdentity implements Serializable {
 
     }
 
-    TblStrandIdentity(final String subjectKey, final String name, final String key) {
-        this.subjectKey = subjectKey;
+    TblStrandIdentity(final String name, final String key) {
         this.name = name;
         this.key = key;
     }
 
-    @Column(name = "_fk_subject")
-    public String getSubjectKey() {
-        return subjectKey;
-    }
 
     public String getName() {
         return name;
@@ -47,11 +41,6 @@ public class TblStrandIdentity implements Serializable {
     @Column(name = "_key")
     public String getKey() {
         return key;
-    }
-
-    /* Note: NEVER USE THESE SETTERS - They are only for Hibernate compatibility - use the builder */
-    private void setSubjectKey(final String subjectKey) {
-        this.subjectKey = subjectKey;
     }
 
     private void setName(final String name) {
@@ -67,14 +56,13 @@ public class TblStrandIdentity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final TblStrandIdentity that = (TblStrandIdentity) o;
-        return Objects.equals(subjectKey, that.subjectKey) &&
-            Objects.equals(name, that.name) &&
+        return Objects.equals(name, that.name) &&
             Objects.equals(key, that.key);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(subjectKey, name, key);
+        return Objects.hash(name, key);
     }
 }

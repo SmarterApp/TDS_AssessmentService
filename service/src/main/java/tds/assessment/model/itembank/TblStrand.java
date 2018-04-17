@@ -27,6 +27,7 @@ import javax.persistence.Transient;
 @Table(name = "tblstrand", catalog = "itembank")
 public class TblStrand {
     private TblStrandIdentity tblStrandIdentity;
+    private String subjectKey;
     private String parentKey;
     private long clientKey;
     private int treeLevel;
@@ -41,7 +42,8 @@ public class TblStrand {
     }
 
     private TblStrand(Builder builder) {
-        tblStrandIdentity = new TblStrandIdentity(builder.subjectKey, builder.name, builder.key);
+        tblStrandIdentity = new TblStrandIdentity(builder.name, builder.key);
+        subjectKey = builder.subjectKey;
         parentKey = builder.parentKey;
         clientKey = builder.clientKey;
         treeLevel = builder.treeLevel;
@@ -119,6 +121,11 @@ public class TblStrand {
         return tblStrandIdentity;
     }
 
+    @Column(name = "_fk_subject")
+    public String getSubjectKey() {
+        return subjectKey;
+    }
+
     @Column(name = "_fk_parent")
     public String getParentKey() {
         return parentKey;
@@ -159,9 +166,9 @@ public class TblStrand {
         return tblStrandIdentity.getKey();
     }
 
-    @Transient
-    public String getSubjectKey() {
-        return tblStrandIdentity.getSubjectKey();
+    /* Note: NEVER USE THESE SETTERS - They are only for Hibernate compatibility - use the builder */
+    private void setSubjectKey(final String subjectKey) {
+        this.subjectKey = subjectKey;
     }
 
     private void setParentKey(final String parentKey) {
