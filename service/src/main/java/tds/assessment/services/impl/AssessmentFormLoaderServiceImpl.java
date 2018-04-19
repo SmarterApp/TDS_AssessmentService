@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -75,6 +76,10 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                             .withSegmentId(segment.getId())
                             .withKey(newFormKey.get())
                             .withFormId(form.getId())
+                            // TODO: fix multiple forms with same id
+                            // TODO: a single segment form can have multiple presentations
+                            // TODO: a new segment form would then be created for each presentation
+                            // TODO: and a new form id would need to be created
                             .withLanguage(presentation.getCode())
                             .withFormKey(String.format("%s-%s", testPackage.getBankKey(), newFormKey.getAndIncrement())) // increment after fetching for the next iteration
                             .withVersion(Long.parseLong(testPackage.getVersion()))
@@ -111,7 +116,7 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
     private void loadAdminFormItems(final TestPackage testPackage, final List<TestForm> testForms) {
         // formId -> testForm
         Map<String, TestForm> testFormMap = testForms.stream()
-            .collect(Collectors.toMap(form -> getFormUniqueId(form), Function.identity()));
+            .collect(Collectors.toMap(this::getFormUniqueId, Function.identity()));
 
         // Map each item to its "testform"
         List<TestFormItem> testFormItems = testPackage.getAssessments().stream()
@@ -121,17 +126,16 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                     .flatMap(form -> form.itemGroups().stream()
                         .flatMap(itemGroup -> itemGroup.items().stream()
                             .flatMap(formItem -> form.getPresentations().stream().map(presentation -> {
-                                    if (testFormMap.containsKey(getFormUniqueId(form, presentation))) {
+                                    if (testFormMap.containsKey(getFormUniqueId(form, presentation)) && (formItem.getPresentations().contains(presentation))) {
                                         return new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
                                             testFormMap.get(getFormUniqueId(form, presentation)).getFormKey())
                                             .withFormItsKey(testFormMap.get(getFormUniqueId(form, presentation)).getItsKey())
                                             .withActive(true)
                                             .build();
-                                    } else
-                                        throw new IllegalStateException(String.format(
-                                            "A testform was declared with an invalid formkey. " +
-                                                "Make sure that a matching segmentform is present for the testform %s", form.getId()));
-                                })
+                                    } else {
+                                        return null;
+                                    }
+                                }).filter(Objects::nonNull)
                             )
                         )
                     )
