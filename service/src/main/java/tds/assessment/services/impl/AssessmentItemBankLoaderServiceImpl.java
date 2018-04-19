@@ -80,8 +80,8 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
 
         final String subjectKey = client.getName() + '-' + testPackage.getSubject();
         // Contains  all items and other item metadata specified in the test package
-        final Map<String, ItemMetadataWrapper> itemIdToItemMetadata = mapItemsToItemMetadata(testPackage);
-        final List<ItemMetadataWrapper> itemMetadata = Lists.newArrayList(itemIdToItemMetadata.values());
+        final List<ItemMetadataWrapper> itemMetadata = mapItemsToItemMetadata(testPackage);
+        Map<String, ItemMetadataWrapper> itemMetadataWrappersMap = itemMetadata.stream().collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper, (a1, a2) -> a1));
 
         /* load_subject() */
         assessmentItemBankGenericDataLoaderService.loadSubject(testPackage, client, subjectKey);
@@ -126,7 +126,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
         assessmentItemStimuliLoaderService.loadAdminItems(testPackage, itemMetadata, keyToStrands);
 
         /* load_adminitemmeasurementparms() */
-        assessmentItemSelectionLoaderService.loadAdminItemMeasurementParameters(itemIdToItemMetadata);
+        assessmentItemSelectionLoaderService.loadAdminItemMeasurementParameters(itemMetadataWrappersMap);
 
         /* load_adminstimuli() */
         assessmentItemStimuliLoaderService.loadAdminStimuli(testPackage);
@@ -141,12 +141,12 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
     }
 
     public Set<String> findDuplicateItems(final TestPackage testPackage) {
-        Map<String, ItemMetadataWrapper> itemMetadataWrappers = mapItemsToItemMetadata(testPackage);
-        return assessmentItemBankGenericDataLoaderService.findDuplicateItems(testPackage, itemMetadataWrappers.values());
+        List<ItemMetadataWrapper> itemMetadataWrappers = mapItemsToItemMetadata(testPackage);
+        Map<String, ItemMetadataWrapper> itemMetadataWrappersMap = itemMetadataWrappers.stream().collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper, (a1, a2) -> a1));
+        return assessmentItemBankGenericDataLoaderService.findDuplicateItems(testPackage, itemMetadataWrappersMap.values());
     }
 
-
-    private static Map<String, ItemMetadataWrapper> mapItemsToItemMetadata(final TestPackage testPackage) {
+    private static List<ItemMetadataWrapper> mapItemsToItemMetadata(final TestPackage testPackage) {
         return testPackage.getAssessments().stream().flatMap(
             assessment -> assessment.getSegments().stream().flatMap(segment -> {
                     if (segment.getAlgorithmType().equals(Algorithm.FIXED_FORM.getType())) {
@@ -167,6 +167,6 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
                         throw new TestPackageLoaderException("Unrecognized selection algorithm");
                     }
                 }
-            )).collect(Collectors.toMap(itemWrapper -> itemWrapper.getItem().getKey(), itemWrapper -> itemWrapper, (a1, a2) -> a1));
+            )).collect(Collectors.toList());
     }
 }
