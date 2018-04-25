@@ -108,7 +108,7 @@ public class AssessmentSegmentLoaderServiceImpl implements AssessmentSegmentLoad
         TblTestAdmin testAdmin = tblTestAdminRepository.findOne(client.getName());
 
         if (testAdmin != null) {
-            itemBankDataCommandRepository.updateTblTestAdminVersion(testAdmin.getKey(), testPackage.getVersion());
+            itemBankDataCommandRepository.updateTblTestAdminVersion(testAdmin.getKey(), testPackage.getVersion(), testPackage.getAcademicYear());
         } else {
             final TblTestAdmin tblTestAdmin = new TblTestAdmin.Builder()
                 .withAcademicYear(testPackage.getAcademicYear())

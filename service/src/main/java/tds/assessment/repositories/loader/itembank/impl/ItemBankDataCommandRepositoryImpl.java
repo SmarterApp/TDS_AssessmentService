@@ -56,14 +56,16 @@ public class ItemBankDataCommandRepositoryImpl implements ItemBankDataCommandRep
     }
 
     @Override
-    public void updateTblTestAdminVersion(final String key, final String version) {
+    public void updateTblTestAdminVersion(final String key, final String version, final String academicYear) {
         final SqlParameterSource parameters = new MapSqlParameterSource("key", key)
-            .addValue("version",version);
+            .addValue("version", version)
+            .addValue("academicYear", academicYear);
 
         final String SQL = "UPDATE \n" +
             "   tbltestadmin \n" +
             "SET \n" +
-            "   updateconfig = :version \n" +
+            "   updateconfig = :version, \n" +
+            "   schoolyear = :academicYear \n" +
             "WHERE \n" +
             "   _key = :key";
 

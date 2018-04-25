@@ -20,5 +20,5 @@ import tds.assessment.model.itembank.TblTestAdmin;
 public interface ItemBankDataCommandRepository {
     Client insertClient(final String clientName);
 
-    void updateTblTestAdminVersion(final String key, final String version);
+    void updateTblTestAdminVersion(final String key, final String version, final String academicYear);
 }
