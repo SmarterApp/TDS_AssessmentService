@@ -17,6 +17,10 @@ spring:
       minimum-idle: 8
       idle-timeout: 10000
       connectionTestQuery: "SELECT 1"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: validate
 
   mvc:
     throw-exception-if-no-handler-found: true
@@ -49,7 +53,7 @@ security:
     role: MANAGEMENT
 
 server:
-  port: 8082
+  port: 32841
   undertow:
     buffer-size: 8192
     io-threads: 4

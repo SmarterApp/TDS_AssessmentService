@@ -15,6 +15,7 @@ package tds.assessment.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import tds.common.configuration.CacheConfiguration;
 import tds.common.configuration.DataSourceConfiguration;
@@ -32,7 +33,8 @@ import tds.common.web.advice.ExceptionAdvice;
     RedisClusterConfiguration.class,
     CacheConfiguration.class,
     SecurityConfiguration.class,
-    EventLoggerConfiguration.class,
+    EventLoggerConfiguration.class
 })
+@EnableTransactionManagement
 public class AssessmentServiceApplicationConfiguration {
 }
