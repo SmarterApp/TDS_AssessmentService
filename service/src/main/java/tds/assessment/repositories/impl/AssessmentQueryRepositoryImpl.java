@@ -78,6 +78,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         "   CT.deleteUnansweredItems, \n" +
         "   CT.handscoreproject AS handScored, \n " +
         "   CT.msb AS multiStageBraille, \n" +
+        "   CT.forcecomplete, \n" +
         "   TA.schoolyear AS academicYear, \n" +
         "   SP.ftstartdate AS segFieldTestStartDate, \n" +
         "   SP.ftenddate AS segFieldTestEndDate, \n" +

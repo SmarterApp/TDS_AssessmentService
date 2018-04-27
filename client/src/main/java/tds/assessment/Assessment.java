@@ -59,6 +59,7 @@ public class Assessment {
     private String academicYear;
     private Long loadVersion;
     private Long updateVersion;
+    private boolean forceComplete;
 
     public List<ItemConstraint> getItemConstraints() {
         return itemConstraints != null ? itemConstraints : new ArrayList<ItemConstraint>();
@@ -403,6 +404,17 @@ public class Assessment {
 
     public void setUpdateVersion(Long updateVersion) {
         this.updateVersion = updateVersion;
+    }
+
+    /**
+     * @return {@code true} if the assessment can be forced completed
+     */
+    public boolean isForceComplete() {
+        return forceComplete;
+    }
+
+    public void setForceComplete(final boolean forceComplete) {
+        this.forceComplete = forceComplete;
     }
 
     @Override

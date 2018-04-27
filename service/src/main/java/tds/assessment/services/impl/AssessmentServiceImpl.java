@@ -16,8 +16,10 @@ package tds.assessment.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,12 +33,14 @@ import tds.assessment.ItemProperty;
 import tds.assessment.Strand;
 import tds.assessment.model.SegmentMetadata;
 import tds.assessment.repositories.AccommodationsQueryRepository;
+import tds.assessment.repositories.AssessmentCommandRepository;
 import tds.assessment.repositories.AssessmentQueryRepository;
 import tds.assessment.repositories.FormQueryRepository;
 import tds.assessment.repositories.GradesQueryRepository;
 import tds.assessment.repositories.ItemGroupQueryRepository;
 import tds.assessment.repositories.ItemQueryRepository;
 import tds.assessment.repositories.StrandQueryRepository;
+import tds.assessment.services.AssessmentConfigLoaderService;
 import tds.assessment.services.AssessmentService;
 import tds.common.Algorithm;
 import tds.common.cache.CacheType;
@@ -45,6 +49,7 @@ import tds.common.web.exceptions.NotFoundException;
 @Service
 class AssessmentServiceImpl implements AssessmentService {
     private final AssessmentQueryRepository assessmentQueryRepository;
+    private final AssessmentCommandRepository assessmentCommandRepository;
     private final ItemQueryRepository itemQueryRepository;
     private final FormQueryRepository formQueryRepository;
     private final StrandQueryRepository strandQueryRepository;
@@ -54,6 +59,7 @@ class AssessmentServiceImpl implements AssessmentService {
 
     @Autowired
     public AssessmentServiceImpl(final AssessmentQueryRepository assessmentQueryRepository,
+                                 final AssessmentCommandRepository assessmentCommandRepository,
                                  final ItemQueryRepository itemQueryRepository,
                                  final FormQueryRepository formQueryRepository,
                                  final StrandQueryRepository strandQueryRepository,
@@ -61,6 +67,7 @@ class AssessmentServiceImpl implements AssessmentService {
                                  final GradesQueryRepository gradesQueryRepository,
                                  final ItemGroupQueryRepository itemGroupQueryRepository) {
         this.assessmentQueryRepository = assessmentQueryRepository;
+        this.assessmentCommandRepository = assessmentCommandRepository;
         this.itemQueryRepository = itemQueryRepository;
         this.formQueryRepository = formQueryRepository;
         this.strandQueryRepository = strandQueryRepository;
@@ -70,7 +77,7 @@ class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    @Cacheable(CacheType.LONG_TERM)
+//    @Cacheable(CacheType.LONG_TERM)
     public Optional<Assessment> findAssessment(final String clientName, final String assessmentKey) {
         Optional<Assessment> maybeAssessment = assessmentQueryRepository.findAssessmentByKey(clientName, assessmentKey);
         List<Form> forms = new ArrayList<>();
@@ -107,5 +114,16 @@ class AssessmentServiceImpl implements AssessmentService {
             .orElseThrow(() -> new NotFoundException("Could not find a segment for key %s", segmentKey));
 
         return findAssessment(metadata.getClientName(), metadata.getParentKey() == null ? segmentKey : metadata.getParentKey());
+    }
+
+    @Override
+    @Transactional
+    public void removeAssessment(final String clientName, final String... keys) {
+        Arrays.asList(keys).forEach(key -> {
+            final Assessment assessment = findAssessment(clientName, key)
+                .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
+
+            assessmentCommandRepository.removeAssessmentData(clientName, assessment);
+        });
     }
 }

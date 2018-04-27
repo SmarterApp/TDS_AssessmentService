@@ -78,4 +78,12 @@ public class AssessmentControllerTest {
         when(service.findAssessment(clientName, assessmentKey)).thenReturn(Optional.empty());
         controller.findAssessment(clientName, assessmentKey);
     }
+
+    @Test
+    public void shouldRemoveAssessment() {
+        final String clientName = "SBAC_PT";
+        final String assessmentKey = "theKey";
+        controller.removeAssessment(clientName, assessmentKey);
+        verify(service).removeAssessment(clientName, assessmentKey);
+    }
 }

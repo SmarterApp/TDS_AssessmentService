@@ -16,6 +16,8 @@ package tds.assessment.services;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
+import tds.common.ValidationError;
+import tds.testpackage.model.TestPackage;
 
 /**
  * Service handling interaction with assessments
@@ -33,8 +35,17 @@ public interface AssessmentService {
 
     /**
      * Finds an assessment by the segment key including single segmented assessments
+     *
      * @param segmentKey the segment key
      * @return optional with {@link tds.assessment.Assessment} if found otherwise empty
      */
     Optional<Assessment> findAssessmentBySegmentKey(final String segmentKey);
+
+    /**
+     * Deletes one or more {@link tds.assessment.Assessment} with the specified key(s) and client name
+     *
+     * @param clientName the client environment identifier
+     * @param keys        the keys of the {@link tds.assessment.Assessment}
+     */
+    void removeAssessment(final String clientName, final String... keys);
 }
