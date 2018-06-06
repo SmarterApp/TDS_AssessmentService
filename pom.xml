@@ -34,7 +34,7 @@
         <mockito.version>1.10.19</mockito.version>
 
         <tds-common.version>5.0.1</tds-common.version>
-        <support-tool-client.version>4.1.4</support-tool-client.version>
+        <support-tool-client.version>4.1.6-SNAPSHOT</support-tool-client.version>
 
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>2.3.2</maven.jar.plugin.version>
