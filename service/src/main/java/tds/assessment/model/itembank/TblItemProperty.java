@@ -27,8 +27,6 @@ import javax.validation.constraints.NotNull;
 public class TblItemProperty {
     private TblItemPropertyIdentity tblItemPropertyIdentity;
     private boolean active;
-
-    @NotNull
     private String description;
 
     /**
