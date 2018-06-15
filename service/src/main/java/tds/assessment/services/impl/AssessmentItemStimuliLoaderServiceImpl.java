@@ -109,6 +109,15 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
                 itemProperties.add(new TblItemProperty(item.getKey(), GRADE_PROP_NAME, grade.getValue(), wrapper.getSegmentKey())));
         });
 
+        itemMetadata.forEach(itemWrapper -> itemWrapper.getItem()
+            .poolProperties().forEach(property -> {
+                final TblItemProperty prop = new TblItemProperty(itemWrapper.getItem().getKey(), property.getName(),
+                    property.getValue(), itemWrapper.getSegmentKey());
+                prop.setDescription(String.format("%s = %s", property.getName(), property.getValue()));
+                itemProperties.add(prop);
+            })
+        );
+
         tblItemPropertiesRepository.save(itemProperties);
     }
 
