@@ -107,7 +107,7 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
     private void loadAdminFormItems(final TestPackage testPackage, final List<TestForm> testForms) {
         // formId -> testForm
         Map<String, TestForm> testFormMap = testForms.stream()
-            .collect(Collectors.toMap(this::getFormUniqueId, Function.identity()));
+            .collect(Collectors.toMap(TestForm::getFormId, Function.identity()));
 
         // Map each item to its "testform"
         List<TestFormItem> testFormItems = testPackage.getAssessments().stream()
@@ -117,17 +117,18 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                     .flatMap(form -> form.itemGroups().stream()
                         .flatMap(itemGroup -> itemGroup.items().stream()
                             .flatMap(formItem -> form.getPresentations().stream().map(presentation -> {
-                                    if (testFormMap.containsKey(getFormUniqueId(form, presentation)) && (formItem.getPresentations().contains(presentation))) {
-                                        return new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
-                                            testFormMap.get(getFormUniqueId(form, presentation)).getFormKey())
-                                            .withFormItsKey(testFormMap.get(getFormUniqueId(form, presentation)).getItsKey())
-                                            .withActive(true)
-                                            .build();
-                                    } else {
-                                        return null;
-                                    }
-                                }).filter(Objects::nonNull)
-                            )
+                                final String formId = form.id(presentation.getCode());
+                                if (testFormMap.containsKey(formId) && (formItem.getPresentations().contains(presentation))) {
+                                    TestForm testForm = testFormMap.get(formId);
+                                    return new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
+                                        testForm.getFormKey())
+                                        .withFormItsKey(testForm.getItsKey())
+                                        .withActive(true)
+                                        .build();
+                                } else {
+                                    return null;
+                                }
+                            }).filter(Objects::nonNull))
                         )
                     )
                 )
