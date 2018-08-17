@@ -153,37 +153,47 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
             );
 
         // Create a map for quick look up of the item dimensions
-        Map<String, ItemScoreDimension> itemScoreDimensionsMap = itemIdToItemMetadata.values().stream()
-            .map(wrapper -> new ItemScoreDimension.Builder()
-                    .withDimension(wrapper.getItem().getItemScoreDimension().getDimension().orElse(""))
+        Map<String, List<ItemScoreDimension>> itemScoreDimensionsMap = itemIdToItemMetadata.values().stream()
+            .flatMap(wrapper -> wrapper.getItem().getItemScoreDimensions().stream()
+                .map(dimension -> new ItemScoreDimension.Builder()
+                    .withDimension(dimension.getDimension().orElse(""))
                     .withRecodeRule("")
-                    .withScorePoints(wrapper.getItem().getItemScoreDimension().getScorePoints())
-                    .withWeight((float) wrapper.getItem().getItemScoreDimension().getWeight())
+                    .withScorePoints(dimension.getScorePoints())
+                    .withWeight((float) dimension.getWeight())
                     .withKey(UUID.randomUUID())
                     .withSegmentKey(wrapper.getSegmentKey())
                     .withItemId(wrapper.getItem().getKey())
                     .withMeasurementModelKey(
-                        measurementModelKeys.containsKey(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase())
-                        ? measurementModelKeys.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase())
-                        : 0) // Default to 0 if measurement model is not present in the mapping
-                    .build()
-            ).collect(Collectors.toMap(ItemScoreDimension::getItemId, Function.identity()));
+                        measurementModelKeys.containsKey(dimension.getMeasurementModel().toUpperCase())
+                            ? measurementModelKeys.get(dimension.getMeasurementModel().toUpperCase())
+                            : 0) // Default to 0 if measurement model is not present in the mapping
+                    .build())
+            ).collect(Collectors.groupingBy(ItemScoreDimension::getItemId));
 
-        itemScoreDimensionsRepository.save(itemScoreDimensionsMap.values());
+        List<ItemScoreDimension> flatList = itemScoreDimensionsMap.values().stream()
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
+        itemScoreDimensionsRepository.save(flatList);
 
         // Stream over each item score dimension and create a list of ItemMeasurementParameters
-        List<ItemMeasurementParameter> itemMeasurementParameters = itemScoreDimensionsMap.values().stream()
+        List<ItemMeasurementParameter> itemMeasurementParameters = flatList.stream()
             .map(dimension -> itemIdToItemMetadata.get(dimension.getItemId()))
-            .flatMap(wrapper -> wrapper.getItem().getItemScoreDimension().itemScoreParameters().stream()
-                .map(param ->
-                    // This part is tricky - we need to get the foreign key of the parameter - which is not keyable based on on only the parameter name.
-                    // This is because parameter keys can be different for different measurement model/param name combinations. For example, the param name "b1"
-                    // has a param number of "1" for the IRTPCL model, while the number is "2" for the IRTGPC model. Lets look up based on model name and param num
-                    new ItemMeasurementParameter(itemScoreDimensionsMap.get(wrapper.getItem().getKey()).getKey(),
-                        modelToMeasurementParameterMap.get(wrapper.getItem().getItemScoreDimension().getMeasurementModel().toUpperCase() + "-" + param.getMeasurementParameter()),
-                        (float) param.getValue())
-                )
-            )
+            .flatMap(wrapper -> wrapper.getItem().getItemScoreDimensions().stream()
+                .flatMap(dimension -> dimension.itemScoreParameters().stream()
+                    .flatMap(param -> itemScoreDimensionsMap.get(wrapper.getItem().getKey()).stream()
+                        .map(legacyDim ->
+                            // This part is tricky - we need to get the foreign key of the parameter - which is not keyable based on on only the parameter name.
+                            // This is because parameter keys can be different for different measurement model/param name combinations. For example, the param name "b1"
+                            // has a param number of "1" for the IRTPCL model, while the number is "2" for the IRTGPC model. Lets look up based on model name and param num
+                            new ItemMeasurementParameter(
+                                legacyDim.getKey(),
+                                modelToMeasurementParameterMap.get(dimension.getMeasurementModel().toUpperCase() + "-" + param.getMeasurementParameter()),
+                                (float) param.getValue()
+                            )
+                        )
+                    )
+
+                ))
             .collect(Collectors.toList());
 
         itemMeasurementParameterRepository.save(itemMeasurementParameters);

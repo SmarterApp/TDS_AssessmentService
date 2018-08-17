@@ -5,13 +5,13 @@
     <artifactId>tds-assessment</artifactId>
     <name>tds-assessment</name>
     <packaging>pom</packaging>
-    <version>4.1.0.RELEASE</version>
+    <version>4.2.0.RELEASE</version>
 
     <scm>
         <connection>scm:git:https://github.com/SmarterApp/TDS_AssessmentService.git</connection>
         <developerConnection>scm:git:https://git@github.com/SmarterApp/TDS_AssessmentService.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AssessmentService</url>
-        <tag>4.1.0.RELEASE</tag>
+        <tag>4.2.0.RELEASE</tag>
     </scm>
 
     <modules>
@@ -34,7 +34,7 @@
         <mockito.version>1.10.19</mockito.version>
 
         <tds-common.version>5.0.1</tds-common.version>
-        <support-tool-client.version>0.0.14</support-tool-client.version>
+        <support-tool-client.version>4.2.0.RELEASE</support-tool-client.version>
 
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>2.3.2</maven.jar.plugin.version>

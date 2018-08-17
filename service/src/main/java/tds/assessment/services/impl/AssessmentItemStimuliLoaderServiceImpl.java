@@ -109,6 +109,15 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
                 itemProperties.add(new TblItemProperty(item.getKey(), GRADE_PROP_NAME, grade.getValue(), wrapper.getSegmentKey())));
         });
 
+        itemMetadata.forEach(itemWrapper -> itemWrapper.getItem()
+            .poolProperties().forEach(property -> {
+                final TblItemProperty prop = new TblItemProperty(itemWrapper.getItem().getKey(), property.getName(),
+                    property.getValue(), itemWrapper.getSegmentKey());
+                prop.setDescription(String.format("%s = %s", property.getName(), property.getValue()));
+                itemProperties.add(prop);
+            })
+        );
+
         tblItemPropertiesRepository.save(itemProperties);
     }
 
@@ -116,76 +125,78 @@ public class AssessmentItemStimuliLoaderServiceImpl implements AssessmentItemSti
     public void loadAdminItems(final TestPackage testPackage, final List<ItemMetadataWrapper> itemMetadataWrappers,
                                final Map<String, TblStrand> keyToStrands) {
         List<TblAdminItem> tblSetOfAdminItems = itemMetadataWrappers.stream()
-            .map(itemWrapper -> {
-                    Item item = itemWrapper.getItem();
+            .flatMap(itemWrapper -> itemWrapper.getItem().getItemScoreDimensions().stream()
+                .map(dimension -> {
+                        final Item item = itemWrapper.getItem();
 
-                    final double irtA = item.getItemScoreDimension().itemScoreParameters().stream()
-                        .filter(param -> param.getMeasurementParameter().equals("a"))
-                        .mapToDouble(ItemScoreParameter::getValue)
-                        .max().orElse(IRT_A_DEFAULT);
-                    // This appears to be the average of all item scoring parameters starting with a "b"
-                    final double irtB = item.getItemScoreDimension().itemScoreParameters().stream()
-                        .filter(param -> param.getMeasurementParameter().startsWith("b"))
-                        .mapToDouble(ItemScoreParameter::getValue)
-                        .average().orElse(IRT_B_DEFAULT);
-                    final double irtC = item.getItemScoreDimension().itemScoreParameters().stream()
-                        .filter(param -> param.getMeasurementParameter().equals("c"))
-                        .mapToDouble(ItemScoreParameter::getValue)
-                        .max().orElse(IRT_C_DEFAULT);
+                        final double irtA = dimension.itemScoreParameters().stream()
+                            .filter(param -> param.getMeasurementParameter().equals("a"))
+                            .mapToDouble(ItemScoreParameter::getValue)
+                            .max().orElse(IRT_A_DEFAULT);
+                        // This appears to be the average of all item scoring parameters starting with a "b"
+                        final double irtB = dimension.itemScoreParameters().stream()
+                            .filter(param -> param.getMeasurementParameter().startsWith("b"))
+                            .mapToDouble(ItemScoreParameter::getValue)
+                            .average().orElse(IRT_B_DEFAULT);
+                        final double irtC = dimension.itemScoreParameters().stream()
+                            .filter(param -> param.getMeasurementParameter().equals("c"))
+                            .mapToDouble(ItemScoreParameter::getValue)
+                            .max().orElse(IRT_C_DEFAULT);
 
-                    final String claimName = item.getBlueprintReferences().stream()
-                        .map(bpRef -> keyToStrands.get(bpRef.getIdRef()))
-                        .filter(bp -> CLAIM_AND_TARGET_TYPES.contains(bp.getType()))
-                        .map(bp -> CLAIM_TYPES.contains(bp.getType())
-                            ? bp.getKey()   // If this is a claim, return the key
-                            : bp.getKey().substring(0, bp.getKey().indexOf('|'))) // Otherwise, if its a target, parse it out
-                        .findFirst()
-                        .orElseThrow(() -> new TestPackageLoaderException(
-                            String.format("Cannot find matching strand/claim in test package for item %s", item.getKey())));
+                        final String claimName = item.getBlueprintReferences().stream()
+                            .map(bpRef -> keyToStrands.get(bpRef.getIdRef()))
+                            .filter(bp -> CLAIM_AND_TARGET_TYPES.contains(bp.getType()))
+                            .map(bp -> CLAIM_TYPES.contains(bp.getType())
+                                ? bp.getKey()   // If this is a claim, return the key
+                                : bp.getKey().substring(0, bp.getKey().indexOf('|'))) // Otherwise, if its a target, parse it out
+                            .findFirst()
+                            .orElseThrow(() -> new TestPackageLoaderException(
+                                String.format("Cannot find matching strand/claim in test package for item %s", item.getKey())));
 
-                    final String leafTargetKey = item.getBlueprintReferences().stream()
-                        .map(bpRef -> keyToStrands.get(bpRef.getIdRef()))
-                        .filter(bp -> TARGET_TYPES.contains(bp.getType())
-                            && bp.isLeafTarget())
-                        .map(TblStrand::getKey)
-                        .findFirst()
-                        .orElse(claimName); // If there's no target/contentlevel, use the strand/claim
+                        final String leafTargetKey = item.getBlueprintReferences().stream()
+                            .map(bpRef -> keyToStrands.get(bpRef.getIdRef()))
+                            .filter(bp -> TARGET_TYPES.contains(bp.getType())
+                                && bp.isLeafTarget())
+                            .map(TblStrand::getKey)
+                            .findFirst()
+                            .orElse(claimName); // If there's no target/contentlevel, use the strand/claim
 
-                    // See itembank.itembvector() for reference - the bvector is a semi-colon delimited list of "b" item
-                    // score dimension parameter values. If no "b" parameter is provided, use the default (-9999)
-                    final String bVector = irtB == IRT_B_DEFAULT
-                        ? String.format("%.15f", irtB)
-                        : StringUtils.join(item.getItemScoreDimension().itemScoreParameters().stream()
+                        // See itembank.itembvector() for reference - the bvector is a semi-colon delimited list of "b" item
+                        // score dimension parameter values. If no "b" parameter is provided, use the default (-9999)
+                        final String bVector = irtB == IRT_B_DEFAULT
+                            ? String.format("%.15f", irtB)
+                            : StringUtils.join(dimension.itemScoreParameters().stream()
                             .filter(param -> param.getMeasurementParameter().startsWith("b"))
                             .map(ItemScoreParameter::getValue)
                             .map(b -> String.format("%.15f", b))
                             .collect(Collectors.toList()), ";");
 
-                    return new TblAdminItem.Builder(itemWrapper.getItem().getKey(), itemWrapper.getSegmentKey())
-                        .withGroupId(itemWrapper.getGroupId())
-                        .withItemPosition(item.position())
-                        .withFieldTest(item.fieldTest())
-                        .withActive(true)
-                        .withIrtB(String.format("%.15f", irtB))
-                        .withRequired(item.responseRequired())
-                        .withBlockId("A")
-                        .withClientName(testPackage.getPublisher())
-                        .withResponseMimeType(MediaType.TEXT_PLAIN_VALUE)
-                        .withStrandKey(leafTargetKey)
-                        .withVersion(Long.parseLong(testPackage.getVersion()))
-                        .withUpdatedVersion(Long.parseLong(testPackage.getVersion()))
-                        .withClaimName(claimName)
-                        .withIrtA((float) irtA)
-                        .withIrtC((float) irtC)
-                        .withIrtModel(item.getItemScoreDimension().getMeasurementModel())
-                        .withNotForScoring(false)
-                        // A semi-colon delimited list of the targets/content levels
-                        .withTargetString(itemWrapper.isAdaptive() ? createClString(item, keyToStrands) : null)
-                        .withFtWeight(1)
-                        .withTestCohort(DEFAULT_COHORT)
-                        .withBVector(bVector)
-                        .build();
-                }
+                        return new TblAdminItem.Builder(itemWrapper.getItem().getKey(), itemWrapper.getSegmentKey())
+                            .withGroupId(itemWrapper.getGroupId())
+                            .withItemPosition(item.position())
+                            .withFieldTest(item.fieldTest())
+                            .withActive(true)
+                            .withIrtB(String.format("%.15f", irtB))
+                            .withRequired(item.responseRequired())
+                            .withBlockId("A")
+                            .withClientName(testPackage.getPublisher())
+                            .withResponseMimeType(MediaType.TEXT_PLAIN_VALUE)
+                            .withStrandKey(leafTargetKey)
+                            .withVersion(Long.parseLong(testPackage.getVersion()))
+                            .withUpdatedVersion(Long.parseLong(testPackage.getVersion()))
+                            .withClaimName(claimName)
+                            .withIrtA((float) irtA)
+                            .withIrtC((float) irtC)
+                            .withIrtModel(dimension.getMeasurementModel())
+                            .withNotForScoring(false)
+                            // A semi-colon delimited list of the targets/content levels
+                            .withTargetString(itemWrapper.isAdaptive() ? createClString(item, keyToStrands) : null)
+                            .withFtWeight(1)
+                            .withTestCohort(DEFAULT_COHORT)
+                            .withBVector(bVector)
+                            .build();
+                    }
+                )
             )
             .collect(Collectors.toList());
 

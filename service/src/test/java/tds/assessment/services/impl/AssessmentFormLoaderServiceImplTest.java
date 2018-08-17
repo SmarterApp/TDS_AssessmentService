@@ -71,22 +71,19 @@ public class AssessmentFormLoaderServiceImplTest extends AssessmentLoaderService
 
     @Test
     public void shouldLoadAdminFormsAndFormItems() {
-        when(itemBankDataQueryRepository.generateFormKey()).thenReturn(2112L);
-
+        int formId = 1580662250;
         service.loadAdminForms(mockTestPackage);
-
-        verify(itemBankDataQueryRepository).generateFormKey();
         verify(testFormRepository).save(testFormArgumentCaptor.capture());
 
         List<TestForm> savedTestForms = testFormArgumentCaptor.getValue();
         assertThat(savedTestForms).hasSize(1);
         TestForm retTestForm = savedTestForms.get(0);
-        assertThat(retTestForm.getFormKey()).isEqualTo("187-2112");
+        assertThat(retTestForm.getFormKey()).isEqualTo(String.format("187-%d", formId));
         assertThat(retTestForm.getSegmentKey()).isEqualTo("(SBAC_PT)SBAC-IRP-Perf-MATH-11-2017-2018");
-        assertThat(retTestForm.getItsKey()).isEqualTo(2112);
-        assertThat(retTestForm.getKey()).isEqualTo(2112);
+        assertThat(retTestForm.getItsKey()).isEqualTo(formId);
+        assertThat(retTestForm.getKey()).isEqualTo(formId);
         assertThat(retTestForm.getLanguage()).isEqualTo("ENU");
-        assertThat(retTestForm.getFormId()).isEqualTo("IRP::MathG11::Perf::SP15");
+        assertThat(retTestForm.getFormId()).isEqualTo("IRP::MathG11::Perf::SP15::ENU");
         assertThat(retTestForm.getCohort()).isEqualTo("Default");
 
         verify(testFormItemRepository).save(testFormItemsArgumentCaptor.capture());
@@ -95,9 +92,9 @@ public class AssessmentFormLoaderServiceImplTest extends AssessmentLoaderService
 
         TestFormItem formItem = savedTestFormItems.get(0);
         assertThat(formItem.isActive()).isTrue();
-        assertThat(formItem.getFormItsKey()).isEqualTo(2112);
+        assertThat(formItem.getFormItsKey()).isEqualTo(formId);
         assertThat(formItem.getTestFormItemIdentity().getItemPosition()).isEqualTo(1);
-        assertThat(formItem.getTestFormItemIdentity().getFormKey()).isEqualTo("187-2112");
+        assertThat(formItem.getTestFormItemIdentity().getFormKey()).isEqualTo(String.format("187-%d", formId));
         assertThat(formItem.getTestFormItemIdentity().getItemId()).isEqualTo("187-1434");
     }
 
