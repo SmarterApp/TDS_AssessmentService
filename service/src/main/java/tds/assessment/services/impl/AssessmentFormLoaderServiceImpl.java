@@ -60,12 +60,7 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
 
     @Override
     public List<TestForm> loadAdminForms(final TestPackage testPackage) {
-        // We'll use this atomic long value to keep track of the "unique" form keys we will be generating. This key
-        // used to be a required field in the old test package spec but has been removed - we are generating an "internal"
-        // database key manually for backup compatibility purposes
-        AtomicLong newFormKey = new AtomicLong(itemBankDataQueryRepository.generateFormKey());
-
-        // Map each SegmentForm to a "testform" - we will generate the form key manually
+        // Map each SegmentForm to a "testform"
         List<TestForm> testForms = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.getSegments().stream()
                 .filter(segment -> segment.getAlgorithmType().equalsIgnoreCase(Algorithm.FIXED_FORM.getType()))
@@ -74,14 +69,10 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                         .map(presentation -> new TestForm.Builder()
                             .withSegmentKey(segment.getKey())
                             .withSegmentId(segment.getId())
-                            .withKey(newFormKey.get())
-                            .withFormId(form.getId())
-                            // TODO: fix multiple forms with same id
-                            // TODO: a single segment form can have multiple presentations
-                            // TODO: a new segment form would then be created for each presentation
-                            // TODO: and a new form id would need to be created
+                            .withKey(form.key(presentation.getCode()))
+                            .withFormId(form.id(presentation.getCode()))
                             .withLanguage(presentation.getCode())
-                            .withFormKey(String.format("%s-%s", testPackage.getBankKey(), newFormKey.getAndIncrement())) // increment after fetching for the next iteration
+                            .withFormKey(String.format("%s-%s", testPackage.getBankKey(), form.key(presentation.getCode())))
                             .withVersion(Long.parseLong(testPackage.getVersion()))
                             .withCohort(form.getCohort())
                             .build()
@@ -116,7 +107,7 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
     private void loadAdminFormItems(final TestPackage testPackage, final List<TestForm> testForms) {
         // formId -> testForm
         Map<String, TestForm> testFormMap = testForms.stream()
-            .collect(Collectors.toMap(this::getFormUniqueId, Function.identity()));
+            .collect(Collectors.toMap(TestForm::getFormId, Function.identity()));
 
         // Map each item to its "testform"
         List<TestFormItem> testFormItems = testPackage.getAssessments().stream()
@@ -126,17 +117,18 @@ public class AssessmentFormLoaderServiceImpl implements AssessmentFormLoaderServ
                     .flatMap(form -> form.itemGroups().stream()
                         .flatMap(itemGroup -> itemGroup.items().stream()
                             .flatMap(formItem -> form.getPresentations().stream().map(presentation -> {
-                                    if (testFormMap.containsKey(getFormUniqueId(form, presentation)) && (formItem.getPresentations().contains(presentation))) {
-                                        return new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
-                                            testFormMap.get(getFormUniqueId(form, presentation)).getFormKey())
-                                            .withFormItsKey(testFormMap.get(getFormUniqueId(form, presentation)).getItsKey())
-                                            .withActive(true)
-                                            .build();
-                                    } else {
-                                        return null;
-                                    }
-                                }).filter(Objects::nonNull)
-                            )
+                                final String formId = form.id(presentation.getCode());
+                                if (testFormMap.containsKey(formId) && (formItem.getPresentations().contains(presentation))) {
+                                    TestForm testForm = testFormMap.get(formId);
+                                    return new TestFormItem.Builder(formItem.position(), segment.getKey(), formItem.getKey(),
+                                        testForm.getFormKey())
+                                        .withFormItsKey(testForm.getItsKey())
+                                        .withActive(true)
+                                        .build();
+                                } else {
+                                    return null;
+                                }
+                            }).filter(Objects::nonNull))
                         )
                     )
                 )

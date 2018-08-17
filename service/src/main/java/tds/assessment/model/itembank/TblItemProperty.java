@@ -17,6 +17,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * A row representing generic item metadata (not linked to any specific segment or assessment)
@@ -26,6 +27,7 @@ import javax.persistence.Table;
 public class TblItemProperty {
     private TblItemPropertyIdentity tblItemPropertyIdentity;
     private boolean active;
+    private String description;
 
     /**
      * Empty constructor for frameworks
@@ -44,6 +46,15 @@ public class TblItemProperty {
 
     public void setTblItemPropertyIdentity(final TblItemPropertyIdentity tblItemPropertyIdentity) {
         this.tblItemPropertyIdentity = tblItemPropertyIdentity;
+    }
+
+    @Column(name = "propdescription")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
     @Column(name = "isactive")

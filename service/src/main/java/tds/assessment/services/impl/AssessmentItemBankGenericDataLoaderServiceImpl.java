@@ -208,7 +208,7 @@ public class AssessmentItemBankGenericDataLoaderServiceImpl implements Assessmen
             .withItemType(item.getType())
             .withBankKey(bankKey)
             .withVersion(Long.parseLong(version))
-            .withScorePoints(item.getItemScoreDimension().getScorePoints())
+            .withScorePoints(item.getItemScoreDimensions().get(0).getScorePoints())
             .withFileName(fileName)
             .withFilePath(filePath)
             .build();

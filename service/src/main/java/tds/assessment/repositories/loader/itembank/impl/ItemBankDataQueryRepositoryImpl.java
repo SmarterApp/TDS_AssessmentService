@@ -61,15 +61,4 @@ public class ItemBankDataQueryRepositoryImpl implements ItemBankDataQueryReposit
 
         return maybeClient;
     }
-
-    @Override
-    public long generateFormKey() {
-        final String SQL =
-            "SELECT \n" +
-                "   COALESCE(MAX(_efk_itskey) + 1, 100) \n" +
-                "FROM \n" +
-                "   testform";
-
-        return jdbcTemplate.queryForObject(SQL, new MapSqlParameterSource(), Long.class);
-    }
 }
