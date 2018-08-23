@@ -90,6 +90,25 @@ public class AssessmentCommandRepositoryImplIntegrationTests {
     }
 
     @Test
+    public void shouldRemoveCATAssessmentFromItembankSuccessfully() {
+        // Make sure both loaded assessments exist
+        Optional<Assessment> assessment = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY);
+        assertThat(assessment.isPresent()).isTrue();
+        Optional<Assessment> assessment2 = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY2);
+        assertThat(assessment2.isPresent()).isTrue();
+
+        // Remove only the CAT assessment
+        commandRepository.removeItemBankAssessmentData(TEST_ASSESSMENT_KEY);
+
+        // The second assessment's data should not be affected by the delete
+        Optional<Assessment> retAssessment = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY);
+        assertThat(retAssessment.isPresent()).isFalse();
+        Optional<Assessment> retAssessment2 = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY2);
+        assertThat(retAssessment2.isPresent()).isTrue();
+        assertThat(assessment2).isEqualTo(retAssessment2);
+    }
+
+    @Test
     public void shouldRemoveFixedFormAssessmentSuccessfully() {
         // Make sure both loaded assessments exist
         Optional<Assessment> assessment = queryRepository.findAssessmentByKey(TEST_CLIENT_NAME, TEST_ASSESSMENT_KEY);

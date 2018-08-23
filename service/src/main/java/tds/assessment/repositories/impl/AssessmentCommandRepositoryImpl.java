@@ -89,6 +89,12 @@ public class AssessmentCommandRepositoryImpl implements AssessmentCommandReposit
         jdbcTemplate.batchUpdate(SQL.toArray(new String[SQL.size()]));
     }
 
+    @Override
+    public void removeItemBankAssessmentData(final String assessmentKey) {
+        List<String> deleteSql = generateItembankDeleteSQL(assessmentKey);
+        jdbcTemplate.batchUpdate(deleteSql.toArray(new String[deleteSql.size()]));
+    }
+
     private List<String> generateItembankDeleteSQL(final String key) {
         final List<String> SQL = Arrays.stream(ITEMBANK_TABLE_NAMES)
             .map(table -> table.equals("tblsetofadminsubjects")

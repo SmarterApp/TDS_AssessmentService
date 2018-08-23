@@ -118,12 +118,19 @@ class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     @Transactional
-    public void removeAssessment(final String clientName, final String... keys) {
+    public void removeAssessment(final String clientName, final boolean safeDelete, final String... keys) {
         Arrays.asList(keys).forEach(key -> {
-            final Assessment assessment = findAssessment(clientName, key)
-                .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
+            if (safeDelete) {
+                final Assessment assessment = findAssessment(clientName, key)
+                    .orElseThrow(() -> new NotFoundException("Could not find set of admin subject for %s", key));
 
-            assessmentCommandRepository.removeAssessmentData(clientName, assessment);
+                assessmentCommandRepository.removeAssessmentData(clientName, assessment);
+            }  else {
+                assessmentCommandRepository.removeItemBankAssessmentData(key);
+                // If this is a multi-segmented assessment, delete all the segment-specific data as well
+                assessmentQueryRepository.findSegmentKeysByAssessmentKey(key)
+                    .forEach(segmentKey -> assessmentCommandRepository.removeItemBankAssessmentData(key));
+            }
         });
     }
 }
