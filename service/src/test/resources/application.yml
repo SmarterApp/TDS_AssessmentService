@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/itembank
-    username: root
-    password: password123
+    url: ${sbac.jdbc.host}/itembank
+    username: ${sbac.jdbc.user}
+    password: ${sbac.jdbc.password}
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
   mvc:
