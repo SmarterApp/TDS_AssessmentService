@@ -26,4 +26,11 @@ public interface AssessmentCommandRepository {
      * @param assessment The {@link tds.assessment.Assessment} object to delete
      */
     void removeAssessmentData(final String clientName, final Assessment assessment);
+
+    /**
+     * Removes {@link tds.assessment.Assessment} data from the TDS database
+     *
+     * @param key The assessment or segment key of the object to delete
+     */
+    void removeItemBankAssessmentData(final String key);
 }
