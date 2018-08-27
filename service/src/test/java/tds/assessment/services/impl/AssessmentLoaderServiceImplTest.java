@@ -96,7 +96,7 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
 
         List<TestForm> mockTestForms = randomListOf(2, TestForm.class);
         when(assessmentItemBankLoaderService.loadTestPackage(testPackageName, mockTestPackage, new HashSet<>())).thenReturn(mockTestForms);
-        doThrow(NotFoundException.class).when(assessmentService).removeAssessment(mockTestPackage.getPublisher(), true, mockTestPackage.getAssessments().get(0).getKey());
+        doThrow(NotFoundException.class).when(assessmentService).removeAssessment(mockTestPackage.getPublisher(), false, mockTestPackage.getAssessments().get(0).getKey());
         doThrow(TestPackageLoaderException.class).when(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
 
         Optional<ValidationError> maybeError = service.loadTestPackage(testPackageName, mockTestPackage);
@@ -104,7 +104,7 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
 
         verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage, new HashSet<>());
         verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
-        verify(assessmentService, times(2)).removeAssessment(mockTestPackage.getPublisher(), true
+        verify(assessmentService, times(2)).removeAssessment(mockTestPackage.getPublisher(), false
             , mockTestPackage.getAssessments().get(0).getKey());
     }
 
@@ -119,9 +119,9 @@ public class AssessmentLoaderServiceImplTest extends AssessmentLoaderServiceBase
 
         verify(assessmentItemBankLoaderService).loadTestPackage(testPackageName, mockTestPackage, new HashSet<>());
         verify(assessmentConfigLoaderService).loadTestPackage(testPackageName, mockTestPackage, mockTestForms);
-        verify(assessmentService).removeAssessment(mockTestPackage.getPublisher(), true
+        verify(assessmentService).removeAssessment(mockTestPackage.getPublisher(), false
             , mockTestPackage.getAssessments().get(0).getKey());
-        verify(assessmentService).removeAssessment(mockTestPackage.getPublisher(), true
+        verify(assessmentService).removeAssessment(mockTestPackage.getPublisher(), false
             , mockTestPackage.getAssessments().get(1).getKey());
     }
 }
