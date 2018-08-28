@@ -26,23 +26,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import tds.assessment.exceptions.TestPackageLoaderException;
 import tds.assessment.model.itembank.Client;
 import tds.assessment.model.itembank.TblStrand;
 import tds.assessment.model.itembank.TestForm;
 import tds.assessment.repositories.loader.itembank.ItemBankDataCommandRepository;
 import tds.assessment.repositories.loader.itembank.ItemBankDataQueryRepository;
 import tds.assessment.services.AffinityGroupLoaderService;
-import tds.assessment.services.AssessmentConfigLoaderService;
 import tds.assessment.services.AssessmentFormLoaderService;
 import tds.assessment.services.AssessmentItemBankGenericDataLoaderService;
 import tds.assessment.services.AssessmentItemBankLoaderService;
 import tds.assessment.services.AssessmentItemSelectionLoaderService;
 import tds.assessment.services.AssessmentItemStimuliLoaderService;
-import tds.assessment.services.AssessmentLoaderService;
 import tds.assessment.services.AssessmentSegmentLoaderService;
-import tds.assessment.services.AssessmentService;
-import tds.common.ValidationError;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -106,7 +101,7 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
         List<TestForm> testForms = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage, new HashSet<>());
         assertThat(testForms).isEmpty();
 
-        verify(assessmentItemSelectionLoaderService).loadScoringSeedData();
+        verify(assessmentItemSelectionLoaderService).loadSeedData(mockTestPackage);
         verify(itemBankDataQueryRepository).findClient("SBAC_PT");
         verify(itemBankDataCommandRepository).insertClient(mockTestPackage.getPublisher());
         verify(assessmentItemBankGenericDataLoaderService).loadSubject(eq(mockTestPackage), isA(Client.class), eq("SBAC_PT-MATH"));
@@ -141,7 +136,7 @@ public class AssessmentItemBankLoaderServiceImplTest extends AssessmentLoaderSer
         List<TestForm> testForms = service.loadTestPackage("V2-(SBAC_PT)IRP-GRADE-11-MATH-EXAMPLE.xml", mockTestPackage, new HashSet<>());
         assertThat(testForms).isEmpty();
 
-        verify(assessmentItemSelectionLoaderService).loadScoringSeedData();
+        verify(assessmentItemSelectionLoaderService).loadSeedData(mockTestPackage);
         verify(itemBankDataQueryRepository).findClient("SBAC_PT");
         verify(itemBankDataCommandRepository, never()).insertClient(mockTestPackage.getPublisher());
         verify(assessmentItemBankGenericDataLoaderService).loadSubject(eq(mockTestPackage), isA(Client.class), eq("SBAC_PT-MATH"));
