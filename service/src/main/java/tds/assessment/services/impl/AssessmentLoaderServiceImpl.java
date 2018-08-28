@@ -20,7 +20,6 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

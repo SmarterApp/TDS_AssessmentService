@@ -92,10 +92,10 @@ public class AssessmentConfigSeedDataLoaderServiceImpl implements AssessmentConf
         subjectRepository.save(new Subject(clientName, testPackage.getSubject()));
         accommodationFamilyRepository.save(new AccommodationFamily(clientName, testPackage.getSubject()));
 
-        // Load default tool dependency seed data
-        testPackage.getAssessments().forEach(assessment ->
-            jdbcTemplate.update("call configs.InsertToolDependencies(?, ?)", testPackage.getPublisher(), assessment.getId())
-        );
+//        // Load default tool dependency seed data
+//        testPackage.getAssessments().forEach(assessment ->
+//            jdbcTemplate.update("call configs.InsertToolDependencies(?, ?)", testPackage.getPublisher(), assessment.getId())
+//        );
     }
 
     @Override

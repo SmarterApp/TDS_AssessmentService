@@ -18,6 +18,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import tds.assessment.model.ItemMetadataWrapper;
@@ -116,25 +116,33 @@ public class AssessmentItemSelectionLoaderServiceImpl implements AssessmentItemS
     private final MeasurementParameterRepository measurementParameterRepository;
     private final ItemMeasurementParameterRepository itemMeasurementParameterRepository;
     private final TblItemSelectionParameterRepository tblItemSelectionParameterRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public AssessmentItemSelectionLoaderServiceImpl(final ItemScoreDimensionsRepository itemScoreDimensionsRepository,
                                                     final MeasurementModelRepository measurementModelRepository,
                                                     final MeasurementParameterRepository measurementParameterRepository,
                                                     final ItemMeasurementParameterRepository itemMeasurementParameterRepository,
-                                                    final TblItemSelectionParameterRepository tblItemSelectionParameterRepository) {
+                                                    final TblItemSelectionParameterRepository tblItemSelectionParameterRepository,
+                                                    final JdbcTemplate jdbcTemplate) {
         this.itemScoreDimensionsRepository = itemScoreDimensionsRepository;
         this.measurementModelRepository = measurementModelRepository;
         this.measurementParameterRepository = measurementParameterRepository;
         this.itemMeasurementParameterRepository = itemMeasurementParameterRepository;
         this.tblItemSelectionParameterRepository = tblItemSelectionParameterRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void loadScoringSeedData() {
+    public void loadSeedData(final TestPackage testPackage) {
         // Load the scoring measurement seed data (refer to loader_measurementparameters stored procedure in legacy)
         measurementModelRepository.save(measurementModels);
         measurementParameterRepository.save(measurementParameters);
+
+        // Load default tool dependency seed data
+        testPackage.getAssessments().forEach(assessment ->
+            jdbcTemplate.update("call configs.InsertToolDependencies(?, ?)", testPackage.getPublisher(), assessment.getId())
+        );
     }
 
     @Override
