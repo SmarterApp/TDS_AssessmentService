@@ -17,6 +17,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -203,5 +204,25 @@ public class ToolDependency {
 
     private void setContextType(final String contextType) {
         this.contextType = contextType;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final ToolDependency that = (ToolDependency) o;
+        return Objects.equals(context, that.context) &&
+            Objects.equals(contextType, that.contextType) &&
+            Objects.equals(ifType, that.ifType) &&
+            Objects.equals(ifValue, that.ifValue) &&
+            Objects.equals(thenType, that.thenType) &&
+            Objects.equals(thenValue, that.thenValue) &&
+            Objects.equals(clientName, that.clientName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(context, contextType, ifType, ifValue, thenType, thenValue, clientName);
     }
 }

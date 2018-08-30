@@ -21,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,9 @@ public class AssessmentItemSelectionLoaderServiceImplTest extends AssessmentLoad
     @Mock
     private TblItemSelectionParameterRepository tblItemSelectionParameterRepository;
 
+    @Mock
+    private JdbcTemplate jdbcTemplate;
+
     @Captor
     private ArgumentCaptor<List<TblItemSelectionParameter>> selectionParamsArgumentCaptor;
 
@@ -73,14 +77,16 @@ public class AssessmentItemSelectionLoaderServiceImplTest extends AssessmentLoad
     @Before
     public void setup() {
         service = new AssessmentItemSelectionLoaderServiceImpl(itemScoreDimensionsRepository,
-            measurementModelRepository, measurementParameterRepository, itemMeasurementParameterRepository, tblItemSelectionParameterRepository);
+            measurementModelRepository, measurementParameterRepository, itemMeasurementParameterRepository,
+            tblItemSelectionParameterRepository, jdbcTemplate);
     }
 
     @Test
     public void shouldInsertScoringSeedData() {
-        service.loadScoringSeedData();
+        service.loadSeedData(mockTestPackage);
         verify(measurementModelRepository).save(isA(Set.class));
         verify(measurementParameterRepository).save(isA(Set.class));
+        verify(jdbcTemplate).update("call configs.InsertToolDependencies(?, ?)", "SBAC_PT", "SBAC-IRP-CAT-MATH-11");
     }
 
     @Test
