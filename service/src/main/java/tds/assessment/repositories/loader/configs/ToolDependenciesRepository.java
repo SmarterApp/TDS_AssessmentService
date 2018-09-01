@@ -16,10 +16,12 @@ package tds.assessment.repositories.loader.configs;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import tds.assessment.model.configs.ToolDependency;
 
 @Repository
-public interface ToolDependenciesRepository extends CrudRepository<ToolDependency, UUID>{
+public interface ToolDependenciesRepository extends CrudRepository<ToolDependency, UUID> {
+    List<ToolDependency> findByContextAndClientName(final String context, final String clientName);
 }

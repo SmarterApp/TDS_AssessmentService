@@ -67,7 +67,7 @@ class AssessmentController {
     @DeleteMapping(value = "/{clientName}/assessments", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> removeAssessment(@PathVariable final String clientName,
                                        @RequestParam("assessmentKey") final String... assessmentKeys) throws NotFoundException {
-        service.removeAssessment(clientName, assessmentKeys);
+        service.removeAssessment(clientName, true, assessmentKeys);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 }

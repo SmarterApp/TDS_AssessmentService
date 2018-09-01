@@ -175,19 +175,17 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
-    public void shouldRemoveAssessment() {
-        Assessment assessment = random(Assessment.class);
-        when(mockAssessmentQueryRepository.findAssessmentByKey("SBAC_PT", assessment.getKey()))
-            .thenReturn(Optional.of(assessment));
-        service.removeAssessment("SBAC_PT", assessment.getKey());
-        verify(mockAssessmentQueryRepository).findAssessmentByKey("SBAC_PT", assessment.getKey());
-        verify(mockAssessmentCommandRepository).removeAssessmentData("SBAC_PT", assessment);
+    public void shouldRemoveAssessmentUnsafeDelete() {
+        final String key = "assessmentKey";
+        service.removeAssessment("SBAC_PT", false, key);
+        verify(mockAssessmentQueryRepository).findSegmentKeysByAssessmentKey(key);
+        verify(mockAssessmentCommandRepository).removeItemBankAssessmentData(key);
     }
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowForNoAssessmentFoundRemoveAssessment() {
         when(mockAssessmentQueryRepository.findAssessmentByKey("SBAC_PT", "noAssessment"))
             .thenReturn(Optional.empty());
-        service.removeAssessment("SBAC_PT", "noAssessment");
+        service.removeAssessment("SBAC_PT", true, "noAssessment");
     }
 }

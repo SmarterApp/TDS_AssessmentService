@@ -84,6 +84,6 @@ public class AssessmentControllerTest {
         final String clientName = "SBAC_PT";
         final String assessmentKey = "theKey";
         controller.removeAssessment(clientName, assessmentKey);
-        verify(service).removeAssessment(clientName, assessmentKey);
+        verify(service).removeAssessment(clientName, true, assessmentKey);
     }
 }
