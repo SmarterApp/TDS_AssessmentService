@@ -13,7 +13,6 @@
 
 package tds.assessment.services.impl;
 
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,6 @@ import tds.assessment.services.AssessmentItemSelectionLoaderService;
 import tds.assessment.services.AssessmentItemStimuliLoaderService;
 import tds.assessment.services.AssessmentSegmentLoaderService;
 import tds.common.Algorithm;
-import tds.support.job.TestPackageLoadJob;
 import tds.testpackage.model.TestPackage;
 
 @Service
@@ -72,7 +70,7 @@ public class AssessmentItemBankLoaderServiceImpl implements AssessmentItemBankLo
 
     @Override
     public List<TestForm> loadTestPackage(final String testPackageName, final TestPackage testPackage, final Set<String> duplicateItemIds) {
-        assessmentItemSelectionLoaderService.loadScoringSeedData();
+        assessmentItemSelectionLoaderService.loadSeedData(testPackage);
 
         //Find client if exists. If not, we need to create one
         final Client client = itemBankDataQueryRepository.findClient(testPackage.getPublisher())

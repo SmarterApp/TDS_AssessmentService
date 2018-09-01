@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import tds.assessment.exceptions.TestPackageLoaderException;
@@ -33,6 +35,7 @@ import tds.common.Algorithm;
 import tds.testpackage.model.Presentation;
 import tds.testpackage.model.TestPackage;
 
+import static java.util.stream.Collectors.toSet;
 import static tds.assessment.services.TestToolDefaultsHelper.TOOL_OPTION_DEFAULTS_MAP;
 
 @Service
@@ -103,6 +106,11 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
     }
 
     private void loadToolDependencies(final TestPackage testPackage) {
+        // Build a map of dependencies based on the assessment id (context of the tooldependency) so that we can eliminate duplicates
+        Map<String, Set<ToolDependency>> existingDependencies = testPackage.getAssessments().stream()
+            .flatMap(assessment -> toolDependenciesRepository.findByContextAndClientName(assessment.getId(), testPackage.getPublisher()).stream())
+            .collect(Collectors.groupingBy(ToolDependency::getContext, toSet()));
+
         // Assessment tool dependencies
         List<ToolDependency> toolDependencies = testPackage.getAssessments().stream()
             .flatMap(assessment -> assessment.tools().stream()
@@ -119,6 +127,8 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
                             .withDefaultValue(dependency.defaultValue())
                             .build()
                         )
+                        .filter(dependency -> !existingDependencies.containsKey(assessment.getId())
+                            || !existingDependencies.get(assessment.getId()).contains(dependency))
                     )
                 ))
             .collect(Collectors.toList());
@@ -146,13 +156,6 @@ public class AssessmentToolConfigServiceImpl implements AssessmentToolConfigServ
             .collect(Collectors.toList());
 
         toolDependencies.addAll(segmentToolDependencies);
-
-
-        //TODO: Clear out existing "default" tool accommodations if a dependency is defined explicitly
-//        toolDependencies.forEach(dependency ->
-//            toolDependenciesRepository.deleteByContextAndThenType(dependency.getContext(), dependency.getThenType())
-//        );
-
         toolDependenciesRepository.save(toolDependencies);
     }
 

@@ -288,6 +288,20 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository {
         return maybeSegmentMetadata;
     }
 
+    @Override
+    public List<String> findSegmentKeysByAssessmentKey(final String assessmentKey) {
+        final SqlParameterSource parameters = new MapSqlParameterSource("assessmentKey", assessmentKey);
+
+        final String SQL = "SELECT \n" +
+            "  _key\n" +
+            "FROM \n" +
+            "  tblsetofadminsubjects \n" +
+            "WHERE \n" +
+            "  virtualtest = :assessmentKey";
+
+        return jdbcTemplate.queryForList(SQL, parameters, String.class);
+    }
+
     private static class AssessmentInfoRowMapper implements RowMapper<AssessmentInfo> {
         @Override
         public AssessmentInfo mapRow(final ResultSet rs, final int i) throws SQLException {

@@ -163,16 +163,16 @@ public class AssessmentControllerIntegrationTests {
             .param("assessmentKey", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
-        verify(assessmentService).removeAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        verify(assessmentService).removeAssessment("SBAC_PT", true , "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
     }
 
     @Test
     public void shouldReturn404WhenAssessmentNotFound() throws Exception {
-        doThrow(NotFoundException.class).when(assessmentService).removeAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        doThrow(NotFoundException.class).when(assessmentService).removeAssessment("SBAC_PT", true, "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
         http.perform(delete(new URI("/SBAC_PT/assessments"))
             .param("assessmentKey", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
-        verify(assessmentService).removeAssessment("SBAC_PT", "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
+        verify(assessmentService).removeAssessment("SBAC_PT", true, "(SBAC_PT)IRP-Perf-ELA-11-Summer-2015-2016");
     }
 }

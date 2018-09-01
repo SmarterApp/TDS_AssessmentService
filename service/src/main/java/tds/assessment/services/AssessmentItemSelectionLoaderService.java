@@ -25,7 +25,7 @@ public interface AssessmentItemSelectionLoaderService {
     /**
      * Loads scoring measurement seed data into the item bank
      */
-    void loadScoringSeedData();
+    void loadSeedData(final TestPackage testPackage);
 
     /**
      * Loads {@link tds.assessment.model.itembank.ItemMeasurementParameter}s into the item bank

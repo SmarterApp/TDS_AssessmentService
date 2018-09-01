@@ -64,8 +64,17 @@ public interface AssessmentQueryRepository {
 
     /**
      * Finds {@link tds.assessment.model.SegmentMetadata} for the segment key
+     *
      * @param segmentKey the unique segment key
      * @return {@link tds.assessment.model.SegmentMetadata} if found otherwise empty
      */
     Optional<SegmentMetadata> findSegmentMetadata(final String segmentKey);
+
+    /**
+     * Finds keys for any segments present in the assessment (if the assessment is multi-segmented)
+     *
+     * @param assessmentKey The key of the assessment containing the segments
+     * @return The list of segment keys
+     */
+    List<String> findSegmentKeysByAssessmentKey(final String assessmentKey);
 }

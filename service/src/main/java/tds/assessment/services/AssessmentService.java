@@ -13,6 +13,7 @@
 
 package tds.assessment.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import tds.assessment.Assessment;
@@ -47,5 +48,5 @@ public interface AssessmentService {
      * @param clientName the client environment identifier
      * @param keys        the keys of the {@link tds.assessment.Assessment}
      */
-    void removeAssessment(final String clientName, final String... keys);
+    void removeAssessment(final String clientName, final boolean safeDelete, final String... keys);
 }

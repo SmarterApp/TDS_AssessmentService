@@ -20,7 +20,6 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -92,7 +91,7 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
             }
         } catch (Exception e) {
             removeTestPackageIfPresent(testPackage);
-            log.error("An error occurred while loading the test package: , Clearing the test package from TDS", e);
+            log.error("An error occurred while loading the test package: {}, Clearing the test package from TDS", testPackage.getId(), e);
             return Optional.of(new ValidationError("TDS-Load", String.format("An error occurred while loading the test package %s. Message: %s",
                 testPackageName, e.getMessage())));
         }
@@ -102,7 +101,7 @@ public class AssessmentLoaderServiceImpl implements AssessmentLoaderService {
     private void removeTestPackageIfPresent(final TestPackage testPackage) {
         try {
             testPackage.getAssessments().forEach(assessment ->
-                assessmentService.removeAssessment(testPackage.getPublisher(), assessment.getKey()));
+                assessmentService.removeAssessment(testPackage.getPublisher(), false, assessment.getKey()));
         } catch (NotFoundException e) {
             // Ignore this exception - no issue if the assessment isn't present in the system
             log.debug("Attempted to clear the assessments in the test package {} before loading, but no assessments were found presently in the system");
